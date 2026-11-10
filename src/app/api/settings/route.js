@@ -1,58 +1,21 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { getSettings, saveSettings } from '@/lib/db';
 
-const dataFilePath = path.join(process.cwd(), 'src', 'data', 'settings.json');
-
-const defaultSettings = {
-  whatsappNumber: "8801909711808",
-  displayPhone: "+880 1909-711808",
-  officialEmail: "drivenitsolution@gmail.com",
-  workingHours: "Mon-Fri from 8am to 6pm (Official WhatsApp Active)",
-  officeAddress: "Dhaka, Bangladesh · Remote-First Worldwide",
-  tagline: "Your Growth Our Mission",
-  ctaText: "Book Free Call",
-  socials: {
-    linkedin: "https://linkedin.com",
-    facebook: "https://facebook.com",
-    github: "https://github.com",
-    twitter: "https://x.com",
-    instagram: "https://instagram.com"
-  }
+const NO_CACHE_HEADERS = {
+  'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+  Pragma: 'no-cache',
+  Expires: '0'
 };
 
-function getSettings() {
-  try {
-    if (!fs.existsSync(dataFilePath)) {
-      return defaultSettings;
-    }
-    const fileContent = fs.readFileSync(dataFilePath, 'utf-8');
-    return JSON.parse(fileContent);
-  } catch (error) {
-    console.error('Error reading settings:', error);
-    return defaultSettings;
-  }
-}
-
-function saveSettings(settings) {
-  try {
-    fs.writeFileSync(dataFilePath, JSON.stringify(settings, null, 2), 'utf-8');
-    return true;
-  } catch (error) {
-    console.error('Error saving settings:', error);
-    return false;
-  }
-}
-
 export async function GET() {
-  const settings = getSettings();
-  return NextResponse.json(settings);
+  const settings = await getSettings();
+  return NextResponse.json(settings, { headers: NO_CACHE_HEADERS });
 }
 
 export async function PUT(request) {
   try {
     const updatedSettings = await request.json();
-    const current = getSettings();
+    const current = await getSettings();
 
     const merged = {
       ...current,
@@ -63,9 +26,14 @@ export async function PUT(request) {
       }
     };
 
-    saveSettings(merged);
-    return NextResponse.json(merged);
+    await saveSettings(merged);
+    return NextResponse.json(merged, { headers: NO_CACHE_HEADERS });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to update settings' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to update settings' }, { status: 500, headers: NO_CACHE_HEADERS });
   }
+}
+
+export async function POST(request) {
+  // Support POST as alias for PUT for settings
+  return PUT(request);
 }

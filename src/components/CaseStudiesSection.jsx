@@ -152,16 +152,26 @@ function ProjectCard({ project, index }) {
   );
 }
 
-export default function CaseStudiesSection() {
-  const [projects, setProjects] = useState(defaultProjects);
+export default function CaseStudiesSection({ projects: propProjects = null }) {
+  const [projects, setProjects] = useState(
+    Array.isArray(propProjects) && propProjects.length > 0
+      ? propProjects
+      : defaultProjects
+  );
+
+  useEffect(() => {
+    if (Array.isArray(propProjects)) {
+      setProjects(propProjects);
+    }
+  }, [propProjects]);
 
   useEffect(() => {
     async function loadProjects() {
       try {
-        const res = await fetch('/api/projects');
+        const res = await fetch(`/api/projects?t=${Date.now()}`, { cache: 'no-store' });
         if (res.ok) {
           const data = await res.json();
-          if (Array.isArray(data) && data.length > 0) {
+          if (Array.isArray(data)) {
             setProjects(data);
           }
         }
@@ -169,8 +179,10 @@ export default function CaseStudiesSection() {
         console.error('Failed to load projects:', err);
       }
     }
-    loadProjects();
-  }, []);
+    if (!propProjects) {
+      loadProjects();
+    }
+  }, [propProjects]);
 
   return (
     <section id="work" className="mx-auto w-full max-w-[1520px] px-4 sm:px-6 lg:px-8 relative py-28">

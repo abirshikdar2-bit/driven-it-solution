@@ -2,6 +2,12 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
+const NO_CACHE_HEADERS = {
+  'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+  Pragma: 'no-cache',
+  Expires: '0'
+};
+
 const ADMINS_FILE = path.join(process.cwd(), 'src', 'data', 'admins.json');
 
 function getAdminConfig() {
@@ -50,7 +56,7 @@ export async function GET() {
   return NextResponse.json({
     success: true,
     data: config.users || []
-  });
+  }, { headers: NO_CACHE_HEADERS });
 }
 
 // 2. POST: Add / Pre-authorize a new admin user

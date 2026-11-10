@@ -4,25 +4,37 @@ import { useState, useEffect } from 'react';
 import CornerBrackets, { SectionBadge } from './CornerBrackets';
 import initialReviews from '../data/reviews.json';
 
-export default function ClientStories() {
-  const [reviews, setReviews] = useState(initialReviews);
+export default function ClientStories({ reviews: propReviews = null }) {
+  const [reviews, setReviews] = useState(
+    Array.isArray(propReviews) && propReviews.length > 0
+      ? propReviews
+      : Array.isArray(initialReviews) ? initialReviews : []
+  );
+
+  useEffect(() => {
+    if (Array.isArray(propReviews)) {
+      setReviews(propReviews);
+    }
+  }, [propReviews]);
 
   useEffect(() => {
     async function fetchReviews() {
       try {
-        const res = await fetch('/api/reviews');
+        const res = await fetch(`/api/reviews?t=${Date.now()}`, { cache: 'no-store' });
         if (res.ok) {
           const data = await res.json();
-          if (Array.isArray(data) && data.length > 0) {
+          if (Array.isArray(data)) {
             setReviews(data);
           }
         }
       } catch (e) {
-        // Fallback to initial JSON
+        // Fallback
       }
     }
-    fetchReviews();
-  }, []);
+    if (!propReviews) {
+      fetchReviews();
+    }
+  }, [propReviews]);
 
   return (
     <section id="reviews" className="mx-auto w-full max-w-[1520px] px-4 sm:px-6 lg:px-8 py-28 relative">

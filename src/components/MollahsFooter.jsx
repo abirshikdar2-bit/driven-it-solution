@@ -7,13 +7,21 @@ import CornerBrackets from './CornerBrackets';
 import WhatsAppIcon from './WhatsAppIcon';
 import initialSettings from '@/data/settings.json';
 
-export default function MollahsFooter() {
-  const [settings, setSettings] = useState(initialSettings);
+export default function MollahsFooter({ settings: propSettings = null }) {
+  const [settings, setSettings] = useState(
+    propSettings && propSettings.whatsappNumber ? propSettings : initialSettings
+  );
+
+  useEffect(() => {
+    if (propSettings && propSettings.whatsappNumber) {
+      setSettings(propSettings);
+    }
+  }, [propSettings]);
 
   useEffect(() => {
     async function loadSettings() {
       try {
-        const res = await fetch('/api/settings');
+        const res = await fetch(`/api/settings?t=${Date.now()}`, { cache: 'no-store' });
         if (res.ok) {
           const data = await res.json();
           if (data && data.whatsappNumber) {
@@ -24,8 +32,10 @@ export default function MollahsFooter() {
         console.error('Failed to load settings in Footer:', err);
       }
     }
-    loadSettings();
-  }, []);
+    if (!propSettings) {
+      loadSettings();
+    }
+  }, [propSettings]);
   return (
     <footer className="relative overflow-hidden border-t border-white/5 bg-[#050505]">
       {/* Ambient Blue Radial Glow at Bottom */}

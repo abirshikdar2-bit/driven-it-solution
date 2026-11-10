@@ -1,35 +1,15 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { getTeam, saveTeam, deleteTeamMember } from '@/lib/db';
 
-const dataFilePath = path.join(process.cwd(), 'src', 'data', 'team.json');
-
-function getTeamData() {
-  try {
-    if (!fs.existsSync(dataFilePath)) {
-      return [];
-    }
-    const fileContents = fs.readFileSync(dataFilePath, 'utf8');
-    return JSON.parse(fileContents);
-  } catch (err) {
-    console.error('Failed to read team.json:', err);
-    return [];
-  }
-}
-
-function saveTeamData(data) {
-  try {
-    fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2), 'utf8');
-    return true;
-  } catch (err) {
-    console.error('Failed to save team.json:', err);
-    return false;
-  }
-}
+const NO_CACHE_HEADERS = {
+  'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+  Pragma: 'no-cache',
+  Expires: '0'
+};
 
 export async function GET() {
-  const team = getTeamData();
-  return NextResponse.json({ success: true, data: team });
+  const team = await getTeam();
+  return NextResponse.json({ success: true, data: team }, { headers: NO_CACHE_HEADERS });
 }
 
 export async function POST(request) {
@@ -40,10 +20,13 @@ export async function POST(request) {
     if (body.action) {
       const { action, member, members } = body;
       if (members && Array.isArray(members)) {
-        saveTeamData(members);
-        return NextResponse.json({ success: true, data: members, message: 'All profiles updated successfully.' });
+        await saveTeam(members);
+        return NextResponse.json(
+          { success: true, data: members, message: 'All profiles updated successfully.' },
+          { headers: NO_CACHE_HEADERS }
+        );
       }
-      let team = getTeamData();
+      let team = await getTeam();
       if (action === 'create') {
         const newMember = {
           ...member,
@@ -51,24 +34,32 @@ export async function POST(request) {
           order: team.length + 1
         };
         team.push(newMember);
-        saveTeamData(team);
-        return NextResponse.json({ success: true, data: team, message: 'New member profile added!' });
+        await saveTeam(team);
+        return NextResponse.json(
+          { success: true, data: team, message: 'New member profile added!' },
+          { status: 201, headers: NO_CACHE_HEADERS }
+        );
       }
       if (action === 'update') {
         team = team.map((m) => (m.id === member.id ? { ...m, ...member } : m));
-        saveTeamData(team);
-        return NextResponse.json({ success: true, data: team, message: 'Profile updated!' });
+        await saveTeam(team);
+        return NextResponse.json(
+          { success: true, data: team, message: 'Profile updated!' },
+          { headers: NO_CACHE_HEADERS }
+        );
       }
       if (action === 'delete') {
-        team = team.filter((m) => m.id !== member.id);
-        saveTeamData(team);
-        return NextResponse.json({ success: true, data: team, message: 'Profile deleted!' });
+        team = await deleteTeamMember(member.id);
+        return NextResponse.json(
+          { success: true, data: team, message: 'Profile deleted!' },
+          { headers: NO_CACHE_HEADERS }
+        );
       }
     }
 
     // Direct REST POST
     const newMember = body;
-    let team = getTeamData();
+    let team = await getTeam();
     const created = {
       ...newMember,
       id: newMember.id || (newMember.name ? newMember.name.toLowerCase().replace(/[^a-z0-9]/g, '-') : `member-${Date.now()}`),
@@ -76,22 +67,25 @@ export async function POST(request) {
       order: team.length + 1
     };
     team.push(created);
-    saveTeamData(team);
-    return NextResponse.json({ success: true, data: team, member: created }, { status: 201 });
+    await saveTeam(team);
+    return NextResponse.json(
+      { success: true, data: team, member: created },
+      { status: 201, headers: NO_CACHE_HEADERS }
+    );
   } catch (err) {
     console.error('API Error in /api/team POST:', err);
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: err.message }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }
 
 export async function PUT(request) {
   try {
     const updatedMember = await request.json();
-    let team = getTeamData();
+    let team = await getTeam();
 
     const index = team.findIndex((m) => m.id === updatedMember.id);
     if (index === -1) {
-      return NextResponse.json({ success: false, error: 'Member not found' }, { status: 404 });
+      return NextResponse.json({ success: false, error: 'Member not found' }, { status: 404, headers: NO_CACHE_HEADERS });
     }
 
     team[index] = {
@@ -99,11 +93,11 @@ export async function PUT(request) {
       ...updatedMember,
       skills: Array.isArray(updatedMember.skills) ? updatedMember.skills : team[index].skills
     };
-    saveTeamData(team);
+    await saveTeam(team);
 
-    return NextResponse.json({ success: true, data: team, member: team[index] });
+    return NextResponse.json({ success: true, data: team, member: team[index] }, { headers: NO_CACHE_HEADERS });
   } catch (err) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: err.message }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }
 
@@ -113,20 +107,15 @@ export async function DELETE(request) {
     const id = searchParams.get('id');
 
     if (!id) {
-      return NextResponse.json({ success: false, error: 'Member ID is required' }, { status: 400 });
+      return NextResponse.json({ success: false, error: 'Member ID is required' }, { status: 400, headers: NO_CACHE_HEADERS });
     }
 
-    let team = getTeamData();
-    const originalLength = team.length;
-    team = team.filter((m) => m.id !== id);
-
-    if (team.length === originalLength) {
-      return NextResponse.json({ success: false, error: 'Member not found' }, { status: 404 });
-    }
-
-    saveTeamData(team);
-    return NextResponse.json({ success: true, data: team, message: 'Member deleted successfully' });
+    const filtered = await deleteTeamMember(id);
+    return NextResponse.json(
+      { success: true, data: filtered, message: 'Member deleted successfully' },
+      { headers: NO_CACHE_HEADERS }
+    );
   } catch (err) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: err.message }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }

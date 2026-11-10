@@ -1,11 +1,13 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import MollahsNavbar from '@/components/MollahsNavbar';
 import MollahsFooter from '@/components/MollahsFooter';
 import CornerBrackets, { SectionBadge } from '@/components/CornerBrackets';
-import teamData from '@/data/team.json';
+import initialTeamData from '@/data/team.json';
 import { Mail, Award, CheckCircle } from 'lucide-react';
+import { subscribeToDataChanges } from '@/lib/syncEvents';
 
 function LinkedInIcon({ size = 15 }) {
   return (
@@ -26,6 +28,32 @@ function FacebookIcon({ size = 15 }) {
 }
 
 export default function AboutPage() {
+  const [team, setTeam] = useState(initialTeamData);
+
+  useEffect(() => {
+    async function loadTeam() {
+      try {
+        const res = await fetch(`/api/team?t=${Date.now()}`, { cache: 'no-store' });
+        if (res.ok) {
+          const json = await res.json();
+          if (json.success && Array.isArray(json.data)) {
+            setTeam(json.data);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load team in AboutPage:', err);
+      }
+    }
+    loadTeam();
+
+    const unsub = subscribeToDataChanges((event) => {
+      if (event.entity === 'team' || event.entity === 'all') {
+        loadTeam();
+      }
+    });
+    return () => unsub();
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#050505] text-white">
       <MollahsNavbar />
@@ -47,7 +75,7 @@ export default function AboutPage() {
 
         {/* Team Members Grid */}
         <div className="grid gap-8 md:grid-cols-2">
-          {teamData.map((member) => (
+          {team.map((member) => (
             <div
               key={member.id}
               className="relative border border-white/10 bg-[#0a0a0b] p-8 flex flex-col justify-between group hover:border-cyan-400/40 transition-colors"

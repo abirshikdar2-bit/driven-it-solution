@@ -7,8 +7,17 @@ import CornerBrackets, { SectionBadge } from './CornerBrackets';
 import { Mail, Clock, MessageSquare, Send, CheckCircle2, ArrowRight } from 'lucide-react';
 import initialSettings from '@/data/settings.json';
 
-export default function ContactSection() {
-  const [settings, setSettings] = useState(initialSettings);
+export default function ContactSection({ settings: propSettings = null }) {
+  const [settings, setSettings] = useState(
+    propSettings && propSettings.whatsappNumber ? propSettings : initialSettings
+  );
+
+  useEffect(() => {
+    if (propSettings && propSettings.whatsappNumber) {
+      setSettings(propSettings);
+    }
+  }, [propSettings]);
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -22,7 +31,7 @@ export default function ContactSection() {
   useEffect(() => {
     async function loadSettings() {
       try {
-        const res = await fetch('/api/settings');
+        const res = await fetch(`/api/settings?t=${Date.now()}`, { cache: 'no-store' });
         if (res.ok) {
           const data = await res.json();
           if (data && data.whatsappNumber) {
@@ -33,8 +42,10 @@ export default function ContactSection() {
         console.error('Failed to load dynamic contact settings:', err);
       }
     }
-    loadSettings();
-  }, []);
+    if (!propSettings) {
+      loadSettings();
+    }
+  }, [propSettings]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

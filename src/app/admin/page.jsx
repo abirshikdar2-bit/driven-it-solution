@@ -36,6 +36,7 @@ import CornerBrackets, { SectionBadge } from '@/components/CornerBrackets';
 import FlowFieldCanvas from '@/components/FlowFieldCanvas';
 import DrivenItWordmark from '@/components/DrivenItWordmark';
 import AdminGoogleAuthModal from '@/components/AdminGoogleAuthModal';
+import { broadcastDataChange } from '@/lib/syncEvents';
 
 export default function AdminPage() {
   // Authentication State
@@ -132,6 +133,7 @@ export default function AdminPage() {
       showToast('Admin user added successfully!');
       setIsUserModalOpen(false);
       setUserForm({ name: '', email: '', role: 'admin' });
+      broadcastDataChange('users');
       fetchUsers();
     } catch (err) {
       showToast(err.message, 'error');
@@ -160,6 +162,7 @@ export default function AdminPage() {
         throw new Error(data.message || 'Failed to update role');
       }
       showToast(`Role updated to ${nextRole === 'super_admin' ? 'Super Admin' : 'Admin'}!`);
+      broadcastDataChange('users');
       fetchUsers();
     } catch (err) {
       showToast(err.message, 'error');
@@ -181,6 +184,7 @@ export default function AdminPage() {
         throw new Error(data.message || 'Failed to remove user');
       }
       showToast(`User ${targetUser.name} removed successfully.`);
+      broadcastDataChange('users');
       fetchUsers();
     } catch (err) {
       showToast(err.message, 'error');
@@ -314,7 +318,7 @@ export default function AdminPage() {
   const fetchProjects = async () => {
     try {
       setLoadingProjects(true);
-      const res = await fetch('/api/projects');
+      const res = await fetch(`/api/projects?t=${Date.now()}`, { cache: 'no-store' });
       const data = await res.json();
       setProjects(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -327,7 +331,7 @@ export default function AdminPage() {
   const fetchProducts = async () => {
     try {
       setLoadingProducts(true);
-      const res = await fetch('/api/products');
+      const res = await fetch(`/api/products?t=${Date.now()}`, { cache: 'no-store' });
       const data = await res.json();
       setProducts(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -340,7 +344,7 @@ export default function AdminPage() {
   const fetchServices = async () => {
     try {
       setLoadingServices(true);
-      const res = await fetch('/api/services');
+      const res = await fetch(`/api/services?t=${Date.now()}`, { cache: 'no-store' });
       const data = await res.json();
       setServices(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -353,7 +357,7 @@ export default function AdminPage() {
   const fetchTeam = async () => {
     try {
       setLoadingTeam(true);
-      const res = await fetch('/api/team');
+      const res = await fetch(`/api/team?t=${Date.now()}`, { cache: 'no-store' });
       const json = await res.json();
       if (json.success && Array.isArray(json.data)) {
         setTeam(json.data);
@@ -368,7 +372,7 @@ export default function AdminPage() {
   const fetchReviews = async () => {
     try {
       setLoadingReviews(true);
-      const res = await fetch('/api/reviews');
+      const res = await fetch(`/api/reviews?t=${Date.now()}`, { cache: 'no-store' });
       const data = await res.json();
       setReviews(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -381,7 +385,7 @@ export default function AdminPage() {
   const fetchSettings = async () => {
     try {
       setLoadingSettings(true);
-      const res = await fetch('/api/settings');
+      const res = await fetch(`/api/settings?t=${Date.now()}`, { cache: 'no-store' });
       const data = await res.json();
       if (data && data.whatsappNumber) {
         setSettings(data);
@@ -469,6 +473,7 @@ export default function AdminPage() {
       if (!res.ok) throw new Error('Operation failed');
       showToast(isEditing ? 'Case study updated!' : 'New case study added!');
       setIsProjectModalOpen(false);
+      broadcastDataChange('projects');
       fetchProjects();
     } catch (err) {
       showToast(err.message, 'error');
@@ -481,6 +486,7 @@ export default function AdminPage() {
       const res = await fetch(`/api/projects?id=${id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to delete project');
       showToast('Case study deleted successfully!');
+      broadcastDataChange('projects');
       fetchProjects();
     } catch (err) {
       showToast(err.message, 'error');
@@ -557,6 +563,7 @@ export default function AdminPage() {
       if (!res.ok) throw new Error('Operation failed');
       showToast(isEditing ? 'SaaS product updated!' : 'New SaaS product created!');
       setIsProductModalOpen(false);
+      broadcastDataChange('products');
       fetchProducts();
     } catch (err) {
       showToast(err.message, 'error');
@@ -569,6 +576,7 @@ export default function AdminPage() {
       const res = await fetch(`/api/products?id=${id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to delete product');
       showToast('Product deleted successfully!');
+      broadcastDataChange('products');
       fetchProducts();
     } catch (err) {
       showToast(err.message, 'error');
@@ -629,6 +637,7 @@ export default function AdminPage() {
       if (!res.ok) throw new Error('Operation failed');
       showToast(isEditing ? 'Service updated successfully!' : 'New service added!');
       setIsServiceModalOpen(false);
+      broadcastDataChange('services');
       fetchServices();
     } catch (err) {
       showToast(err.message, 'error');
@@ -641,6 +650,7 @@ export default function AdminPage() {
       const res = await fetch(`/api/services?id=${id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to delete service');
       showToast('Service deleted successfully!');
+      broadcastDataChange('services');
       fetchServices();
     } catch (err) {
       showToast(err.message, 'error');
@@ -735,6 +745,7 @@ export default function AdminPage() {
       if (!res.ok || !json.success) throw new Error(json.error || 'Operation failed');
       showToast(isEditing ? 'Teacher/Leader profile updated!' : 'New profile added!');
       setIsTeamModalOpen(false);
+      broadcastDataChange('team');
       fetchTeam();
     } catch (err) {
       showToast(err.message, 'error');
@@ -748,6 +759,7 @@ export default function AdminPage() {
       const json = await res.json();
       if (!res.ok || !json.success) throw new Error(json.error || 'Failed to delete member');
       showToast('Profile deleted successfully!');
+      broadcastDataChange('team');
       fetchTeam();
     } catch (err) {
       showToast(err.message, 'error');
@@ -790,6 +802,7 @@ export default function AdminPage() {
       if (!res.ok) throw new Error('Operation failed');
       showToast(isEditing ? 'Review updated successfully!' : 'New review added!');
       setIsReviewModalOpen(false);
+      broadcastDataChange('reviews');
       fetchReviews();
     } catch (err) {
       showToast(err.message, 'error');
@@ -802,6 +815,7 @@ export default function AdminPage() {
       const res = await fetch(`/api/reviews?id=${id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to delete review');
       showToast('Review deleted successfully!');
+      broadcastDataChange('reviews');
       fetchReviews();
     } catch (err) {
       showToast(err.message, 'error');
@@ -821,6 +835,7 @@ export default function AdminPage() {
 
       if (!res.ok) throw new Error('Failed to save settings');
       showToast('Global contact settings saved successfully!');
+      broadcastDataChange('settings');
     } catch (err) {
       showToast(err.message, 'error');
     } finally {

@@ -1,41 +1,21 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { getProducts, saveProducts, deleteProductItem } from '@/lib/db';
 
-const dataFilePath = path.join(process.cwd(), 'src', 'data', 'products.json');
-
-function getProducts() {
-  try {
-    if (!fs.existsSync(dataFilePath)) {
-      return [];
-    }
-    const fileContent = fs.readFileSync(dataFilePath, 'utf-8');
-    return JSON.parse(fileContent);
-  } catch (error) {
-    console.error('Error reading products:', error);
-    return [];
-  }
-}
-
-function saveProducts(products) {
-  try {
-    fs.writeFileSync(dataFilePath, JSON.stringify(products, null, 2), 'utf-8');
-    return true;
-  } catch (error) {
-    console.error('Error saving products:', error);
-    return false;
-  }
-}
+const NO_CACHE_HEADERS = {
+  'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+  Pragma: 'no-cache',
+  Expires: '0'
+};
 
 export async function GET() {
-  const products = getProducts();
-  return NextResponse.json(products);
+  const products = await getProducts();
+  return NextResponse.json(products, { headers: NO_CACHE_HEADERS });
 }
 
 export async function POST(request) {
   try {
     const newProduct = await request.json();
-    const products = getProducts();
+    const products = await getProducts();
 
     const created = {
       ...newProduct,
@@ -45,22 +25,22 @@ export async function POST(request) {
     };
 
     products.push(created);
-    saveProducts(products);
+    await saveProducts(products);
 
-    return NextResponse.json(created, { status: 201 });
+    return NextResponse.json(created, { status: 201, headers: NO_CACHE_HEADERS });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to create product' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to create product' }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }
 
 export async function PUT(request) {
   try {
     const updatedProduct = await request.json();
-    const products = getProducts();
+    const products = await getProducts();
 
     const index = products.findIndex((p) => p.id === updatedProduct.id);
     if (index === -1) {
-      return NextResponse.json({ error: 'Product not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Product not found' }, { status: 404, headers: NO_CACHE_HEADERS });
     }
 
     products[index] = {
@@ -68,11 +48,11 @@ export async function PUT(request) {
       ...updatedProduct,
       features: Array.isArray(updatedProduct.features) ? updatedProduct.features : products[index].features
     };
-    saveProducts(products);
+    await saveProducts(products);
 
-    return NextResponse.json(products[index]);
+    return NextResponse.json(products[index], { headers: NO_CACHE_HEADERS });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to update product' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to update product' }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }
 
@@ -82,20 +62,12 @@ export async function DELETE(request) {
     const id = searchParams.get('id');
 
     if (!id) {
-      return NextResponse.json({ error: 'Product ID is required' }, { status: 400 });
+      return NextResponse.json({ error: 'Product ID is required' }, { status: 400, headers: NO_CACHE_HEADERS });
     }
 
-    let products = getProducts();
-    const originalLength = products.length;
-    products = products.filter((p) => p.id !== id);
-
-    if (products.length === originalLength) {
-      return NextResponse.json({ error: 'Product not found' }, { status: 404 });
-    }
-
-    saveProducts(products);
-    return NextResponse.json({ success: true, message: 'Product deleted successfully' });
+    await deleteProductItem(id);
+    return NextResponse.json({ success: true, message: 'Product deleted successfully' }, { headers: NO_CACHE_HEADERS });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to delete product' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to delete product' }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }

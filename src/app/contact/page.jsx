@@ -1,14 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import MollahsNavbar from '@/components/MollahsNavbar';
 import MollahsFooter from '@/components/MollahsFooter';
 import FlowFieldCanvas from '@/components/FlowFieldCanvas';
 import WhatsAppIcon from '@/components/WhatsAppIcon';
 import CornerBrackets, { SectionBadge } from '@/components/CornerBrackets';
 import { Mail, Clock, MessageSquare, Send, CheckCircle2, ArrowRight } from 'lucide-react';
+import defaultSettings from '@/data/settings.json';
+import { subscribeToDataChanges } from '@/lib/syncEvents';
 
 export default function ContactPage() {
+  const [settings, setSettings] = useState(defaultSettings);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -18,6 +21,30 @@ export default function ContactPage() {
     message: ''
   });
   const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    async function loadSettings() {
+      try {
+        const res = await fetch(`/api/settings?t=${Date.now()}`, { cache: 'no-store' });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.whatsappNumber) {
+            setSettings(data);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load contact settings:', err);
+      }
+    }
+    loadSettings();
+
+    const unsub = subscribeToDataChanges((event) => {
+      if (event.entity === 'settings' || event.entity === 'all') {
+        loadSettings();
+      }
+    });
+    return () => unsub();
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -215,10 +242,10 @@ export default function ContactPage() {
                         Email
                       </h3>
                       <a
-                        href="mailto:drivenitsolution@gmail.com"
+                        href={`mailto:${settings.officialEmail}`}
                         className="text-gray-300 text-lg font-light mb-1 hover:text-white transition-colors duration-200 block underline decoration-cyan-500/30 underline-offset-4"
                       >
-                        drivenitsolution@gmail.com
+                        {settings.officialEmail}
                       </a>
                       <p className="text-gray-500 text-sm font-light italic font-sans tracking-wide">
                         Send us an email anytime
@@ -236,15 +263,15 @@ export default function ContactPage() {
                         <span>Phone &amp; WhatsApp</span>
                       </h3>
                       <a
-                        href="https://wa.me/8801909711808"
+                        href={`https://wa.me/${settings.whatsappNumber}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-gray-300 text-lg font-light mb-1 hover:text-white transition-colors duration-200 block underline decoration-[#25D366]/40 underline-offset-4"
                       >
-                        +880 1909-711808
+                        {settings.displayPhone || settings.whatsappNumber}
                       </a>
                       <p className="text-gray-500 text-sm font-light italic font-sans tracking-wide">
-                        Mon-Fri from 8am to 6pm (Official WhatsApp Active)
+                        {settings.workingHours}
                       </p>
                     </div>
                   </div>

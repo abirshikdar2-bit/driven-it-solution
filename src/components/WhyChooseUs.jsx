@@ -5,29 +5,40 @@ import Image from 'next/image';
 import CornerBrackets, { SectionBadge } from './CornerBrackets';
 import initialTeam from '@/data/team.json';
 
-export default function WhyChooseUs() {
+export default function WhyChooseUs({ team = null }) {
   const [teamMembers, setTeamMembers] = useState(
-    Array.isArray(initialTeam) ? initialTeam.filter(m => m.isHighlighted !== false) : []
+    Array.isArray(team) && team.length > 0
+      ? team
+      : Array.isArray(initialTeam) ? initialTeam : []
   );
+
+  useEffect(() => {
+    if (Array.isArray(team)) {
+      setTeamMembers(team);
+    }
+  }, [team]);
 
   useEffect(() => {
     async function loadTeam() {
       try {
-        const res = await fetch('/api/team');
+        const res = await fetch(`/api/team?t=${Date.now()}`, { cache: 'no-store' });
         if (res.ok) {
           const json = await res.json();
-          if (json.success && Array.isArray(json.data) && json.data.length > 0) {
-            // Filter highlighted or show all
-            const highlighted = json.data.filter(m => m.isHighlighted !== false);
-            setTeamMembers(highlighted.length > 0 ? highlighted : json.data);
+          if (json.success && Array.isArray(json.data)) {
+            setTeamMembers(json.data);
           }
         }
       } catch (err) {
         console.error('Failed to load dynamic team in WhyChooseUs:', err);
       }
     }
-    loadTeam();
-  }, []);
+    if (!team) {
+      loadTeam();
+    }
+  }, [team]);
+
+  const highlighted = teamMembers.filter(m => m.isHighlighted !== false);
+  const visibleMembers = highlighted.length > 0 ? highlighted : teamMembers;
 
   return (
     <section id="benefits" className="mx-auto w-full max-w-[1520px] px-4 sm:px-6 lg:px-8 py-28 relative">
@@ -49,7 +60,7 @@ export default function WhyChooseUs() {
       {/* Dynamic Teachers Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
         {/* Dynamic Teacher & Leadership Cards */}
-        {teamMembers.map((member) => (
+        {visibleMembers.map((member) => (
           <div
             key={member.id}
             className="relative min-h-[440px] overflow-hidden border border-white/10 bg-[#0c0c0c] p-6 sm:p-8 flex flex-col justify-between group hover:border-cyan-400/40 transition-all duration-300"

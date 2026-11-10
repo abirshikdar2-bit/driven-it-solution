@@ -31,18 +31,28 @@ const iconMap = {
   Smartphone
 };
 
-export default function WhatYouGet() {
-  const [services, setServices] = useState(initialServices);
+export default function WhatYouGet({ services: propServices = null }) {
+  const [services, setServices] = useState(
+    Array.isArray(propServices) && propServices.length > 0
+      ? propServices
+      : Array.isArray(initialServices) ? initialServices : []
+  );
   const [activeIdx, setActiveIdx] = useState(0);
   const hoverTimeoutRef = useRef(null);
 
   useEffect(() => {
+    if (Array.isArray(propServices)) {
+      setServices(propServices);
+    }
+  }, [propServices]);
+
+  useEffect(() => {
     async function loadServices() {
       try {
-        const res = await fetch('/api/services');
+        const res = await fetch(`/api/services?t=${Date.now()}`, { cache: 'no-store' });
         if (res.ok) {
           const data = await res.json();
-          if (Array.isArray(data) && data.length > 0) {
+          if (Array.isArray(data)) {
             setServices(data);
           }
         }
@@ -50,8 +60,10 @@ export default function WhatYouGet() {
         console.error('Failed to load dynamic services:', err);
       }
     }
-    loadServices();
-  }, []);
+    if (!propServices) {
+      loadServices();
+    }
+  }, [propServices]);
 
   // Smooth hover intent: 75ms buffer prevents erratic switching during rapid cursor transit
   const handleMouseEnter = (idx) => {

@@ -6,16 +6,26 @@ import { ArrowUpRight } from 'lucide-react';
 import CornerBrackets, { SectionBadge } from './CornerBrackets';
 import initialProducts from '@/data/products.json';
 
-export default function SoftwareWeOwn() {
-  const [products, setProducts] = useState(initialProducts);
+export default function SoftwareWeOwn({ products: propProducts = null }) {
+  const [products, setProducts] = useState(
+    Array.isArray(propProducts) && propProducts.length > 0
+      ? propProducts
+      : Array.isArray(initialProducts) ? initialProducts : []
+  );
+
+  useEffect(() => {
+    if (Array.isArray(propProducts)) {
+      setProducts(propProducts);
+    }
+  }, [propProducts]);
 
   useEffect(() => {
     async function loadProducts() {
       try {
-        const res = await fetch('/api/products');
+        const res = await fetch(`/api/products?t=${Date.now()}`, { cache: 'no-store' });
         if (res.ok) {
           const data = await res.json();
-          if (Array.isArray(data) && data.length > 0) {
+          if (Array.isArray(data)) {
             setProducts(data);
           }
         }
@@ -23,8 +33,10 @@ export default function SoftwareWeOwn() {
         console.error('Failed to load dynamic products:', err);
       }
     }
-    loadProducts();
-  }, []);
+    if (!propProducts) {
+      loadProducts();
+    }
+  }, [propProducts]);
 
   return (
     <section id="products" className="mx-auto w-full max-w-[1520px] px-4 sm:px-6 lg:px-8 relative py-28">

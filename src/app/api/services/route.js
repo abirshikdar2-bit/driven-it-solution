@@ -1,41 +1,21 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { getServices, saveServices, deleteServiceItem } from '@/lib/db';
 
-const dataFilePath = path.join(process.cwd(), 'src', 'data', 'servicesList.json');
-
-function getServices() {
-  try {
-    if (!fs.existsSync(dataFilePath)) {
-      return [];
-    }
-    const fileContent = fs.readFileSync(dataFilePath, 'utf-8');
-    return JSON.parse(fileContent);
-  } catch (error) {
-    console.error('Error reading services:', error);
-    return [];
-  }
-}
-
-function saveServices(services) {
-  try {
-    fs.writeFileSync(dataFilePath, JSON.stringify(services, null, 2), 'utf-8');
-    return true;
-  } catch (error) {
-    console.error('Error saving services:', error);
-    return false;
-  }
-}
+const NO_CACHE_HEADERS = {
+  'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+  Pragma: 'no-cache',
+  Expires: '0'
+};
 
 export async function GET() {
-  const services = getServices();
-  return NextResponse.json(services);
+  const services = await getServices();
+  return NextResponse.json(services, { headers: NO_CACHE_HEADERS });
 }
 
 export async function POST(request) {
   try {
     const newService = await request.json();
-    const services = getServices();
+    const services = await getServices();
 
     const nextIndex = services.length + 1;
     const formattedNum = `/00${nextIndex}/`;
@@ -50,22 +30,22 @@ export async function POST(request) {
     };
 
     services.push(created);
-    saveServices(services);
+    await saveServices(services);
 
-    return NextResponse.json(created, { status: 201 });
+    return NextResponse.json(created, { status: 201, headers: NO_CACHE_HEADERS });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to create service' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to create service' }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }
 
 export async function PUT(request) {
   try {
     const updatedService = await request.json();
-    const services = getServices();
+    const services = await getServices();
 
     const index = services.findIndex((s) => s.id === updatedService.id);
     if (index === -1) {
-      return NextResponse.json({ error: 'Service not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Service not found' }, { status: 404, headers: NO_CACHE_HEADERS });
     }
 
     services[index] = {
@@ -73,11 +53,11 @@ export async function PUT(request) {
       ...updatedService,
       features: Array.isArray(updatedService.features) ? updatedService.features : services[index].features
     };
-    saveServices(services);
+    await saveServices(services);
 
-    return NextResponse.json(services[index]);
+    return NextResponse.json(services[index], { headers: NO_CACHE_HEADERS });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to update service' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to update service' }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }
 
@@ -87,20 +67,12 @@ export async function DELETE(request) {
     const id = searchParams.get('id');
 
     if (!id) {
-      return NextResponse.json({ error: 'Service ID is required' }, { status: 400 });
+      return NextResponse.json({ error: 'Service ID is required' }, { status: 400, headers: NO_CACHE_HEADERS });
     }
 
-    let services = getServices();
-    const originalLength = services.length;
-    services = services.filter((s) => s.id !== id);
-
-    if (services.length === originalLength) {
-      return NextResponse.json({ error: 'Service not found' }, { status: 404 });
-    }
-
-    saveServices(services);
-    return NextResponse.json({ success: true, message: 'Service deleted successfully' });
+    await deleteServiceItem(id);
+    return NextResponse.json({ success: true, message: 'Service deleted successfully' }, { headers: NO_CACHE_HEADERS });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to delete service' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to delete service' }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }

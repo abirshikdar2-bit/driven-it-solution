@@ -1,21 +1,38 @@
-import fs from 'fs';
-import path from 'path';
 import ClientPage from './ClientPage';
+import {
+  getTeam,
+  getProjects,
+  getServices,
+  getProducts,
+  getReviews,
+  getSettings
+} from '@/lib/db';
 
-// Read team data on the server for instant SSR
-function getInitialTeam() {
-  try {
-    const filePath = path.join(process.cwd(), 'src', 'data', 'team.json');
-    const data = fs.readFileSync(filePath, 'utf8');
-    return JSON.parse(data);
-  } catch (err) {
-    console.error('Failed to read team.json in page.js:', err);
-    return [];
-  }
-}
+export default async function Home() {
+  const [
+    initialTeam,
+    initialProjects,
+    initialServices,
+    initialProducts,
+    initialReviews,
+    initialSettings
+  ] = await Promise.all([
+    getTeam(),
+    getProjects(),
+    getServices(),
+    getProducts(),
+    getReviews(),
+    getSettings()
+  ]);
 
-export default function Home() {
-  const initialTeam = getInitialTeam();
-
-  return <ClientPage initialTeam={initialTeam} />;
+  return (
+    <ClientPage
+      initialTeam={initialTeam}
+      initialProjects={initialProjects}
+      initialServices={initialServices}
+      initialProducts={initialProducts}
+      initialReviews={initialReviews}
+      initialSettings={initialSettings}
+    />
+  );
 }

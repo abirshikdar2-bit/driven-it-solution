@@ -1,38 +1,21 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { getReviews, saveReviews, deleteReviewItem } from '@/lib/db';
 
-const dataFilePath = path.join(process.cwd(), 'src', 'data', 'reviews.json');
-
-function getReviews() {
-  try {
-    const fileContent = fs.readFileSync(dataFilePath, 'utf-8');
-    return JSON.parse(fileContent);
-  } catch (error) {
-    console.error('Error reading reviews:', error);
-    return [];
-  }
-}
-
-function saveReviews(reviews) {
-  try {
-    fs.writeFileSync(dataFilePath, JSON.stringify(reviews, null, 2), 'utf-8');
-    return true;
-  } catch (error) {
-    console.error('Error saving reviews:', error);
-    return false;
-  }
-}
+const NO_CACHE_HEADERS = {
+  'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+  Pragma: 'no-cache',
+  Expires: '0'
+};
 
 export async function GET() {
-  const reviews = getReviews();
-  return NextResponse.json(reviews);
+  const reviews = await getReviews();
+  return NextResponse.json(reviews, { headers: NO_CACHE_HEADERS });
 }
 
 export async function POST(request) {
   try {
     const newReview = await request.json();
-    const reviews = getReviews();
+    const reviews = await getReviews();
 
     const created = {
       ...newReview,
@@ -41,30 +24,30 @@ export async function POST(request) {
     };
 
     reviews.push(created);
-    saveReviews(reviews);
+    await saveReviews(reviews);
 
-    return NextResponse.json(created, { status: 201 });
+    return NextResponse.json(created, { status: 201, headers: NO_CACHE_HEADERS });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to create review' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to create review' }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }
 
 export async function PUT(request) {
   try {
     const updatedReview = await request.json();
-    const reviews = getReviews();
+    const reviews = await getReviews();
 
     const index = reviews.findIndex((r) => r.id === updatedReview.id);
     if (index === -1) {
-      return NextResponse.json({ error: 'Review not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Review not found' }, { status: 404, headers: NO_CACHE_HEADERS });
     }
 
     reviews[index] = { ...reviews[index], ...updatedReview };
-    saveReviews(reviews);
+    await saveReviews(reviews);
 
-    return NextResponse.json(reviews[index]);
+    return NextResponse.json(reviews[index], { headers: NO_CACHE_HEADERS });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to update review' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to update review' }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }
 
@@ -74,15 +57,12 @@ export async function DELETE(request) {
     const id = searchParams.get('id');
 
     if (!id) {
-      return NextResponse.json({ error: 'Review ID is required' }, { status: 400 });
+      return NextResponse.json({ error: 'Review ID is required' }, { status: 400, headers: NO_CACHE_HEADERS });
     }
 
-    let reviews = getReviews();
-    reviews = reviews.filter((r) => r.id !== id);
-    saveReviews(reviews);
-
-    return NextResponse.json({ success: true, message: 'Review deleted successfully' });
+    await deleteReviewItem(id);
+    return NextResponse.json({ success: true, message: 'Review deleted successfully' }, { headers: NO_CACHE_HEADERS });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to delete review' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to delete review' }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }
