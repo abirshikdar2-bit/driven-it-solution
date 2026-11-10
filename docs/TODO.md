@@ -8,6 +8,7 @@
 - **2026-11-11**: Restructured repository so Next.js application lives directly at the root for zero-configuration cloud hosting.
 - **2026-11-11**: Initialized Git repository, staged all assets, committed with clean history, and pushed to GitHub (`abirshikdar2-bit/driven-it-solution`).
 - **2026-11-11**: Provided live global public share links for both Public Website and Admin Panel via secure HTTPS Cloudflare edge CDN.
+- **2026-11-11**: Replaced random tunnel URL with branded company subdomain `https://driven-it-solution.loca.lt` and verified both Public Panel and Admin Console via live headless browser tests.
 
 ## Backlog
 - [ ] Connect Supabase PostgreSQL database to replace local JSON storage (`admins.json`, `team.json`, `projects.json`, `reviews.json`, `products.json`).
