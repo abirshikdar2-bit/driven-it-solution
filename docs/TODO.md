@@ -13,4 +13,9 @@
 ## Backlog
 - [ ] Connect Supabase PostgreSQL database to replace local JSON storage (`admins.json`, `team.json`, `projects.json`, `reviews.json`, `products.json`).
 - [ ] Setup Supabase Storage Buckets for cloud image uploads on serverless platforms.
-- [ ] Finalize Vercel one-click deployment once user connects GitHub in Vercel account settings.
+- **2026-11-11**: Finalized permanent Vercel cloud deployment under official brand domain `https://driven-it-solution.vercel.app` with live automated CI/CD from GitHub `main`.
+- **2026-11-11**: Verified Public Panel and Admin Console on Vercel Edge Network with HTTP 200 responses and headless browser screenshots.
+
+## Backlog
+- [ ] Connect Supabase PostgreSQL database to replace local JSON storage (`admins.json`, `team.json`, `projects.json`, `reviews.json`, `products.json`).
+- [ ] Setup Supabase Storage Buckets for cloud image uploads on serverless platforms.
