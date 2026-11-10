@@ -1,0 +1,542 @@
+[
+  {
+    "slug": "ai-voice-receptionist",
+    "title": "AI Voice Receptionist",
+    "shortTitle": "AI Voice Receptionist",
+    "description": "Missed calls are missed revenue. Our AI voice receptionist answers your phone 24/7, handles questions, and books appointments automatically.",
+    "longDescription": "Never miss another opportunity. Our AI Voice Receptionist handles every call with natural, human-like conversation — answering questions, qualifying leads, booking appointments, and routing urgent calls — all while you focus on running your business. Built for service-based businesses that can't afford to miss a single call.",
+    "icon": "PhoneCall",
+    "color": "text-cyan-400",
+    "bgColor": "bg-cyan-950/30",
+    "borderColor": "border-cyan-500/20",
+    "gradientFrom": "from-cyan-500/5",
+    "gradientTo": "to-cyan-500/10",
+    "pricing": "From $898 per project",
+    "pricingNote": "Professional plan ($599) + AI voice receptionist module ($299).",
+    "features": [
+      {
+        "title": "24/7 Call Handling",
+        "description": "Never miss a call again. Our AI answers every call instantly, day or night, weekends and holidays included."
+      },
+      {
+        "title": "Smart Appointment Booking",
+        "description": "Seamlessly integrates with your calendar to schedule, reschedule, and cancel appointments in real-time."
+      },
+      {
+        "title": "Natural Language Voice",
+        "description": "Human-like conversation that your callers won't distinguish from a real receptionist."
+      },
+      {
+        "title": "Multi-language Support",
+        "description": "Communicate with customers in their preferred language — English, Spanish, Bengali, and more."
+      },
+      {
+        "title": "Call Analytics Dashboard",
+        "description": "Track call volume, common questions, missed opportunities, and conversion metrics."
+      },
+      {
+        "title": "Custom Call Flows",
+        "description": "Tailored conversation paths based on your specific business needs and FAQ."
+      }
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "title": "Discovery Call",
+        "description": "We learn your business, common call patterns, and what matters most to your customers."
+      },
+      {
+        "step": 2,
+        "title": "Voice & Script Design",
+        "description": "We craft a custom voice profile and conversation flow that matches your brand personality."
+      },
+      {
+        "step": 3,
+        "title": "Integration & Setup",
+        "description": "We connect the AI to your phone system, calendar, CRM, and any other tools you use."
+      },
+      {
+        "step": 4,
+        "title": "Testing & Launch",
+        "description": "Rigorous testing ensures every scenario is handled perfectly before going live."
+      },
+      {
+        "step": 5,
+        "title": "Continuous Optimization",
+        "description": "We monitor performance, refine responses, and improve accuracy based on real call data."
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Will callers know they're talking to an AI?",
+        "answer": "Our AI uses the latest voice synthesis technology to sound natural and conversational. Most callers cannot tell the difference. We also customize the voice, tone, and personality to match your brand."
+      },
+      {
+        "question": "What happens if the AI can't answer a question?",
+        "answer": "The AI is trained to gracefully handle unknown questions by taking a message, scheduling a callback, or transferring to a human team member based on your preferences."
+      },
+      {
+        "question": "Can it handle multiple calls simultaneously?",
+        "answer": "Yes. Unlike a human receptionist, our AI can handle unlimited simultaneous calls without any drop in quality or wait times."
+      },
+      {
+        "question": "How long does setup take?",
+        "answer": "Most businesses are up and running within 1-2 weeks. Complex setups with multiple integrations may take up to 3 weeks."
+      }
+    ],
+    "ctaTitle": "NEVER MISS ANOTHER CALL",
+    "ctaDescription": "Let our AI handle your phones while you handle your business.",
+    "heroBadge": "24/7 Automated Call Handling",
+    "heroSubtitle": "Your AI receptionist works around the clock so you never miss a lead, appointment, or opportunity."
+  },
+  {
+    "slug": "social-media-automation",
+    "title": "Social Media Automation",
+    "shortTitle": "Social Media Automation",
+    "description": "Staying consistent on social media is a full time job, unless you automate it. We set up systems that schedule and publish your content across every platform.",
+    "longDescription": "Transform your social media from a time-sink into a growth engine. We build automated systems that create, schedule, and publish content across all your platforms — powered by AI that understands your brand voice, audience, and goals. Get daily posting consistency without the daily effort.",
+    "icon": "Share2",
+    "color": "text-purple-400",
+    "bgColor": "bg-purple-950/30",
+    "borderColor": "border-purple-500/20",
+    "gradientFrom": "from-purple-500/5",
+    "gradientTo": "to-purple-500/10",
+    "pricing": "$1,249 per month",
+    "pricingNote": "Part of the Partnership plan: AI content, monthly strategy and every module included.",
+    "features": [
+      {
+        "title": "Multi-platform Posting",
+        "description": "Publish across Instagram, Facebook, LinkedIn, Twitter/X, TikTok, and more from one system."
+      },
+      {
+        "title": "AI Content Creation",
+        "description": "AI-generated captions, hashtags, and content ideas tailored to your brand voice and audience."
+      },
+      {
+        "title": "Engagement Tracking",
+        "description": "Monitor likes, comments, shares, and follower growth with detailed analytics reports."
+      },
+      {
+        "title": "Automated Scheduling",
+        "description": "Smart scheduling that posts at optimal times for maximum engagement on each platform."
+      },
+      {
+        "title": "Content Calendar",
+        "description": "Visual calendar view of all scheduled posts with approval workflows."
+      },
+      {
+        "title": "Competitor Monitoring",
+        "description": "Track competitor activity and industry trends to stay ahead of the curve."
+      }
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "title": "Brand Audit",
+        "description": "We analyze your current social presence, competitors, and target audience to build a strategy."
+      },
+      {
+        "step": 2,
+        "title": "Content Strategy",
+        "description": "We develop a content pillars framework, posting schedule, and brand voice guidelines."
+      },
+      {
+        "step": 3,
+        "title": "System Setup",
+        "description": "We configure automation tools, connect all platforms, and set up AI content pipelines."
+      },
+      {
+        "step": 4,
+        "title": "Content Creation",
+        "description": "AI generates a month of content for your review and approval before anything goes live."
+      },
+      {
+        "step": 5,
+        "title": "Launch & Optimize",
+        "description": "We go live, monitor performance, and continuously refine based on engagement data."
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Will the content sound robotic or generic?",
+        "answer": "No. We train the AI on your brand voice, past content, and industry language. Every post is reviewed and can be edited before publishing. Most followers can't tell the difference."
+      },
+      {
+        "question": "How many platforms can you manage?",
+        "answer": "We support all major platforms — Instagram, Facebook, LinkedIn, Twitter/X, TikTok, Pinterest, and YouTube. There's no limit to how many we can manage simultaneously."
+      },
+      {
+        "question": "Do I still need to be involved?",
+        "answer": "You'll review and approve content before it goes live. Beyond that, the system runs itself. We provide monthly reports and strategy calls to keep things optimized."
+      },
+      {
+        "question": "What if I need to post something urgent?",
+        "answer": "The system supports instant posting alongside scheduled content. You can add time-sensitive posts anytime through your dashboard."
+      }
+    ],
+    "ctaTitle": "PUT YOUR SOCIAL MEDIA ON AUTOPILOT",
+    "ctaDescription": "Consistent posting, growing engagement, zero daily effort.",
+    "heroBadge": "AI-Powered Content Engine",
+    "heroSubtitle": "Daily posting across every platform, powered by AI that understands your brand."
+  },
+  {
+    "slug": "custom-business-dashboard",
+    "title": "Custom Business Dashboard",
+    "shortTitle": "Custom Business Dashboard",
+    "description": "Stop pulling reports manually. We connect your tools, CRM, sales, ads, and analytics, into one view so you always know where your business stands.",
+    "longDescription": "Your business data is scattered across a dozen tools. We bring it all together into one beautiful, real-time dashboard that gives you instant visibility into every metric that matters. No more logging into five different platforms to understand how your business is performing.",
+    "icon": "LayoutDashboard",
+    "color": "text-green-400",
+    "bgColor": "bg-green-950/30",
+    "borderColor": "border-green-500/20",
+    "gradientFrom": "from-green-500/5",
+    "gradientTo": "to-green-500/10",
+    "pricing": "From $848 per project",
+    "pricingNote": "Professional plan ($599) + custom dashboard module ($249).",
+    "features": [
+      {
+        "title": "Real-time Analytics",
+        "description": "Live data from all your connected tools, updated automatically without manual refresh."
+      },
+      {
+        "title": "Tool Integration",
+        "description": "Connects to your CRM, ad platforms, analytics, e-commerce, and any tool with an API."
+      },
+      {
+        "title": "Custom KPIs",
+        "description": "Track the metrics that matter to YOUR business, not generic templates."
+      },
+      {
+        "title": "Unified Data View",
+        "description": "One screen to see your entire business — sales, marketing, operations, and finance."
+      },
+      {
+        "title": "Automated Reports",
+        "description": "Scheduled reports delivered to your inbox or team Slack/Teams channel."
+      },
+      {
+        "title": "Role-based Access",
+        "description": "Different team members see only the data relevant to their role."
+      }
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "title": "Tool Audit",
+        "description": "We inventory all your current tools, data sources, and reporting workflows."
+      },
+      {
+        "step": 2,
+        "title": "KPI Definition",
+        "description": "Together we define the exact metrics, charts, and views you need to run your business."
+      },
+      {
+        "step": 3,
+        "title": "Dashboard Design",
+        "description": "We design a custom dashboard layout optimized for your decision-making process."
+      },
+      {
+        "step": 4,
+        "title": "Integration & Build",
+        "description": "We connect all your data sources and build the dashboard with real-time data feeds."
+      },
+      {
+        "step": 5,
+        "title": "Training & Handover",
+        "description": "We train your team and provide documentation so everyone can use the dashboard effectively."
+      }
+    ],
+    "faqs": [
+      {
+        "question": "What tools can you connect?",
+        "answer": "If it has an API, we can connect it. Common integrations include Google Analytics, Meta Ads, Google Ads, Shopify, Stripe, HubSpot, Salesforce, QuickBooks, and hundreds more."
+      },
+      {
+        "question": "How long does it take to build?",
+        "answer": "Most dashboards are built within 2-3 weeks. More complex setups with many data sources may take 4-5 weeks."
+      },
+      {
+        "question": "Can I customize the dashboard myself?",
+        "answer": "Yes. We build with customization in mind. You can add, remove, and rearrange widgets, create new views, and set up custom alerts."
+      },
+      {
+        "question": "Is my data secure?",
+        "answer": "Absolutely. We use encrypted connections, OAuth authentication, and role-based access controls. Your data never leaves your accounts — we only display it."
+      }
+    ],
+    "ctaTitle": "SEE YOUR ENTIRE BUSINESS AT A GLANCE",
+    "ctaDescription": "One dashboard. Every metric. Zero manual reporting.",
+    "heroBadge": "Unified Business Intelligence",
+    "heroSubtitle": "Connect all your tools into one beautiful, real-time command center."
+  },
+  {
+    "slug": "saas-mvp-development",
+    "title": "SaaS & MVP Development",
+    "shortTitle": "SaaS & MVP Development",
+    "description": "Rapid MVP builds from concept to first working prototype in as little as 1 hour. Scalable architecture built to handle growth from day one.",
+    "longDescription": "Turn your idea into a working product fast. We specialize in rapid MVP development that gets you from concept to launch-ready prototype without the bloat. Built on modern, scalable architecture so your MVP can grow into a full product without rebuilding from scratch.",
+    "icon": "Layers",
+    "color": "text-yellow-400",
+    "bgColor": "bg-yellow-950/30",
+    "borderColor": "border-yellow-500/20",
+    "gradientFrom": "from-yellow-500/5",
+    "gradientTo": "to-yellow-500/10",
+    "pricing": "Custom quote",
+    "pricingNote": "Scoped on a free call. Fixed scope and fixed price once agreed.",
+    "features": [
+      {
+        "title": "1-Hour MVP Prototyping",
+        "description": "Rapid concept validation with working prototypes you can test with real users immediately."
+      },
+      {
+        "title": "Scalable Architecture",
+        "description": "Built on modern tech stacks (Next.js, React, Node.js) designed to scale from 100 to 1M+ users."
+      },
+      {
+        "title": "User-Centric UI/UX",
+        "description": "Beautiful, intuitive interfaces that users love — not clunky MVP compromises."
+      },
+      {
+        "title": "Full Launch Handover",
+        "description": "Complete codebase, documentation, deployment setup, and knowledge transfer."
+      },
+      {
+        "title": "Payment Integration",
+        "description": "Stripe, PayPal, or custom billing — monetize from day one."
+      },
+      {
+        "title": "Analytics & Monitoring",
+        "description": "Built-in usage analytics and error monitoring so you know exactly how users interact."
+      }
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "title": "Idea Workshop",
+        "description": "We map out your core value proposition, target users, and must-have features."
+      },
+      {
+        "step": 2,
+        "title": "Scope & Architecture",
+        "description": "We define the MVP scope, tech stack, and system architecture for scalability."
+      },
+      {
+        "step": 3,
+        "title": "Rapid Development",
+        "description": "Agile sprints with weekly demos so you see progress and can pivot as needed."
+      },
+      {
+        "step": 4,
+        "title": "Testing & Refinement",
+        "description": "User testing, bug fixing, and performance optimization before launch."
+      },
+      {
+        "step": 5,
+        "title": "Launch & Support",
+        "description": "Deployment, monitoring setup, and ongoing support to iterate based on user feedback."
+      }
+    ],
+    "faqs": [
+      {
+        "question": "How fast can you build an MVP?",
+        "answer": "For simple MVPs, we can have a working prototype in 1-2 weeks. More complex products typically take 4-8 weeks. We move fast without cutting corners."
+      },
+      {
+        "question": "What tech stack do you use?",
+        "answer": "We primarily use Next.js, React, TypeScript, and Node.js for the frontend/backend, with PostgreSQL or MongoDB for databases. We choose the stack that best fits your specific needs."
+      },
+      {
+        "question": "Will I own the code?",
+        "answer": "Yes. 100%. You own everything — the codebase, design, database, and all intellectual property. Full handover with documentation."
+      },
+      {
+        "question": "What if I need to add features later?",
+        "answer": "We build with extensibility in mind. The architecture is designed so new features can be added without rebuilding. We also offer ongoing development support."
+      }
+    ],
+    "ctaTitle": "TURN YOUR IDEA INTO A REAL PRODUCT",
+    "ctaDescription": "From concept to launch-ready MVP. Fast, scalable, and built to grow.",
+    "heroBadge": "From Concept to Launch",
+    "heroSubtitle": "Rapid MVP development that gets your product to market without the bloat."
+  },
+  {
+    "slug": "shopify-theme-development",
+    "title": "Shopify Theme Development",
+    "shortTitle": "Shopify Theme Development",
+    "description": "100% custom Shopify themes that load fast, look great, and are designed specifically to turn browsers into buyers.",
+    "longDescription": "Your Shopify store deserves more than a template. We design and develop custom Shopify themes that are blazing fast, conversion-optimized, and uniquely yours. From store architecture to custom features, we build Shopify experiences that drive sales and scale with your growth.",
+    "icon": "ShoppingBag",
+    "color": "text-primary-400",
+    "bgColor": "bg-primary-950/30",
+    "borderColor": "border-primary-500/20",
+    "gradientFrom": "from-primary-500/5",
+    "gradientTo": "to-primary-500/10",
+    "pricing": "From $599 per project",
+    "pricingNote": "Professional plan. Add catalog upload, integrations and more as modules.",
+    "features": [
+      {
+        "title": "Custom Theme Design",
+        "description": "100% unique design tailored to your brand — no templates, no cookie-cutter solutions."
+      },
+      {
+        "title": "Sub-3s Load Times",
+        "description": "Optimized for speed so customers don't bounce before your products even load."
+      },
+      {
+        "title": "Conversion-Focused",
+        "description": "Every element designed to guide visitors toward purchase — from product pages to checkout."
+      },
+      {
+        "title": "SEO-Optimized",
+        "description": "Clean code, structured data, and optimized metadata built into every page."
+      },
+      {
+        "title": "Mobile-First Design",
+        "description": "Over 70% of Shopify traffic is mobile. We design for mobile first, desktop second."
+      },
+      {
+        "title": "Custom Features",
+        "description": "Product customizers, subscription flows, bundle builders, and any custom functionality you need."
+      }
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "title": "Brand & Store Audit",
+        "description": "We analyze your brand, products, competitors, and current store performance."
+      },
+      {
+        "step": 2,
+        "title": "UX/UI Design",
+        "description": "Custom wireframes and high-fidelity designs for approval before any code is written."
+      },
+      {
+        "step": 3,
+        "title": "Theme Development",
+        "description": "We build your custom Shopify theme with Liquid, HTML, CSS, and JavaScript."
+      },
+      {
+        "step": 4,
+        "title": "Testing & Optimization",
+        "description": "Cross-browser testing, mobile optimization, speed testing, and conversion tuning."
+      },
+      {
+        "step": 5,
+        "title": "Launch & Training",
+        "description": "Store launch, team training on theme customization, and 30 days of post-launch support."
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Can you migrate my existing store to a custom theme?",
+        "answer": "Yes. We handle full migrations — products, collections, customers, orders, and all content. Zero downtime during the transition."
+      },
+      {
+        "question": "How long does a custom theme take?",
+        "answer": "Most custom themes are designed and developed in 3-5 weeks. More complex stores with custom features may take 6-8 weeks."
+      },
+      {
+        "question": "Will I be able to update the theme myself?",
+        "answer": "Absolutely. We build with Shopify's theme editor in mind. You'll be able to update content, colors, and layouts without touching code."
+      },
+      {
+        "question": "Do you work with Shopify Plus?",
+        "answer": "Yes. We work with all Shopify plans including Plus, and can leverage Plus-exclusive features like custom checkout and advanced scripting."
+      }
+    ],
+    "ctaTitle": "BUILD A STORE THAT SELLS",
+    "ctaDescription": "Custom Shopify themes designed to convert browsers into buyers.",
+    "heroBadge": "Custom Shopify Themes",
+    "heroSubtitle": "Blazing fast, conversion-optimized, and 100% unique to your brand."
+  },
+  {
+    "slug": "custom-nextjs-development",
+    "title": "Custom Next.js Development",
+    "shortTitle": "Custom Next.js Development",
+    "description": "Premium, lightning-fast websites that rank higher and load faster. Production-ready sites delivered in as little as 2 days.",
+    "longDescription": "Your website is your most important digital asset. We build premium Next.js websites that are blazing fast, SEO-optimized, and designed to convert. With server-side rendering, perfect Core Web Vitals, and modern architecture, your site will outperform the competition in both speed and search rankings.",
+    "icon": "Globe",
+    "color": "text-red-400",
+    "bgColor": "bg-red-950/30",
+    "borderColor": "border-red-500/20",
+    "gradientFrom": "from-red-500/5",
+    "gradientTo": "to-red-500/10",
+    "pricing": "From $599 per project",
+    "pricingNote": "Professional plan. Server-side rendered, SEO-ready and production-grade.",
+    "features": [
+      {
+        "title": "2-Day Production Turnaround",
+        "description": "For standard sites, we can go from design to live deployment in as little as 2 days."
+      },
+      {
+        "title": "SEO Excellence",
+        "description": "Server-side rendering, structured data, optimized metadata, and perfect Core Web Vitals."
+      },
+      {
+        "title": "Dynamic Functionality",
+        "description": "API routes, database integrations, user authentication, and any custom feature you need."
+      },
+      {
+        "title": "Fully Responsive",
+        "description": "Pixel-perfect on every device — from mobile phones to ultrawide monitors."
+      },
+      {
+        "title": "CMS Integration",
+        "description": "Headless CMS (Sanity, Contentful, Strapi) for easy content management."
+      },
+      {
+        "title": "Performance Optimized",
+        "description": "Image optimization, code splitting, caching, and CDN delivery for sub-second load times."
+      }
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "title": "Requirements & Strategy",
+        "description": "We define your goals, target audience, content structure, and technical requirements."
+      },
+      {
+        "step": 2,
+        "title": "Design & Prototype",
+        "description": "Custom UI/UX design with interactive prototypes for your review and approval."
+      },
+      {
+        "step": 3,
+        "title": "Next.js Development",
+        "description": "We build your site with Next.js 14, leveraging App Router, Server Components, and API routes."
+      },
+      {
+        "step": 4,
+        "title": "Testing & Optimization",
+        "description": "Cross-browser testing, performance auditing, SEO validation, and accessibility checks."
+      },
+      {
+        "step": 5,
+        "title": "Deployment & Handover",
+        "description": "Deployed to Cloudflare or your preferred platform with full documentation and training."
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Why Next.js instead of WordPress or other platforms?",
+        "answer": "Next.js gives you superior performance (server-side rendering), better SEO, faster load times, and complete flexibility. It's the modern standard for professional websites that need to perform."
+      },
+      {
+        "question": "How fast can you deliver?",
+        "answer": "Standard marketing sites can be live in 2-5 days. More complex sites with custom functionality typically take 2-4 weeks."
+      },
+      {
+        "question": "Can you redesign my existing website?",
+        "answer": "Yes. We can rebuild your existing site in Next.js for dramatically improved performance, SEO, and user experience."
+      },
+      {
+        "question": "What about ongoing maintenance?",
+        "answer": "We offer ongoing maintenance and support plans. Next.js sites require minimal maintenance, but we're here when you need updates, new features, or optimizations."
+      }
+    ],
+    "ctaTitle": "BUILD A WEBSITE THAT OUTPERFORMS",
+    "ctaDescription": "Lightning-fast, SEO-optimized, and designed to convert.",
+    "heroBadge": "Premium Next.js Websites",
+    "heroSubtitle": "Blazing fast, SEO-optimized professional websites delivered in as little as 2 days."
+  }
+]

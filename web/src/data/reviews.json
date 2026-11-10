@@ -1,0 +1,35 @@
+[
+  {
+    "id": "rev-1",
+    "clientName": "Marcus Vance",
+    "role": "Founder & Managing Director",
+    "company": "Apex Global Automotive",
+    "country": "United Kingdom",
+    "rating": 5,
+    "quote": "We had tried two other agencies before Driven IT Solution. Within four weeks we had a platform we were genuinely proud of — and our qualified inquiry rate doubled in the first month.",
+    "avatar": "MV",
+    "metrics": "+140% Conversion Rate"
+  },
+  {
+    "id": "rev-2",
+    "clientName": "Elena Rostova",
+    "role": "Head of Growth",
+    "company": "Synthetix AI Systems",
+    "country": "United States",
+    "rating": 5,
+    "quote": "The custom Meta conversion CAPI telemetry and audience modeling designed by Driven IT Solution slashes our CAC across all active ad campaigns. Completely hands-off and profitable.",
+    "avatar": "ER",
+    "metrics": "4.8x Meta ROAS"
+  },
+  {
+    "id": "rev-3",
+    "clientName": "Tariq Al-Mansoor",
+    "role": "CEO",
+    "company": "Oasis Cloud Logistics",
+    "country": "United Arab Emirates",
+    "rating": 5,
+    "quote": "From the custom Next.js web application to our full corporate brand identity, Driven IT Solution gave us an elite digital presence that instantly commands authority with enterprise clients.",
+    "avatar": "TM",
+    "metrics": "99 Core Web Vitals"
+  }
+]

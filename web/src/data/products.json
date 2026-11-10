@@ -1,0 +1,34 @@
+[
+  {
+    "id": "dalil-os",
+    "name": "Dalil OS",
+    "banglaName": "দলিল OS",
+    "tag": "SaaS · Legal-tech · Bangladesh",
+    "image": "/products/dalil-os.webp",
+    "description": "Deed-writing software for deed writers and computer operators. Type each detail once — the deed, schedule and hand sketch fill themselves, ready to print on stamp paper.",
+    "features": [
+      "Automated Deed Drafting",
+      "Dynamic Land Schedule",
+      "Instant Print-Ready Formatting"
+    ],
+    "liveUrl": "https://dalilos.com",
+    "status": "Active Product",
+    "order": 1
+  },
+  {
+    "id": "cafe-os",
+    "name": "Cafe OS",
+    "banglaName": "",
+    "tag": "SaaS · Restaurants & Cafés",
+    "image": "/products/cafe-os.png",
+    "description": "Ordering, kitchen, inventory, staff and money in one real-time operational system for cafés, cloud kitchens, and modern dining establishments.",
+    "features": [
+      "Live Kitchen Display (KDS)",
+      "Real-time Table & Inventory Sync",
+      "Cloud POS & Analytics"
+    ],
+    "liveUrl": "https://cafeos.drivenitsolution.com",
+    "status": "Active Product",
+    "order": 2
+  }
+]

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1880 404" role="img" aria-label="Driven IT">
+  <defs>
+    <linearGradient id="ditMGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#00E5FF"/>
+      <stop offset="0.5" stop-color="#02B8FA"/>
+      <stop offset="1" stop-color="#0277E4"/>
+    </linearGradient>
+    <linearGradient id="ditRibbon1" x1="0" y1="0" x2="0.6" y2="1">
+      <stop offset="0" stop-color="#00E5FF"/>
+      <stop offset="0.5" stop-color="#02A7F4"/>
+      <stop offset="1" stop-color="#027BE6"/>
+    </linearGradient>
+    <linearGradient id="ditRibbon2" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#0279E5"/>
+      <stop offset="0.5" stop-color="#02B8FA"/>
+      <stop offset="1" stop-color="#00E5FF"/>
+    </linearGradient>
+    <linearGradient id="ditItGrad" x1="0" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#00E5FF"/>
+      <stop offset="0.6" stop-color="#02B8FA"/>
+      <stop offset="1" stop-color="#0277E4"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 3D Ribbon 'D' Monogram -->
+  <g id="monogram">
+    <!-- Pillar -->
+    <rect x="60" y="38" width="96" height="328" rx="26" fill="url(#ditRibbon1)"/>
+    <!-- Outer Curved Loop -->
+    <path d="M 115 38 C 290 38 440 108 440 202 C 440 296 290 366 115 366 C 185 366 335 308 335 202 C 335 96 185 38 115 38 Z" fill="url(#ditRibbon2)"/>
+    <!-- Inner Dark Depth Fold -->
+    <path d="M 160 116 C 248 116 310 154 310 202 C 310 250 248 288 160 288 Z" fill="#040e1a" opacity="0.92"/>
+    <!-- Inner Cyan Shading Accent -->
+    <path d="M 150 126 C 225 136 280 166 280 202 C 280 238 225 268 150 278 Z" fill="url(#ditRibbon1)" opacity="0.55"/>
+    <!-- Specular Highlight Line -->
+    <path d="M 115 40 C 285 40 432 110 432 202 C 432 294 285 364 115 364" stroke="#00E5FF" stroke-width="3.5" stroke-linecap="round" opacity="0.45" fill="none"/>
+  </g>
+
+  <!-- Brand Typography -->
+  <!-- RIVEN in Crisp Bold White -->
+  <text x="495" y="298" fill="#FFFFFF" font-family="-apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', Segoe UI, Roboto, sans-serif" font-size="285" font-weight="900" letter-spacing="-0.035em">RIVEN</text>
+
+  <!-- IT in Electric Cyan Gradient -->
+  <text x="1455" y="298" fill="url(#ditItGrad)" font-family="-apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', Segoe UI, Roboto, sans-serif" font-size="285" font-weight="900" letter-spacing="-0.02em">IT</text>
+</svg>

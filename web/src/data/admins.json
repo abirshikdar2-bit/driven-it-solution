@@ -1,0 +1,16 @@
+{
+  "googleClientId": "",
+  "allowAnyGoogleAccount": true,
+  "users": [
+    {
+      "id": "usr-abir-001",
+      "name": "Abir Shikdar",
+      "email": "abirshikdar.official@gmail.com",
+      "picture": "https://api.dicebear.com/7.x/bottts/svg?seed=AbirAdmin",
+      "role": "super_admin",
+      "status": "active",
+      "createdAt": "2026-11-10T18:00:00.000Z",
+      "lastLogin": "2026-11-10T18:10:00.000Z"
+    }
+  ]
+}

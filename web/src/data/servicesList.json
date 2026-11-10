@@ -1,0 +1,120 @@
+[
+  {
+    "id": "srv-1",
+    "slug": "graphic-designing",
+    "num": "/001/",
+    "title": "Graphic Designing",
+    "shortTitle": "Graphic Designing",
+    "icon": "Palette",
+    "pricing": "From $399 per project",
+    "description": "High-impact brand identity, bespoke marketing collaterals, and premium visual assets that command immediate authority and elevate customer trust.",
+    "features": [
+      "Brand Identity & Logos",
+      "Social Media Creatives",
+      "Marketing & Print Collateral",
+      "UI/UX & Figma Prototypes"
+    ],
+    "order": 1
+  },
+  {
+    "id": "srv-2",
+    "slug": "web-design-and-development",
+    "num": "/002/",
+    "title": "Web Design & Development",
+    "shortTitle": "Web Design & Development",
+    "icon": "Code2",
+    "pricing": "From $599 per project",
+    "description": "Modern, lightning-fast, and responsive websites engineered to convert visitors into paying clients with seamless cross-device performance.",
+    "features": [
+      "Custom Responsive UI/UX",
+      "Full-Stack Architecture",
+      "Speed & SEO Optimization",
+      "CMS & E-Commerce Integration"
+    ],
+    "order": 2
+  },
+  {
+    "id": "srv-3",
+    "slug": "ai-and-meta-ads-expert",
+    "num": "/003/",
+    "title": "AI & Meta Ads Expert",
+    "shortTitle": "AI & Meta Ads Expert",
+    "icon": "Target",
+    "pricing": "From $499 per month",
+    "description": "Data-driven ad campaigns engineered with AI audience intelligence, Server-Side CAPI tracking, and aggressive creative testing to scale your ROAS.",
+    "features": [
+      "Meta CAPI Server Tracking",
+      "AI Audience Targeting",
+      "High-ROAS Creative Testing",
+      "Conversion Rate Optimization"
+    ],
+    "order": 3
+  },
+  {
+    "id": "srv-4",
+    "slug": "digital-marketing",
+    "num": "/004/",
+    "title": "Digital Marketing",
+    "shortTitle": "Digital Marketing",
+    "icon": "Megaphone",
+    "pricing": "From $699 per month",
+    "description": "Comprehensive full-funnel digital marketing strategies spanning search, social, and automated email workflows designed to compound your market share.",
+    "features": [
+      "Full-Funnel Growth Strategy",
+      "Multi-Channel Ad Management",
+      "Automated Email Sequences",
+      "Data & Analytics Telemetry"
+    ],
+    "order": 4
+  },
+  {
+    "id": "srv-5",
+    "slug": "custom-business-dashboard",
+    "num": "/005/",
+    "title": "Custom Business Dashboard",
+    "shortTitle": "Custom Business Dashboard",
+    "icon": "LayoutDashboard",
+    "pricing": "From $599 per project",
+    "description": "Tailored internal operations dashboards, KPI trackers, and administrative consoles that transform complex business data into actionable executive insights.",
+    "features": [
+      "Role-Based Access Control",
+      "Real-Time Data Visualizations",
+      "Automated PDF & Excel Reports",
+      "Third-Party API Integrations"
+    ],
+    "order": 5
+  },
+  {
+    "id": "srv-6",
+    "slug": "custom-nextjs-development",
+    "num": "/006/",
+    "title": "Custom Next.js Development",
+    "shortTitle": "Custom Next.js Development",
+    "icon": "Globe",
+    "pricing": "From $799 per project",
+    "description": "Enterprise-grade Next.js applications built with React Server Components, Turbopack, and edge runtime capabilities for unmatched velocity and reliability.",
+    "features": [
+      "Next.js App Router Architecture",
+      "RSC & Edge Streaming",
+      "Strict TypeScript Codebases",
+      "Enterprise CI/CD Pipelines"
+    ],
+    "order": 6
+  },
+  {
+    "id": "srv-1794249947983",
+    "num": "/007/",
+    "title": "Mobile application development.",
+    "shortTitle": "Mobile application development.",
+    "icon": "Code2",
+    "pricing": "From $599 per project",
+    "description": "Mobile application development.",
+    "features": [
+      "Bespoke Architecture",
+      "High Velocity Delivery",
+      "SEO & Performance 95+"
+    ],
+    "slug": "mobile-application-development-",
+    "order": 7
+  }
+]

@@ -1,0 +1,113 @@
+[
+  {
+    "id": "rezhone-hossain",
+    "name": "Rezhone Hossain",
+    "role": "CEO & Digital Marketer",
+    "company": "Driven IT Solution",
+    "department": "Executive Leadership",
+    "photo": "/images/rezhone-ceo.jpg",
+    "tagline": "Your Growth Our Mission",
+    "quote": "Together Towards a Smarter Digital Future",
+    "bio": "Leading Driven IT Solution with visionary strategy, performance digital marketing, and sustainable technology roadmaps that accelerate global business expansion.",
+    "skills": [
+      "Digital Marketing",
+      "Brand Strategy",
+      "Executive Leadership",
+      "Growth Architecture",
+      "Meta Ecosystem"
+    ],
+    "experience": "5+ Years Experience",
+    "projectsCompleted": 130,
+    "rating": "4.9/5",
+    "socials": {
+      "linkedin": "https://linkedin.com",
+      "facebook": "https://facebook.com",
+      "email": "rezhone@drivenitsolution.com"
+    },
+    "isHighlighted": true,
+    "order": 1
+  },
+  {
+    "id": "jakia-sultana",
+    "name": "Jakia Sultana",
+    "role": "Co-founder, Web Design & Developer",
+    "company": "Driven IT Solution",
+    "department": "Engineering & UI/UX",
+    "photo": "/images/jakia-cofounder.jpg",
+    "tagline": "Dream, Plan, Develop, Grow",
+    "quote": "Crafting modern, accessible, and high-performance digital experiences.",
+    "bio": "Co-founder spearheading web engineering and digital product design. Specialized in cutting-edge Next.js, scalable full-stack applications, and interactive user experiences.",
+    "skills": [
+      "Next.js & React",
+      "Tailwind CSS",
+      "Full-Stack Development",
+      "UI/UX Architecture",
+      "Modern Web Apps"
+    ],
+    "experience": "4+ Years Experience",
+    "projectsCompleted": 95,
+    "rating": "5.0/5",
+    "socials": {
+      "github": "https://github.com",
+      "linkedin": "https://linkedin.com",
+      "email": "jakia@drivenitsolution.com"
+    },
+    "isHighlighted": true,
+    "order": 2
+  },
+  {
+    "id": "sharafat-islam",
+    "name": "Sharafat Islam",
+    "role": "Graphic Designer",
+    "company": "Driven IT Solution",
+    "department": "Creative Studio",
+    "photo": "/uploads/teacher-1794251914778-7bb390cf-024a-4576-aff1-ed415a400919.png",
+    "tagline": "Visual Identity and Aesthetic Direction",
+    "quote": "Transforming brand concepts into unforgettable visual masterpieces.",
+    "bio": "Lead Graphic Designer driving visual aesthetics, comprehensive branding kits, UI graphics, and marketing collaterals with obsessive attention to design detail.",
+    "skills": [
+      "Brand Identity Design",
+      "Figma",
+      "Adobe Suite",
+      "Vector Illustrations"
+    ],
+    "experience": "3+ Years Experience",
+    "projectsCompleted": 180,
+    "rating": "4.9/5",
+    "socials": {
+      "behance": "https://behance.net",
+      "facebook": "https://facebook.com",
+      "email": "sharafat@drivenitsolution.com"
+    },
+    "isHighlighted": true,
+    "order": 3
+  },
+  {
+    "id": "irfan-sadik",
+    "name": "Irfan Sadik",
+    "role": "AI & Meta Ads Expert",
+    "company": "Driven IT Solution",
+    "department": "AI & Performance Marketing",
+    "photo": "/images/team/irfan.svg",
+    "tagline": "AI Automation & High-Converting Funnels",
+    "quote": "Harnessing the power of predictive AI and laser-targeted Meta advertising algorithms.",
+    "bio": "AI & Meta Advertising Specialist maximizing ROI through deep audience intelligence, automated ad funnels, behavioral retargeting, and continuous conversion rate optimization.",
+    "skills": [
+      "Meta Ads Manager",
+      "AI Marketing Funnels",
+      "Conversion API (CAPI)",
+      "Audience Research",
+      "ROAS Optimization"
+    ],
+    "experience": "3+ Years Experience",
+    "projectsCompleted": 140,
+    "rating": "4.9/5",
+    "socials": {
+      "linkedin": "https://linkedin.com",
+      "facebook": "https://facebook.com",
+      "email": "irfan@drivenitsolution.com"
+    },
+    "isHighlighted": true,
+    "order": 4
+  }
+]

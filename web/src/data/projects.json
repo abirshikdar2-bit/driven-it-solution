@@ -1,0 +1,42 @@
+[
+  {
+    "id": "proj-1",
+    "num": "/001/",
+    "category": "Web Design & Development",
+    "title": "Nexus Enterprise Platform",
+    "description": "Next.js 16 + Supabase real-time cloud aggregator engineered with automated data telemetry and dynamic CMS infrastructure.",
+    "image": "/images/projects/web-development-showcase.webp",
+    "liveUrl": "",
+    "isFeatured": true
+  },
+  {
+    "id": "proj-2",
+    "num": "/002/",
+    "category": "AI & Meta Ad Expert",
+    "title": "Velocita Automotive Scale",
+    "description": "High-converting sales funnel with Meta Conversions API telemetry, AI audience optimization, and verified ROAS multipliers.",
+    "image": "/images/projects/meta-ads-showcase.webp",
+    "liveUrl": "",
+    "isFeatured": true
+  },
+  {
+    "id": "proj-3",
+    "num": "/003/",
+    "category": "Graphics Designing",
+    "title": "Caribbrew Artisan Brand Identity",
+    "description": "Comprehensive visual brand system, packaging design, typography hierarchies, and luxury digital ecommerce experience.",
+    "image": "/images/projects/graphic-design-showcase.webp",
+    "liveUrl": "",
+    "isFeatured": true
+  },
+  {
+    "id": "proj-4",
+    "num": "/004/",
+    "category": "Digital Marketing",
+    "title": "Bellevill Heritage Interiors",
+    "description": "Omnichannel B2B brand experience and automated lead capture pipeline built around architectural excellence and high-ticket conversion.",
+    "image": "/images/projects/digital-marketing-showcase.webp",
+    "liveUrl": "",
+    "isFeatured": true
+  }
+]
