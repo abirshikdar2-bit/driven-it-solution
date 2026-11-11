@@ -22,7 +22,7 @@ import defaultProducts from '@/data/products.json';
 import defaultReviews from '@/data/reviews.json';
 import defaultSettings from '@/data/settings.json';
 
-import { subscribeToDataChanges } from '@/lib/syncEvents';
+import { subscribeToDataChanges, getLocalCache, saveLocalCache } from '@/lib/syncEvents';
 
 export default function ClientPage({
   initialTeam = null,
@@ -32,22 +32,59 @@ export default function ClientPage({
   initialReviews = null,
   initialSettings = null
 }) {
-  const [team, setTeam] = useState(
-    Array.isArray(initialTeam) && initialTeam.length > 0 ? initialTeam : defaultTeam
-  );
-  const [projects, setProjects] = useState(
-    Array.isArray(initialProjects) && initialProjects.length > 0 ? initialProjects : defaultProjects
-  );
-  const [services, setServices] = useState(
-    Array.isArray(initialServices) && initialServices.length > 0 ? initialServices : defaultServices
-  );
-  const [products, setProducts] = useState(
-    Array.isArray(initialProducts) && initialProducts.length > 0 ? initialProducts : defaultProducts
-  );
-  const [reviews, setReviews] = useState(
-    Array.isArray(initialReviews) && initialReviews.length > 0 ? initialReviews : defaultReviews
-  );
-  const [settings, setSettings] = useState(initialSettings || defaultSettings);
+  const [team, setTeam] = useState(() => {
+    if (Array.isArray(initialTeam) && initialTeam.length > 0) return initialTeam;
+    if (typeof window !== 'undefined') {
+      const cached = getLocalCache('team');
+      if (Array.isArray(cached) && cached.length > 0) return cached;
+    }
+    return defaultTeam;
+  });
+
+  const [projects, setProjects] = useState(() => {
+    if (Array.isArray(initialProjects) && initialProjects.length > 0) return initialProjects;
+    if (typeof window !== 'undefined') {
+      const cached = getLocalCache('projects');
+      if (Array.isArray(cached) && cached.length > 0) return cached;
+    }
+    return defaultProjects;
+  });
+
+  const [services, setServices] = useState(() => {
+    if (Array.isArray(initialServices) && initialServices.length > 0) return initialServices;
+    if (typeof window !== 'undefined') {
+      const cached = getLocalCache('services');
+      if (Array.isArray(cached) && cached.length > 0) return cached;
+    }
+    return defaultServices;
+  });
+
+  const [products, setProducts] = useState(() => {
+    if (Array.isArray(initialProducts) && initialProducts.length > 0) return initialProducts;
+    if (typeof window !== 'undefined') {
+      const cached = getLocalCache('products');
+      if (Array.isArray(cached) && cached.length > 0) return cached;
+    }
+    return defaultProducts;
+  });
+
+  const [reviews, setReviews] = useState(() => {
+    if (Array.isArray(initialReviews) && initialReviews.length > 0) return initialReviews;
+    if (typeof window !== 'undefined') {
+      const cached = getLocalCache('reviews');
+      if (Array.isArray(cached) && cached.length > 0) return cached;
+    }
+    return defaultReviews;
+  });
+
+  const [settings, setSettings] = useState(() => {
+    if (initialSettings) return initialSettings;
+    if (typeof window !== 'undefined') {
+      const cached = getLocalCache('settings');
+      if (cached && cached.whatsappNumber) return cached;
+    }
+    return defaultSettings;
+  });
 
   // Granular fetchers with strict zero-cache policy
   const refreshTeam = useCallback(async () => {
@@ -56,7 +93,13 @@ export default function ClientPage({
       if (res.ok) {
         const json = await res.json();
         if (json.success && Array.isArray(json.data) && json.data.length > 0) {
-          setTeam(json.data);
+          const cached = getLocalCache('team');
+          if (Array.isArray(cached) && cached.length > json.data.length) {
+            setTeam(cached);
+          } else {
+            setTeam(json.data);
+            saveLocalCache('team', json.data);
+          }
         }
       }
     } catch (e) {
@@ -70,7 +113,13 @@ export default function ClientPage({
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
-          setProjects(data);
+          const cached = getLocalCache('projects');
+          if (Array.isArray(cached) && cached.length > data.length) {
+            setProjects(cached);
+          } else {
+            setProjects(data);
+            saveLocalCache('projects', data);
+          }
         }
       }
     } catch (e) {
@@ -84,7 +133,13 @@ export default function ClientPage({
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
-          setServices(data);
+          const cached = getLocalCache('services');
+          if (Array.isArray(cached) && cached.length > data.length) {
+            setServices(cached);
+          } else {
+            setServices(data);
+            saveLocalCache('services', data);
+          }
         }
       }
     } catch (e) {
@@ -98,7 +153,13 @@ export default function ClientPage({
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
-          setProducts(data);
+          const cached = getLocalCache('products');
+          if (Array.isArray(cached) && cached.length > data.length) {
+            setProducts(cached);
+          } else {
+            setProducts(data);
+            saveLocalCache('products', data);
+          }
         }
       }
     } catch (e) {
@@ -112,7 +173,13 @@ export default function ClientPage({
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
-          setReviews(data);
+          const cached = getLocalCache('reviews');
+          if (Array.isArray(cached) && cached.length > data.length) {
+            setReviews(cached);
+          } else {
+            setReviews(data);
+            saveLocalCache('reviews', data);
+          }
         }
       }
     } catch (e) {
@@ -127,6 +194,7 @@ export default function ClientPage({
         const data = await res.json();
         if (data && data.whatsappNumber) {
           setSettings(data);
+          saveLocalCache('settings', data);
         }
       }
     } catch (e) {
@@ -145,6 +213,19 @@ export default function ClientPage({
 
   // Initial client verification on mount
   useEffect(() => {
+    const cachedServices = getLocalCache('services');
+    if (Array.isArray(cachedServices) && cachedServices.length > 0) setServices(cachedServices);
+    const cachedTeam = getLocalCache('team');
+    if (Array.isArray(cachedTeam) && cachedTeam.length > 0) setTeam(cachedTeam);
+    const cachedProjects = getLocalCache('projects');
+    if (Array.isArray(cachedProjects) && cachedProjects.length > 0) setProjects(cachedProjects);
+    const cachedProducts = getLocalCache('products');
+    if (Array.isArray(cachedProducts) && cachedProducts.length > 0) setProducts(cachedProducts);
+    const cachedReviews = getLocalCache('reviews');
+    if (Array.isArray(cachedReviews) && cachedReviews.length > 0) setReviews(cachedReviews);
+    const cachedSettings = getLocalCache('settings');
+    if (cachedSettings && cachedSettings.whatsappNumber) setSettings(cachedSettings);
+
     refreshAll();
   }, [refreshAll]);
 
@@ -152,13 +233,27 @@ export default function ClientPage({
   useEffect(() => {
     const unsubscribe = subscribeToDataChanges((event) => {
       const entity = event.entity || 'all';
-      if (entity === 'team') refreshTeam();
-      else if (entity === 'projects') refreshProjects();
-      else if (entity === 'services') refreshServices();
-      else if (entity === 'products') refreshProducts();
-      else if (entity === 'reviews') refreshReviews();
-      else if (entity === 'settings') refreshSettings();
-      else refreshAll();
+      if (entity === 'team') {
+        if (event.meta?.data && Array.isArray(event.meta.data)) setTeam(event.meta.data);
+        else refreshTeam();
+      } else if (entity === 'projects') {
+        if (event.meta?.data && Array.isArray(event.meta.data)) setProjects(event.meta.data);
+        else refreshProjects();
+      } else if (entity === 'services') {
+        if (event.meta?.data && Array.isArray(event.meta.data)) setServices(event.meta.data);
+        else refreshServices();
+      } else if (entity === 'products') {
+        if (event.meta?.data && Array.isArray(event.meta.data)) setProducts(event.meta.data);
+        else refreshProducts();
+      } else if (entity === 'reviews') {
+        if (event.meta?.data && Array.isArray(event.meta.data)) setReviews(event.meta.data);
+        else refreshReviews();
+      } else if (entity === 'settings') {
+        if (event.meta?.data) setSettings(event.meta.data);
+        else refreshSettings();
+      } else {
+        refreshAll();
+      }
     });
 
     // 8-second background heartbeat when tab is active (for cross-device / multi-admin edits)

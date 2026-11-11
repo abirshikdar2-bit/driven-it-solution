@@ -5,6 +5,31 @@
 const SYNC_CHANNEL_NAME = 'driven_it_live_sync_v1';
 const SYNC_STORAGE_KEY = 'driven_it_sync_timestamp';
 
+export function saveLocalCache(entity, data) {
+  if (typeof window === 'undefined' || !entity || !data) return;
+  try {
+    localStorage.setItem(`driven_it_cache_${entity}`, JSON.stringify(data));
+  } catch (e) {
+    console.warn(`Local cache write error for ${entity}:`, e);
+  }
+}
+
+export function getLocalCache(entity) {
+  if (typeof window === 'undefined' || !entity) return null;
+  try {
+    const raw = localStorage.getItem(`driven_it_cache_${entity}`);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) ? parsed.length > 0 : parsed && typeof parsed === 'object') {
+        return parsed;
+      }
+    }
+  } catch (e) {
+    console.warn(`Local cache read error for ${entity}:`, e);
+  }
+  return null;
+}
+
 let sharedBroadcastChannel = null;
 
 function getBroadcastChannel() {
@@ -24,10 +49,14 @@ function getBroadcastChannel() {
 /**
  * Broadcast an update event when an entity is created, edited, or deleted in Admin.
  * @param {string} entity - 'team' | 'projects' | 'services' | 'products' | 'reviews' | 'settings' | 'users' | 'all'
- * @param {object} [meta] - Optional additional metadata
+ * @param {object} [meta] - Optional additional metadata or data payload { data: [...] }
  */
 export function broadcastDataChange(entity = 'all', meta = {}) {
   const timestamp = Date.now();
+  if (meta && meta.data) {
+    saveLocalCache(entity, meta.data);
+  }
+
   const payload = {
     entity,
     timestamp,

@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import CornerBrackets, { SectionBadge } from './CornerBrackets';
 import initialServices from '@/data/servicesList.json';
-import { subscribeToDataChanges } from '@/lib/syncEvents';
+import { subscribeToDataChanges, getLocalCache, saveLocalCache } from '@/lib/syncEvents';
 
 const iconMap = {
   Palette,
@@ -33,11 +33,14 @@ const iconMap = {
 };
 
 export default function WhatYouGet({ services: propServices = null }) {
-  const [services, setServices] = useState(
-    Array.isArray(propServices) && propServices.length > 0
-      ? propServices
-      : Array.isArray(initialServices) ? initialServices : []
-  );
+  const [services, setServices] = useState(() => {
+    if (Array.isArray(propServices) && propServices.length > 0) return propServices;
+    if (typeof window !== 'undefined') {
+      const cached = getLocalCache('services');
+      if (Array.isArray(cached) && cached.length > 0) return cached;
+    }
+    return Array.isArray(initialServices) ? initialServices : [];
+  });
   const [activeIdx, setActiveIdx] = useState(0);
   const hoverTimeoutRef = useRef(null);
 
@@ -47,7 +50,13 @@ export default function WhatYouGet({ services: propServices = null }) {
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
-          setServices(data);
+          const cached = getLocalCache('services');
+          if (Array.isArray(cached) && cached.length > data.length) {
+            setServices(cached);
+          } else {
+            setServices(data);
+            saveLocalCache('services', data);
+          }
         }
       }
     } catch (err) {
@@ -64,10 +73,19 @@ export default function WhatYouGet({ services: propServices = null }) {
 
   // Direct real-time subscription for immediate cross-tab updates
   useEffect(() => {
+    const cached = getLocalCache('services');
+    if (Array.isArray(cached) && cached.length > 0) {
+      setServices(cached);
+    }
     loadServices();
     const unsubscribe = subscribeToDataChanges((event) => {
       if (event.entity === 'services' || event.entity === 'all') {
-        loadServices();
+        if (event.meta?.data && Array.isArray(event.meta.data) && event.meta.data.length > 0) {
+          setServices(event.meta.data);
+          saveLocalCache('services', event.meta.data);
+        } else {
+          loadServices();
+        }
       }
     });
     return () => unsubscribe();
