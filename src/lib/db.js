@@ -1,13 +1,34 @@
 // src/lib/db.js
 // Unified Data Layer for Driven IT Solution
-// Automatically supports Supabase PostgreSQL with seamless fallback to JSON files
+// Automatically supports Supabase PostgreSQL with seamless fallback to bundled JSON data
 
 import fs from 'fs';
 import path from 'path';
 import { supabase, isSupabaseConfigured } from './supabase';
 
+import initialTeam from '@/data/team.json';
+import initialProjects from '@/data/projects.json';
+import initialServices from '@/data/servicesList.json';
+import initialProducts from '@/data/products.json';
+import initialReviews from '@/data/reviews.json';
+import initialSettings from '@/data/settings.json';
+import initialAdmins from '@/data/admins.json';
+
+const BUNDLED_DATA = {
+  'team.json': initialTeam,
+  'projects.json': initialProjects,
+  'servicesList.json': initialServices,
+  'products.json': initialProducts,
+  'reviews.json': initialReviews,
+  'settings.json': initialSettings,
+  'admins.json': initialAdmins
+};
+
 const DATA_DIR = path.join(process.cwd(), 'src', 'data');
 const TMP_DIR = path.join('/tmp', 'driven_it_data');
+
+// In-memory runtime cache for serverless environments
+const MEMORY_CACHE = {};
 
 function ensureTmpDir() {
   try {
@@ -18,31 +39,44 @@ function ensureTmpDir() {
 }
 
 /**
- * Read data safely from JSON file, with serverless /tmp fallback
+ * Read data safely from JSON file, with memory and serverless /tmp fallback
  */
 function readLocalJson(filename, fallback = []) {
+  if (MEMORY_CACHE[filename]) {
+    return MEMORY_CACHE[filename];
+  }
+
   try {
     const tmpPath = path.join(TMP_DIR, filename);
     if (fs.existsSync(tmpPath)) {
       const data = fs.readFileSync(tmpPath, 'utf8');
-      return JSON.parse(data);
+      const parsed = JSON.parse(data);
+      MEMORY_CACHE[filename] = parsed;
+      return parsed;
     }
 
     const localPath = path.join(DATA_DIR, filename);
     if (fs.existsSync(localPath)) {
       const data = fs.readFileSync(localPath, 'utf8');
-      return JSON.parse(data);
+      const parsed = JSON.parse(data);
+      MEMORY_CACHE[filename] = parsed;
+      return parsed;
     }
   } catch (err) {
-    console.error(`Failed to read ${filename}:`, err);
+    // Silent fallback to bundled data
   }
-  return fallback;
+
+  const defaultData = BUNDLED_DATA[filename] || fallback;
+  MEMORY_CACHE[filename] = defaultData;
+  return defaultData;
 }
 
 /**
- * Write data safely to JSON file, with serverless /tmp fallback
+ * Write data safely to JSON file, with memory and serverless /tmp fallback
  */
 function writeLocalJson(filename, data) {
+  MEMORY_CACHE[filename] = data;
+
   try {
     const localPath = path.join(DATA_DIR, filename);
     fs.writeFileSync(localPath, JSON.stringify(data, null, 2), 'utf8');
@@ -54,7 +88,7 @@ function writeLocalJson(filename, data) {
       fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2), 'utf8');
       return true;
     } catch (tmpErr) {
-      console.error(`Failed to write ${filename}:`, tmpErr);
+      console.warn(`Local file write fallback for ${filename}:`, tmpErr);
       return false;
     }
   }
@@ -75,7 +109,7 @@ export async function getTeam() {
       console.warn('Supabase getTeam error, using local fallback:', err);
     }
   }
-  return readLocalJson('team.json', []);
+  return readLocalJson('team.json', initialTeam);
 }
 
 export async function saveTeam(teamList) {
@@ -121,7 +155,7 @@ export async function getProjects() {
       console.warn('Supabase getProjects error, using local fallback:', err);
     }
   }
-  return readLocalJson('projects.json', []);
+  return readLocalJson('projects.json', initialProjects);
 }
 
 export async function saveProjects(projectsList) {
@@ -167,7 +201,7 @@ export async function getServices() {
       console.warn('Supabase getServices error, using local fallback:', err);
     }
   }
-  return readLocalJson('servicesList.json', []);
+  return readLocalJson('servicesList.json', initialServices);
 }
 
 export async function saveServices(servicesList) {
@@ -213,7 +247,7 @@ export async function getProducts() {
       console.warn('Supabase getProducts error, using local fallback:', err);
     }
   }
-  return readLocalJson('products.json', []);
+  return readLocalJson('products.json', initialProducts);
 }
 
 export async function saveProducts(productsList) {
@@ -258,7 +292,7 @@ export async function getReviews() {
       console.warn('Supabase getReviews error, using local fallback:', err);
     }
   }
-  return readLocalJson('reviews.json', []);
+  return readLocalJson('reviews.json', initialReviews);
 }
 
 export async function saveReviews(reviewsList) {
@@ -290,23 +324,6 @@ export async function deleteReviewItem(id) {
 }
 
 // ================= 6. COMPANY SETTINGS =================
-const DEFAULT_SETTINGS = {
-  whatsappNumber: "8801909711808",
-  displayPhone: "+880 1909-711808",
-  officialEmail: "drivenitsolution@gmail.com",
-  workingHours: "Mon-Fri from 8am to 6pm (Official WhatsApp Active)",
-  officeAddress: "Dhaka, Bangladesh · Remote-First Worldwide",
-  tagline: "Your Growth Our Mission",
-  ctaText: "Book Free Call",
-  socials: {
-    linkedin: "https://linkedin.com",
-    facebook: "https://facebook.com",
-    github: "https://github.com",
-    twitter: "https://x.com",
-    instagram: "https://instagram.com"
-  }
-};
-
 export async function getSettings() {
   if (isSupabaseConfigured && supabase) {
     try {
@@ -322,7 +339,7 @@ export async function getSettings() {
       console.warn('Supabase getSettings error, using local fallback:', err);
     }
   }
-  return readLocalJson('settings.json', DEFAULT_SETTINGS);
+  return readLocalJson('settings.json', initialSettings);
 }
 
 export async function saveSettings(settingsData) {

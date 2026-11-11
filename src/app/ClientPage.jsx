@@ -14,22 +14,39 @@ import MetricsBar from '@/components/MetricsBar';
 import ContactSection from '@/components/ContactSection';
 import MollahsFooter from '@/components/MollahsFooter';
 import WhatsAppIcon from '@/components/WhatsAppIcon';
+
+import defaultTeam from '@/data/team.json';
+import defaultProjects from '@/data/projects.json';
+import defaultServices from '@/data/servicesList.json';
+import defaultProducts from '@/data/products.json';
+import defaultReviews from '@/data/reviews.json';
 import defaultSettings from '@/data/settings.json';
+
 import { subscribeToDataChanges } from '@/lib/syncEvents';
 
 export default function ClientPage({
-  initialTeam = [],
-  initialProjects = [],
-  initialServices = [],
-  initialProducts = [],
-  initialReviews = [],
+  initialTeam = null,
+  initialProjects = null,
+  initialServices = null,
+  initialProducts = null,
+  initialReviews = null,
   initialSettings = null
 }) {
-  const [team, setTeam] = useState(initialTeam);
-  const [projects, setProjects] = useState(initialProjects);
-  const [services, setServices] = useState(initialServices);
-  const [products, setProducts] = useState(initialProducts);
-  const [reviews, setReviews] = useState(initialReviews);
+  const [team, setTeam] = useState(
+    Array.isArray(initialTeam) && initialTeam.length > 0 ? initialTeam : defaultTeam
+  );
+  const [projects, setProjects] = useState(
+    Array.isArray(initialProjects) && initialProjects.length > 0 ? initialProjects : defaultProjects
+  );
+  const [services, setServices] = useState(
+    Array.isArray(initialServices) && initialServices.length > 0 ? initialServices : defaultServices
+  );
+  const [products, setProducts] = useState(
+    Array.isArray(initialProducts) && initialProducts.length > 0 ? initialProducts : defaultProducts
+  );
+  const [reviews, setReviews] = useState(
+    Array.isArray(initialReviews) && initialReviews.length > 0 ? initialReviews : defaultReviews
+  );
   const [settings, setSettings] = useState(initialSettings || defaultSettings);
 
   // Granular fetchers with strict zero-cache policy
@@ -38,7 +55,7 @@ export default function ClientPage({
       const res = await fetch(`/api/team?t=${Date.now()}`, { cache: 'no-store' });
       if (res.ok) {
         const json = await res.json();
-        if (json.success && Array.isArray(json.data)) {
+        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
           setTeam(json.data);
         }
       }
@@ -52,7 +69,7 @@ export default function ClientPage({
       const res = await fetch(`/api/projects?t=${Date.now()}`, { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
-        if (Array.isArray(data)) {
+        if (Array.isArray(data) && data.length > 0) {
           setProjects(data);
         }
       }
@@ -66,7 +83,7 @@ export default function ClientPage({
       const res = await fetch(`/api/services?t=${Date.now()}`, { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
-        if (Array.isArray(data)) {
+        if (Array.isArray(data) && data.length > 0) {
           setServices(data);
         }
       }
@@ -80,7 +97,7 @@ export default function ClientPage({
       const res = await fetch(`/api/products?t=${Date.now()}`, { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
-        if (Array.isArray(data)) {
+        if (Array.isArray(data) && data.length > 0) {
           setProducts(data);
         }
       }
@@ -94,7 +111,7 @@ export default function ClientPage({
       const res = await fetch(`/api/reviews?t=${Date.now()}`, { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
-        if (Array.isArray(data)) {
+        if (Array.isArray(data) && data.length > 0) {
           setReviews(data);
         }
       }
@@ -144,12 +161,12 @@ export default function ClientPage({
       else refreshAll();
     });
 
-    // 10-second background heartbeat when tab is active (for cross-device / multi-admin edits)
+    // 8-second background heartbeat when tab is active (for cross-device / multi-admin edits)
     const interval = setInterval(() => {
       if (typeof document !== 'undefined' && document.visibilityState === 'visible') {
         refreshAll();
       }
-    }, 10000);
+    }, 8000);
 
     return () => {
       unsubscribe();

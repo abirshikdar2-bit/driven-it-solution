@@ -43,6 +43,16 @@ export default function ContactSection({ settings: propSettings = null }) {
     return () => unsubscribe();
   }, [loadSettings]);
 
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    service: 'Web Design & Development',
+    message: ''
+  });
+  const [submitted, setSubmitted] = useState(false);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setSubmitted(true);
