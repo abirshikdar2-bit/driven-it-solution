@@ -1,16 +1,31 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import FlowFieldCanvas from './FlowFieldCanvas';
 import WhatsAppIcon from './WhatsAppIcon';
 import CornerBrackets, { SectionBadge } from './CornerBrackets';
 import { Mail, Clock, MessageSquare, Send, CheckCircle2, ArrowRight } from 'lucide-react';
 import initialSettings from '@/data/settings.json';
+import { subscribeToDataChanges } from '@/lib/syncEvents';
 
 export default function ContactSection({ settings: propSettings = null }) {
   const [settings, setSettings] = useState(
     propSettings && propSettings.whatsappNumber ? propSettings : initialSettings
   );
+
+  const loadSettings = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/settings?t=${Date.now()}`, { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.whatsappNumber) {
+          setSettings(data);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to load dynamic contact settings:', err);
+    }
+  }, []);
 
   useEffect(() => {
     if (propSettings && propSettings.whatsappNumber) {
@@ -18,34 +33,15 @@ export default function ContactSection({ settings: propSettings = null }) {
     }
   }, [propSettings]);
 
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    service: 'Web Design & Development',
-    message: ''
-  });
-  const [submitted, setSubmitted] = useState(false);
-
   useEffect(() => {
-    async function loadSettings() {
-      try {
-        const res = await fetch(`/api/settings?t=${Date.now()}`, { cache: 'no-store' });
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.whatsappNumber) {
-            setSettings(data);
-          }
-        }
-      } catch (err) {
-        console.error('Failed to load dynamic contact settings:', err);
+    loadSettings();
+    const unsubscribe = subscribeToDataChanges((event) => {
+      if (event.entity === 'settings' || event.entity === 'all') {
+        loadSettings();
       }
-    }
-    if (!propSettings) {
-      loadSettings();
-    }
-  }, [propSettings]);
+    });
+    return () => unsubscribe();
+  }, [loadSettings]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

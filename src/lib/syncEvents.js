@@ -5,6 +5,22 @@
 const SYNC_CHANNEL_NAME = 'driven_it_live_sync_v1';
 const SYNC_STORAGE_KEY = 'driven_it_sync_timestamp';
 
+let sharedBroadcastChannel = null;
+
+function getBroadcastChannel() {
+  if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+    if (!sharedBroadcastChannel) {
+      try {
+        sharedBroadcastChannel = new BroadcastChannel(SYNC_CHANNEL_NAME);
+      } catch (err) {
+        console.warn('Failed to initialize shared BroadcastChannel:', err);
+      }
+    }
+    return sharedBroadcastChannel;
+  }
+  return null;
+}
+
 /**
  * Broadcast an update event when an entity is created, edited, or deleted in Admin.
  * @param {string} entity - 'team' | 'projects' | 'services' | 'products' | 'reviews' | 'settings' | 'users' | 'all'
@@ -15,6 +31,7 @@ export function broadcastDataChange(entity = 'all', meta = {}) {
   const payload = {
     entity,
     timestamp,
+    nonce: Math.random().toString(36).substring(2, 9),
     meta,
     source: typeof window !== 'undefined' ? window.location.pathname : 'server'
   };
@@ -22,16 +39,15 @@ export function broadcastDataChange(entity = 'all', meta = {}) {
   if (typeof window !== 'undefined') {
     // 1. BroadcastChannel: Instant cross-tab communication in modern browsers
     try {
-      if ('BroadcastChannel' in window) {
-        const bc = new BroadcastChannel(SYNC_CHANNEL_NAME);
+      const bc = getBroadcastChannel();
+      if (bc) {
         bc.postMessage(payload);
-        bc.close();
       }
     } catch (e) {
       console.warn('BroadcastChannel error:', e);
     }
 
-    // 2. LocalStorage event: Cross-tab / cross-window fallback
+    // 2. LocalStorage event: Cross-tab / cross-window fallback with guaranteed unique value
     try {
       localStorage.setItem(SYNC_STORAGE_KEY, JSON.stringify(payload));
     } catch (e) {
@@ -55,18 +71,15 @@ export function broadcastDataChange(entity = 'all', meta = {}) {
 export function subscribeToDataChanges(callback) {
   if (typeof window === 'undefined') return () => {};
 
-  let bc = null;
-  try {
-    if ('BroadcastChannel' in window) {
-      bc = new BroadcastChannel(SYNC_CHANNEL_NAME);
-      bc.onmessage = (event) => {
-        if (event && event.data) {
-          callback(event.data);
-        }
-      };
+  const bc = getBroadcastChannel();
+  const handleBcMessage = (event) => {
+    if (event && event.data) {
+      callback(event.data);
     }
-  } catch (e) {
-    console.warn('BroadcastChannel subscription error:', e);
+  };
+
+  if (bc) {
+    bc.addEventListener('message', handleBcMessage);
   }
 
   const handleStorage = (e) => {
@@ -103,9 +116,7 @@ export function subscribeToDataChanges(callback) {
 
   return () => {
     if (bc) {
-      try {
-        bc.close();
-      } catch (err) {}
+      bc.removeEventListener('message', handleBcMessage);
     }
     window.removeEventListener('storage', handleStorage);
     window.removeEventListener('driven_it_local_data_change', handleLocalEvent);

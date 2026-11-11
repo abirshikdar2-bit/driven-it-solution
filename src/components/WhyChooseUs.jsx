@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import CornerBrackets, { SectionBadge } from './CornerBrackets';
 import initialTeam from '@/data/team.json';
+import { subscribeToDataChanges } from '@/lib/syncEvents';
 
 export default function WhyChooseUs({ team = null }) {
   const [teamMembers, setTeamMembers] = useState(
@@ -12,30 +13,35 @@ export default function WhyChooseUs({ team = null }) {
       : Array.isArray(initialTeam) ? initialTeam : []
   );
 
+  const loadTeam = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/team?t=${Date.now()}`, { cache: 'no-store' });
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+          setTeamMembers(json.data);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to load dynamic team in WhyChooseUs:', err);
+    }
+  }, []);
+
   useEffect(() => {
-    if (Array.isArray(team)) {
+    if (Array.isArray(team) && team.length > 0) {
       setTeamMembers(team);
     }
   }, [team]);
 
   useEffect(() => {
-    async function loadTeam() {
-      try {
-        const res = await fetch(`/api/team?t=${Date.now()}`, { cache: 'no-store' });
-        if (res.ok) {
-          const json = await res.json();
-          if (json.success && Array.isArray(json.data)) {
-            setTeamMembers(json.data);
-          }
-        }
-      } catch (err) {
-        console.error('Failed to load dynamic team in WhyChooseUs:', err);
+    loadTeam();
+    const unsubscribe = subscribeToDataChanges((event) => {
+      if (event.entity === 'team' || event.entity === 'all') {
+        loadTeam();
       }
-    }
-    if (!team) {
-      loadTeam();
-    }
-  }, [team]);
+    });
+    return () => unsubscribe();
+  }, [loadTeam]);
 
   const highlighted = teamMembers.filter(m => m.isHighlighted !== false);
   const visibleMembers = highlighted.length > 0 ? highlighted : teamMembers;

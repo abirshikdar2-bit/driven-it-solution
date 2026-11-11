@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { ArrowUpRight } from 'lucide-react';
 import CornerBrackets, { SectionBadge } from './CornerBrackets';
 import initialProducts from '@/data/products.json';
+import { subscribeToDataChanges } from '@/lib/syncEvents';
 
 export default function SoftwareWeOwn({ products: propProducts = null }) {
   const [products, setProducts] = useState(
@@ -13,30 +14,35 @@ export default function SoftwareWeOwn({ products: propProducts = null }) {
       : Array.isArray(initialProducts) ? initialProducts : []
   );
 
+  const loadProducts = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/products?t=${Date.now()}`, { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          setProducts(data);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to load dynamic products:', err);
+    }
+  }, []);
+
   useEffect(() => {
-    if (Array.isArray(propProducts)) {
+    if (Array.isArray(propProducts) && propProducts.length > 0) {
       setProducts(propProducts);
     }
   }, [propProducts]);
 
   useEffect(() => {
-    async function loadProducts() {
-      try {
-        const res = await fetch(`/api/products?t=${Date.now()}`, { cache: 'no-store' });
-        if (res.ok) {
-          const data = await res.json();
-          if (Array.isArray(data)) {
-            setProducts(data);
-          }
-        }
-      } catch (err) {
-        console.error('Failed to load dynamic products:', err);
+    loadProducts();
+    const unsubscribe = subscribeToDataChanges((event) => {
+      if (event.entity === 'products' || event.entity === 'all') {
+        loadProducts();
       }
-    }
-    if (!propProducts) {
-      loadProducts();
-    }
-  }, [propProducts]);
+    });
+    return () => unsubscribe();
+  }, [loadProducts]);
 
   return (
     <section id="products" className="mx-auto w-full max-w-[1520px] px-4 sm:px-6 lg:px-8 relative py-28">

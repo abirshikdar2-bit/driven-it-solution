@@ -1,16 +1,31 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import CornerBrackets from './CornerBrackets';
 import WhatsAppIcon from './WhatsAppIcon';
 import initialSettings from '@/data/settings.json';
+import { subscribeToDataChanges } from '@/lib/syncEvents';
 
 export default function MollahsFooter({ settings: propSettings = null }) {
   const [settings, setSettings] = useState(
     propSettings && propSettings.whatsappNumber ? propSettings : initialSettings
   );
+
+  const loadSettings = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/settings?t=${Date.now()}`, { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.whatsappNumber) {
+          setSettings(data);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to load settings in Footer:', err);
+    }
+  }, []);
 
   useEffect(() => {
     if (propSettings && propSettings.whatsappNumber) {
@@ -19,23 +34,14 @@ export default function MollahsFooter({ settings: propSettings = null }) {
   }, [propSettings]);
 
   useEffect(() => {
-    async function loadSettings() {
-      try {
-        const res = await fetch(`/api/settings?t=${Date.now()}`, { cache: 'no-store' });
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.whatsappNumber) {
-            setSettings(data);
-          }
-        }
-      } catch (err) {
-        console.error('Failed to load settings in Footer:', err);
+    loadSettings();
+    const unsubscribe = subscribeToDataChanges((event) => {
+      if (event.entity === 'settings' || event.entity === 'all') {
+        loadSettings();
       }
-    }
-    if (!propSettings) {
-      loadSettings();
-    }
-  }, [propSettings]);
+    });
+    return () => unsubscribe();
+  }, [loadSettings]);
   return (
     <footer className="relative overflow-hidden border-t border-white/5 bg-[#050505]">
       {/* Ambient Blue Radial Glow at Bottom */}

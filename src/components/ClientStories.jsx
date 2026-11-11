@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import CornerBrackets, { SectionBadge } from './CornerBrackets';
 import initialReviews from '../data/reviews.json';
+import { subscribeToDataChanges } from '@/lib/syncEvents';
 
 export default function ClientStories({ reviews: propReviews = null }) {
   const [reviews, setReviews] = useState(
@@ -11,30 +12,35 @@ export default function ClientStories({ reviews: propReviews = null }) {
       : Array.isArray(initialReviews) ? initialReviews : []
   );
 
+  const fetchReviews = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/reviews?t=${Date.now()}`, { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          setReviews(data);
+        }
+      }
+    } catch (e) {
+      // Fallback
+    }
+  }, []);
+
   useEffect(() => {
-    if (Array.isArray(propReviews)) {
+    if (Array.isArray(propReviews) && propReviews.length > 0) {
       setReviews(propReviews);
     }
   }, [propReviews]);
 
   useEffect(() => {
-    async function fetchReviews() {
-      try {
-        const res = await fetch(`/api/reviews?t=${Date.now()}`, { cache: 'no-store' });
-        if (res.ok) {
-          const data = await res.json();
-          if (Array.isArray(data)) {
-            setReviews(data);
-          }
-        }
-      } catch (e) {
-        // Fallback
+    fetchReviews();
+    const unsubscribe = subscribeToDataChanges((event) => {
+      if (event.entity === 'reviews' || event.entity === 'all') {
+        fetchReviews();
       }
-    }
-    if (!propReviews) {
-      fetchReviews();
-    }
-  }, [propReviews]);
+    });
+    return () => unsubscribe();
+  }, [fetchReviews]);
 
   return (
     <section id="reviews" className="mx-auto w-full max-w-[1520px] px-4 sm:px-6 lg:px-8 py-28 relative">

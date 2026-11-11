@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import CornerBrackets, { SectionBadge } from './CornerBrackets';
+import { subscribeToDataChanges } from '@/lib/syncEvents';
 
 const defaultProjects = [
   {
@@ -159,30 +160,35 @@ export default function CaseStudiesSection({ projects: propProjects = null }) {
       : defaultProjects
   );
 
+  const loadProjects = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/projects?t=${Date.now()}`, { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          setProjects(data);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to load projects:', err);
+    }
+  }, []);
+
   useEffect(() => {
-    if (Array.isArray(propProjects)) {
+    if (Array.isArray(propProjects) && propProjects.length > 0) {
       setProjects(propProjects);
     }
   }, [propProjects]);
 
   useEffect(() => {
-    async function loadProjects() {
-      try {
-        const res = await fetch(`/api/projects?t=${Date.now()}`, { cache: 'no-store' });
-        if (res.ok) {
-          const data = await res.json();
-          if (Array.isArray(data)) {
-            setProjects(data);
-          }
-        }
-      } catch (err) {
-        console.error('Failed to load projects:', err);
+    loadProjects();
+    const unsubscribe = subscribeToDataChanges((event) => {
+      if (event.entity === 'projects' || event.entity === 'all') {
+        loadProjects();
       }
-    }
-    if (!propProjects) {
-      loadProjects();
-    }
-  }, [propProjects]);
+    });
+    return () => unsubscribe();
+  }, [loadProjects]);
 
   return (
     <section id="work" className="mx-auto w-full max-w-[1520px] px-4 sm:px-6 lg:px-8 relative py-28">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import {
   Palette,
@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import CornerBrackets, { SectionBadge } from './CornerBrackets';
 import initialServices from '@/data/servicesList.json';
+import { subscribeToDataChanges } from '@/lib/syncEvents';
 
 const iconMap = {
   Palette,
@@ -40,30 +41,37 @@ export default function WhatYouGet({ services: propServices = null }) {
   const [activeIdx, setActiveIdx] = useState(0);
   const hoverTimeoutRef = useRef(null);
 
+  const loadServices = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/services?t=${Date.now()}`, { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          setServices(data);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to load dynamic services:', err);
+    }
+  }, []);
+
+  // Update when prop changes
   useEffect(() => {
-    if (Array.isArray(propServices)) {
+    if (Array.isArray(propServices) && propServices.length > 0) {
       setServices(propServices);
     }
   }, [propServices]);
 
+  // Direct real-time subscription for immediate cross-tab updates
   useEffect(() => {
-    async function loadServices() {
-      try {
-        const res = await fetch(`/api/services?t=${Date.now()}`, { cache: 'no-store' });
-        if (res.ok) {
-          const data = await res.json();
-          if (Array.isArray(data)) {
-            setServices(data);
-          }
-        }
-      } catch (err) {
-        console.error('Failed to load dynamic services:', err);
+    loadServices();
+    const unsubscribe = subscribeToDataChanges((event) => {
+      if (event.entity === 'services' || event.entity === 'all') {
+        loadServices();
       }
-    }
-    if (!propServices) {
-      loadServices();
-    }
-  }, [propServices]);
+    });
+    return () => unsubscribe();
+  }, [loadServices]);
 
   // Smooth hover intent: 75ms buffer prevents erratic switching during rapid cursor transit
   const handleMouseEnter = (idx) => {
@@ -119,10 +127,14 @@ export default function WhatYouGet({ services: propServices = null }) {
         {services.map((s, idx) => {
           const isActive = idx === activeIdx;
           const Icon = typeof s.icon === 'string' ? (iconMap[s.icon] || Code2) : (s.icon || Code2);
+          const serviceSlug = s.slug || s.id || `service-${idx}`;
+          const serviceNum = s.num || `/00${idx + 1}/`;
+          const serviceShortTitle = s.shortTitle || s.title || `Service ${idx + 1}`;
+          const serviceFeatures = Array.isArray(s.features) ? s.features : [];
 
           return (
             <div
-              key={s.slug}
+              key={serviceSlug}
               onMouseEnter={() => handleMouseEnter(idx)}
               onClick={() => handleClick(idx)}
               className={`relative overflow-hidden border bg-[#0c0c0c] transition-[flex-grow,background-color,border-color] duration-[1150ms] ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer ${
@@ -139,19 +151,19 @@ export default function WhatYouGet({ services: propServices = null }) {
                   isActive ? 'md:hidden' : 'opacity-70 hover:opacity-100'
                 }`}
               >
-                <span className="text-[11px] font-mono text-cyan-400/80">{s.num}</span>
+                <span className="text-[11px] font-mono text-cyan-400/80">{serviceNum}</span>
                 <span className="text-sm font-medium uppercase text-white md:rotate-180 md:[writing-mode:vertical-rl] tracking-wider whitespace-nowrap">
-                  {s.shortTitle}
+                  {serviceShortTitle}
                 </span>
               </button>
 
               {/* Expanded Card Content - Stable, Permanent, Zero Text Movement */}
               {isActive && (
                 <div className="grid gap-6 p-5 md:h-full md:grid-cols-[1fr_1.15fr] md:p-7 min-w-[560px] lg:min-w-[620px]">
-                  {/* Left Column: Details (Completely stationary, no transform, no movement) */}
+                  {/* Left Column: Details */}
                   <div className="flex flex-col justify-between">
                     <div>
-                      <span className="hidden text-xs font-mono text-cyan-400 md:block">{s.num}</span>
+                      <span className="hidden text-xs font-mono text-cyan-400 md:block">{serviceNum}</span>
                       <h3 className="mt-3 text-2xl font-bold uppercase tracking-tight text-white font-mono">
                         {s.title}
                       </h3>
@@ -165,7 +177,7 @@ export default function WhatYouGet({ services: propServices = null }) {
                         What we offer
                       </p>
                       <ul className="mt-3 flex flex-wrap gap-2">
-                        {s.features.map((feature) => (
+                        {serviceFeatures.map((feature) => (
                           <li
                             key={feature}
                             className="relative px-3 py-1.5 text-[11px] uppercase text-white/80 font-light italic font-sans bg-white/[0.02]"
@@ -177,7 +189,7 @@ export default function WhatYouGet({ services: propServices = null }) {
                       </ul>
 
                       <Link
-                        href={`/contact?service=${s.slug}`}
+                        href={`/contact?service=${encodeURIComponent(serviceSlug)}`}
                         className="mt-6 inline-flex items-center gap-2 text-xs uppercase font-mono font-bold text-[#02B8FA] hover:text-white transition-colors"
                       >
                         <span>Explore service</span>
@@ -186,7 +198,7 @@ export default function WhatYouGet({ services: propServices = null }) {
                     </div>
                   </div>
 
-                  {/* Right Column: Icon & Ambient Glow Box (Stationary) */}
+                  {/* Right Column: Icon & Ambient Glow Box */}
                   <div className="relative hidden min-h-[240px] items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_50%_60%,#111622,#070707_75%)] md:flex border border-white/5">
                     <div
                       aria-hidden="true"
