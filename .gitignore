@@ -35,4 +35,5 @@ cloudflared.exe
 .vercel
 
 portfolio/
+/scripts/
 
