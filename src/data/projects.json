@@ -38,5 +38,15 @@
     "image": "/images/projects/digital-marketing-showcase.webp",
     "liveUrl": "",
     "isFeatured": true
+  },
+  {
+    "id": "proj-1794398086781",
+    "num": "/005/",
+    "title": "Testing Case Study Alpha",
+    "category": "Web Design & Development",
+    "description": "Engineered scalable cloud analytics and Next.js frontend with 99.9% uptime.",
+    "image": "/images/projects/web-development-showcase.webp",
+    "liveUrl": "https://testing-case-study.com",
+    "isFeatured": true
   }
 ]

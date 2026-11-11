@@ -146,6 +146,10 @@ export default function WhatYouGet({ services: propServices = null }) {
               {/* Collapsed Button (visible when inactive on desktop, or toggles on mobile) */}
               <button
                 type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleClick(idx);
+                }}
                 aria-expanded={isActive}
                 className={`flex w-full items-center justify-between gap-4 p-5 text-left md:h-full md:flex-col md:items-start ${
                   isActive ? 'md:hidden' : 'opacity-70 hover:opacity-100'
@@ -159,12 +163,15 @@ export default function WhatYouGet({ services: propServices = null }) {
 
               {/* Expanded Card Content - Stable, Permanent, Zero Text Movement */}
               {isActive && (
-                <div className="grid gap-6 p-5 md:h-full md:grid-cols-[1fr_1.15fr] md:p-7 min-w-[560px] lg:min-w-[620px]">
+                <div className="grid gap-6 p-5 md:h-full md:grid-cols-[1fr_1.15fr] md:p-7 w-full min-w-0 md:min-w-[520px] lg:min-w-[600px]">
                   {/* Left Column: Details */}
                   <div className="flex flex-col justify-between">
                     <div>
-                      <span className="hidden text-xs font-mono text-cyan-400 md:block">{serviceNum}</span>
-                      <h3 className="mt-3 text-2xl font-bold uppercase tracking-tight text-white font-mono">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-mono text-cyan-400">{serviceNum}</span>
+                        <span className="text-xs font-mono text-cyan-400/80 md:hidden">{s.pricing}</span>
+                      </div>
+                      <h3 className="mt-3 text-xl sm:text-2xl font-bold uppercase tracking-tight text-white font-mono">
                         {s.title}
                       </h3>
                       <p className="mt-3 max-w-sm text-sm leading-relaxed text-white/60 font-light italic font-sans">

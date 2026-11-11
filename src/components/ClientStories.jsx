@@ -3,14 +3,17 @@
 import { useState, useEffect, useCallback } from 'react';
 import CornerBrackets, { SectionBadge } from './CornerBrackets';
 import initialReviews from '../data/reviews.json';
-import { subscribeToDataChanges } from '@/lib/syncEvents';
+import { subscribeToDataChanges, getLocalCache, saveLocalCache } from '@/lib/syncEvents';
 
 export default function ClientStories({ reviews: propReviews = null }) {
-  const [reviews, setReviews] = useState(
-    Array.isArray(propReviews) && propReviews.length > 0
-      ? propReviews
-      : Array.isArray(initialReviews) ? initialReviews : []
-  );
+  const [reviews, setReviews] = useState(() => {
+    if (Array.isArray(propReviews) && propReviews.length > 0) return propReviews;
+    if (typeof window !== 'undefined') {
+      const cached = getLocalCache('reviews');
+      if (Array.isArray(cached) && cached.length > 0) return cached;
+    }
+    return Array.isArray(initialReviews) ? initialReviews : [];
+  });
 
   const fetchReviews = useCallback(async () => {
     try {
@@ -18,7 +21,13 @@ export default function ClientStories({ reviews: propReviews = null }) {
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
-          setReviews(data);
+          const cached = getLocalCache('reviews');
+          if (Array.isArray(cached) && cached.length > data.length) {
+            setReviews(cached);
+          } else {
+            setReviews(data);
+            saveLocalCache('reviews', data);
+          }
         }
       }
     } catch (e) {
@@ -33,10 +42,19 @@ export default function ClientStories({ reviews: propReviews = null }) {
   }, [propReviews]);
 
   useEffect(() => {
+    const cached = getLocalCache('reviews');
+    if (Array.isArray(cached) && cached.length > 0) {
+      setReviews(cached);
+    }
     fetchReviews();
     const unsubscribe = subscribeToDataChanges((event) => {
       if (event.entity === 'reviews' || event.entity === 'all') {
-        fetchReviews();
+        if (event.meta?.data && Array.isArray(event.meta.data) && event.meta.data.length > 0) {
+          setReviews(event.meta.data);
+          saveLocalCache('reviews', event.meta.data);
+        } else {
+          fetchReviews();
+        }
       }
     });
     return () => unsubscribe();
@@ -87,15 +105,19 @@ export default function ClientStories({ reviews: propReviews = null }) {
 
             {/* Client Profile */}
             <div className="mt-8 pt-4 border-t border-white/5 flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-cyan-400/10 border border-cyan-400/30 text-cyan-400 font-mono text-xs flex items-center justify-center font-bold">
-                {rev.avatar || rev.clientName.slice(0, 2).toUpperCase()}
+              <div className="h-10 w-10 shrink-0 rounded-full bg-cyan-400/10 border border-cyan-400/30 text-cyan-400 font-mono text-xs flex items-center justify-center font-bold overflow-hidden">
+                {rev.avatar && (rev.avatar.startsWith('/') || rev.avatar.startsWith('http')) ? (
+                  <img src={rev.avatar} alt={rev.clientName} className="h-full w-full object-cover" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                ) : (
+                  <span>{rev.avatar || (rev.clientName ? rev.clientName.slice(0, 2).toUpperCase() : 'CL')}</span>
+                )}
               </div>
-              <div className="flex flex-col">
-                <span className="text-sm font-semibold text-white font-mono uppercase tracking-wide">
+              <div className="flex flex-col min-w-0">
+                <span className="text-sm font-semibold text-white font-mono uppercase tracking-wide truncate">
                   {rev.clientName}
                 </span>
-                <span className="text-[11px] text-white/50 font-sans font-light italic">
-                  {rev.role} · {rev.company} ({rev.country})
+                <span className="text-[11px] text-white/50 font-sans font-light italic truncate">
+                  {rev.role}{rev.company ? ` · ${rev.company}` : ''}{rev.country ? ` (${rev.country})` : ''}
                 </span>
               </div>
             </div>

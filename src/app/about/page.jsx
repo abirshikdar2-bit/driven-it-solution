@@ -144,7 +144,7 @@ export default function AboutPage() {
                 </span>
 
                 <div className="flex items-center gap-2">
-                  {member.socials.linkedin && (
+                  {member.socials?.linkedin && (
                     <a
                       href={member.socials.linkedin}
                       target="_blank"
@@ -155,7 +155,7 @@ export default function AboutPage() {
                       <LinkedInIcon size={15} />
                     </a>
                   )}
-                  {member.socials.facebook && (
+                  {member.socials?.facebook && (
                     <a
                       href={member.socials.facebook}
                       target="_blank"
@@ -166,7 +166,7 @@ export default function AboutPage() {
                       <FacebookIcon size={15} />
                     </a>
                   )}
-                  {member.socials.email && (
+                  {member.socials?.email && (
                     <a
                       href={`mailto:${member.socials.email}`}
                       className="p-2 rounded bg-white/[0.03] text-white/70 hover:text-cyan-400 transition-colors"

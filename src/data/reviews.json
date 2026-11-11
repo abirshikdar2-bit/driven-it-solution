@@ -31,5 +31,16 @@
     "quote": "From the custom Next.js web application to our full corporate brand identity, Driven IT Solution gave us an elite digital presence that instantly commands authority with enterprise clients.",
     "avatar": "TM",
     "metrics": "99 Core Web Vitals"
+  },
+  {
+    "id": "rev-1794398830731",
+    "clientName": "Alexander Wright",
+    "role": "CTO, Horizon Digital UK",
+    "company": "",
+    "country": "United States",
+    "rating": 5,
+    "quote": "Driven IT Solution delivered our entire production web application in record time. Absolute technical brilliance.",
+    "avatar": "/images/testimonials/avatar-1.webp",
+    "metrics": "+250% Conversion Increase"
   }
 ]

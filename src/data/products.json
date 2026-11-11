@@ -30,5 +30,21 @@
     "liveUrl": "https://cafeos.drivenitsolution.com",
     "status": "Active Product",
     "order": 2
+  },
+  {
+    "id": "prod-1794398303223",
+    "name": "Nexus Desk OS",
+    "banglaName": "নেক্সাস ডেস্ক",
+    "tag": "SaaS · Enterprise · Cloud",
+    "image": "/products/dalil-os.webp",
+    "description": "Automated omni-channel customer support and ticketing system for scaling businesses.",
+    "features": [
+      "Automated Operations",
+      "Real-time Analytics",
+      "Cloud Sync"
+    ],
+    "liveUrl": "https://nexusdesk.io",
+    "status": "Active Product",
+    "order": 3
   }
 ]

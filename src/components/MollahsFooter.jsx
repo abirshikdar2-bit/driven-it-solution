@@ -6,12 +6,17 @@ import { ArrowUpRight } from 'lucide-react';
 import CornerBrackets from './CornerBrackets';
 import WhatsAppIcon from './WhatsAppIcon';
 import initialSettings from '@/data/settings.json';
-import { subscribeToDataChanges } from '@/lib/syncEvents';
+import { subscribeToDataChanges, getLocalCache, saveLocalCache } from '@/lib/syncEvents';
 
 export default function MollahsFooter({ settings: propSettings = null }) {
-  const [settings, setSettings] = useState(
-    propSettings && propSettings.whatsappNumber ? propSettings : initialSettings
-  );
+  const [settings, setSettings] = useState(() => {
+    if (propSettings && propSettings.whatsappNumber) return propSettings;
+    if (typeof window !== 'undefined') {
+      const cached = getLocalCache('settings');
+      if (cached && cached.whatsappNumber) return cached;
+    }
+    return initialSettings;
+  });
 
   const loadSettings = useCallback(async () => {
     try {
@@ -20,6 +25,7 @@ export default function MollahsFooter({ settings: propSettings = null }) {
         const data = await res.json();
         if (data && data.whatsappNumber) {
           setSettings(data);
+          saveLocalCache('settings', data);
         }
       }
     } catch (err) {
@@ -34,10 +40,19 @@ export default function MollahsFooter({ settings: propSettings = null }) {
   }, [propSettings]);
 
   useEffect(() => {
+    const cached = getLocalCache('settings');
+    if (cached && cached.whatsappNumber) {
+      setSettings(cached);
+    }
     loadSettings();
     const unsubscribe = subscribeToDataChanges((event) => {
       if (event.entity === 'settings' || event.entity === 'all') {
-        loadSettings();
+        if (event.meta?.data && event.meta.data.whatsappNumber) {
+          setSettings(event.meta.data);
+          saveLocalCache('settings', event.meta.data);
+        } else {
+          loadSettings();
+        }
       }
     });
     return () => unsubscribe();

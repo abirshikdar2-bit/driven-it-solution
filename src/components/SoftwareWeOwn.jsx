@@ -5,14 +5,17 @@ import Image from 'next/image';
 import { ArrowUpRight } from 'lucide-react';
 import CornerBrackets, { SectionBadge } from './CornerBrackets';
 import initialProducts from '@/data/products.json';
-import { subscribeToDataChanges } from '@/lib/syncEvents';
+import { subscribeToDataChanges, getLocalCache, saveLocalCache } from '@/lib/syncEvents';
 
 export default function SoftwareWeOwn({ products: propProducts = null }) {
-  const [products, setProducts] = useState(
-    Array.isArray(propProducts) && propProducts.length > 0
-      ? propProducts
-      : Array.isArray(initialProducts) ? initialProducts : []
-  );
+  const [products, setProducts] = useState(() => {
+    if (Array.isArray(propProducts) && propProducts.length > 0) return propProducts;
+    if (typeof window !== 'undefined') {
+      const cached = getLocalCache('products');
+      if (Array.isArray(cached) && cached.length > 0) return cached;
+    }
+    return Array.isArray(initialProducts) ? initialProducts : [];
+  });
 
   const loadProducts = useCallback(async () => {
     try {
@@ -20,7 +23,13 @@ export default function SoftwareWeOwn({ products: propProducts = null }) {
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
-          setProducts(data);
+          const cached = getLocalCache('products');
+          if (Array.isArray(cached) && cached.length > data.length) {
+            setProducts(cached);
+          } else {
+            setProducts(data);
+            saveLocalCache('products', data);
+          }
         }
       }
     } catch (err) {
@@ -35,10 +44,19 @@ export default function SoftwareWeOwn({ products: propProducts = null }) {
   }, [propProducts]);
 
   useEffect(() => {
+    const cached = getLocalCache('products');
+    if (Array.isArray(cached) && cached.length > 0) {
+      setProducts(cached);
+    }
     loadProducts();
     const unsubscribe = subscribeToDataChanges((event) => {
       if (event.entity === 'products' || event.entity === 'all') {
-        loadProducts();
+        if (event.meta?.data && Array.isArray(event.meta.data) && event.meta.data.length > 0) {
+          setProducts(event.meta.data);
+          saveLocalCache('products', event.meta.data);
+        } else {
+          loadProducts();
+        }
       }
     });
     return () => unsubscribe();

@@ -109,5 +109,30 @@
     },
     "isHighlighted": true,
     "order": 4
+  },
+  {
+    "id": "kawsar-ahmed",
+    "name": "Kawsar Ahmed",
+    "role": "Web Development Instructor & Lead",
+    "department": "Core Faculty & Mentorship",
+    "photo": "/images/rezhone-ceo.jpg",
+    "tagline": "Empowering Next-Gen Engineers",
+    "quote": "Learning through practical production architectures.",
+    "bio": "Senior engineer and mentor coaching professionals in modern web frameworks.",
+    "skills": [
+      "React",
+      "Next.js",
+      "TypeScript",
+      "System Architecture"
+    ],
+    "experience": "4+ Years Experience",
+    "projectsCompleted": 80,
+    "socials": {
+      "linkedin": "https://linkedin.com",
+      "facebook": "https://facebook.com",
+      "email": "kawsar@drivenitsolution.com"
+    },
+    "isHighlighted": true,
+    "order": 5
   }
 ]

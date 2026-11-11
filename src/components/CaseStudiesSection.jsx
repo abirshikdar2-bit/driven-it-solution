@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import CornerBrackets, { SectionBadge } from './CornerBrackets';
-import { subscribeToDataChanges } from '@/lib/syncEvents';
+import { subscribeToDataChanges, getLocalCache, saveLocalCache } from '@/lib/syncEvents';
 
 const defaultProjects = [
   {
@@ -154,11 +154,14 @@ function ProjectCard({ project, index }) {
 }
 
 export default function CaseStudiesSection({ projects: propProjects = null }) {
-  const [projects, setProjects] = useState(
-    Array.isArray(propProjects) && propProjects.length > 0
-      ? propProjects
-      : defaultProjects
-  );
+  const [projects, setProjects] = useState(() => {
+    if (Array.isArray(propProjects) && propProjects.length > 0) return propProjects;
+    if (typeof window !== 'undefined') {
+      const cached = getLocalCache('projects');
+      if (Array.isArray(cached) && cached.length > 0) return cached;
+    }
+    return defaultProjects;
+  });
 
   const loadProjects = useCallback(async () => {
     try {
@@ -166,7 +169,13 @@ export default function CaseStudiesSection({ projects: propProjects = null }) {
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
-          setProjects(data);
+          const cached = getLocalCache('projects');
+          if (Array.isArray(cached) && cached.length > data.length) {
+            setProjects(cached);
+          } else {
+            setProjects(data);
+            saveLocalCache('projects', data);
+          }
         }
       }
     } catch (err) {
@@ -181,10 +190,19 @@ export default function CaseStudiesSection({ projects: propProjects = null }) {
   }, [propProjects]);
 
   useEffect(() => {
+    const cached = getLocalCache('projects');
+    if (Array.isArray(cached) && cached.length > 0) {
+      setProjects(cached);
+    }
     loadProjects();
     const unsubscribe = subscribeToDataChanges((event) => {
       if (event.entity === 'projects' || event.entity === 'all') {
-        loadProjects();
+        if (event.meta?.data && Array.isArray(event.meta.data) && event.meta.data.length > 0) {
+          setProjects(event.meta.data);
+          saveLocalCache('projects', event.meta.data);
+        } else {
+          loadProjects();
+        }
       }
     });
     return () => unsubscribe();

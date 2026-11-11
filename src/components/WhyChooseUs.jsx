@@ -4,14 +4,17 @@ import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import CornerBrackets, { SectionBadge } from './CornerBrackets';
 import initialTeam from '@/data/team.json';
-import { subscribeToDataChanges } from '@/lib/syncEvents';
+import { subscribeToDataChanges, getLocalCache, saveLocalCache } from '@/lib/syncEvents';
 
 export default function WhyChooseUs({ team = null }) {
-  const [teamMembers, setTeamMembers] = useState(
-    Array.isArray(team) && team.length > 0
-      ? team
-      : Array.isArray(initialTeam) ? initialTeam : []
-  );
+  const [teamMembers, setTeamMembers] = useState(() => {
+    if (Array.isArray(team) && team.length > 0) return team;
+    if (typeof window !== 'undefined') {
+      const cached = getLocalCache('team');
+      if (Array.isArray(cached) && cached.length > 0) return cached;
+    }
+    return Array.isArray(initialTeam) ? initialTeam : [];
+  });
 
   const loadTeam = useCallback(async () => {
     try {
@@ -19,7 +22,13 @@ export default function WhyChooseUs({ team = null }) {
       if (res.ok) {
         const json = await res.json();
         if (json.success && Array.isArray(json.data) && json.data.length > 0) {
-          setTeamMembers(json.data);
+          const cached = getLocalCache('team');
+          if (Array.isArray(cached) && cached.length > json.data.length) {
+            setTeamMembers(cached);
+          } else {
+            setTeamMembers(json.data);
+            saveLocalCache('team', json.data);
+          }
         }
       }
     } catch (err) {
@@ -34,10 +43,19 @@ export default function WhyChooseUs({ team = null }) {
   }, [team]);
 
   useEffect(() => {
+    const cached = getLocalCache('team');
+    if (Array.isArray(cached) && cached.length > 0) {
+      setTeamMembers(cached);
+    }
     loadTeam();
     const unsubscribe = subscribeToDataChanges((event) => {
       if (event.entity === 'team' || event.entity === 'all') {
-        loadTeam();
+        if (event.meta?.data && Array.isArray(event.meta.data) && event.meta.data.length > 0) {
+          setTeamMembers(event.meta.data);
+          saveLocalCache('team', event.meta.data);
+        } else {
+          loadTeam();
+        }
       }
     });
     return () => unsubscribe();

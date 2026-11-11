@@ -815,6 +815,8 @@ export default function AdminPage() {
         .filter(Boolean);
 
       const payload = {
+        projectsCompleted: 25,
+        socials: { linkedin: '', facebook: '', email: '' },
         ...currentMember,
         skills: skillsArr
       };
@@ -1064,38 +1066,37 @@ export default function AdminPage() {
 
       {/* Hero Control Banner matching Mollahs IT Aesthetic */}
       <div className="relative z-10 border-b border-white/5 bg-gradient-to-b from-white/[0.02] to-transparent">
-        <div className="mx-auto w-full max-w-[1520px] px-4 sm:px-6 lg:px-8 py-12">
+        <div className="mx-auto w-full max-w-[1520px] px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
             <div>
               <SectionBadge>Administration</SectionBadge>
-              <h1 className="mt-5 text-[clamp(2.2rem,1.4rem+2.6vw,3.5rem)] font-bold uppercase leading-[0.95] tracking-[-0.035em] text-white font-sans">
+              <h1 className="mt-4 text-[clamp(2rem,1.3rem+2.4vw,3.2rem)] font-bold text-white font-sans tracking-tight leading-[1.05]">
                 Driven IT <span className="bg-logo-gradient bg-clip-text text-transparent">Control Hub</span>
               </h1>
-              <p className="mt-3 text-sm sm:text-base text-white/60 font-light italic max-w-2xl font-sans">
+              <p className="mt-2 text-sm sm:text-base text-white/65 font-sans leading-relaxed max-w-2xl">
                 Full-stack dynamic management across portfolio case studies, proprietary SaaS platforms, service packages, faculty &amp; leadership roster, client reviews, and global contact coordinates.
               </p>
             </div>
 
             {/* Quick Status Pill */}
-            <div className="relative inline-flex items-center gap-3 px-4 py-2.5 bg-white/[0.02] border border-white/10 font-mono text-xs text-white/70">
+            <div className="relative inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/[0.03] border border-white/10 font-sans text-xs text-white/70 shadow-sm">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400"></span>
               </span>
-              <span>All 7 Sectors Fully Dynamic</span>
-              <CornerBrackets className="border-white/20" />
+              <span>All 7 Sectors Live &amp; Dynamic</span>
             </div>
           </div>
 
-          {/* 7 Section Tabs Styled Exact with Corner Brackets & Cyber Borders */}
-          <div className="mt-10 flex flex-wrap gap-2.5 border-b border-white/5 pb-3">
+          {/* 7 Section Tabs: Executive Modern Segmented Bar */}
+          <div className="mt-8 flex flex-wrap items-center gap-2 p-1.5 bg-[#0a0a0d] border border-white/10 rounded-2xl backdrop-blur-xl shadow-2xl">
             {[
               { id: 'projects', label: 'Case Studies', icon: Briefcase, count: projects.length },
               { id: 'products', label: 'Software We Own', icon: Cpu, count: products.length },
-              { id: 'services', label: 'What You Get (Services)', icon: Layers, count: services.length },
+              { id: 'services', label: 'What You Get', icon: Layers, count: services.length },
               { id: 'team', label: 'Teachers & Leadership', icon: Users, count: team.length },
               { id: 'reviews', label: 'Client Stories', icon: Star, count: reviews.length },
-              { id: 'settings', label: 'Get In Touch & Settings', icon: Settings },
+              { id: 'settings', label: 'Get In Touch', icon: Settings },
               { id: 'users', label: 'Users & Roles', icon: ShieldCheck, count: usersList.length }
             ].map(tab => {
               const Icon = tab.icon;
@@ -1104,22 +1105,21 @@ export default function AdminPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`group relative flex items-center gap-2.5 px-5 py-3 text-xs font-mono uppercase tracking-wider transition-all duration-300 cursor-pointer ${
+                  className={`relative flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-sans transition-all duration-200 cursor-pointer ${
                     isActive
-                      ? 'bg-cyan-400/10 text-cyan-400 border border-cyan-400/40 shadow-[0_0_24px_rgba(0,229,255,0.18)]'
-                      : 'bg-white/[0.02] text-white/70 hover:bg-white/[0.05] hover:text-white border border-white/5'
+                      ? 'bg-gradient-to-r from-cyan-500/15 via-cyan-400/10 to-blue-500/15 text-cyan-300 border border-cyan-400/40 shadow-[0_0_20px_rgba(34,211,238,0.15)] font-semibold'
+                      : 'text-white/60 hover:text-white hover:bg-white/[0.04] border border-transparent font-medium'
                   }`}
                 >
-                  <Icon size={15} className={isActive ? 'text-cyan-400' : 'text-white/40 group-hover:text-white'} />
+                  <Icon size={16} className={isActive ? 'text-cyan-400' : 'text-white/40'} />
                   <span>{tab.label}</span>
                   {tab.count !== undefined && (
-                    <span className={`px-2 py-0.5 rounded text-[10px] font-semibold ${
-                      isActive ? 'bg-cyan-400/20 text-cyan-300' : 'bg-white/10 text-white/60'
+                    <span className={`px-2 py-0.5 rounded-full text-[11px] font-mono font-medium ${
+                      isActive ? 'bg-cyan-400/25 text-cyan-200' : 'bg-white/10 text-white/50'
                     }`}>
                       {tab.count}
                     </span>
                   )}
-                  {isActive && <CornerBrackets className="border-cyan-400/50" />}
                 </button>
               );
             })}
@@ -1137,38 +1137,37 @@ export default function AdminPage() {
           <div>
             <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
-                <h2 className="text-2xl font-bold uppercase font-mono text-white flex items-center gap-2.5">
+                <h2 className="text-xl sm:text-2xl font-bold text-white font-sans tracking-tight flex items-center gap-2.5">
                   <Briefcase size={22} className="text-cyan-400" />
-                  <span>Case Studies Management</span>
+                  <span>Case Studies</span>
                 </h2>
-                <p className="text-xs text-white/50 font-sans mt-1">
-                  Controls the sticky full-bleed stacking case study cards on the public homepage.
+                <p className="text-xs sm:text-sm text-white/60 font-sans mt-1">
+                  Manage the featured portfolio case studies showcased on the public homepage.
                 </p>
               </div>
 
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => handleOpenProjectModal()}
-                  className="group relative inline-flex items-center gap-2 bg-logo-gradient px-5 py-3 text-xs font-mono font-bold uppercase text-black hover:opacity-90 transition-opacity cursor-pointer shadow-[0_0_20px_rgba(0,229,255,0.25)]"
+                  className="group relative inline-flex items-center gap-2 bg-logo-gradient px-4 py-2.5 rounded-xl text-xs font-sans font-bold uppercase tracking-wider text-black hover:opacity-95 transition-all cursor-pointer shadow-lg shadow-cyan-500/20"
                 >
                   <Plus size={16} />
-                  <span>Add New Case Study</span>
-                  <CornerBrackets className="border-black/40" />
+                  <span>Add Case Study</span>
                 </button>
               </div>
             </div>
 
             {loadingProjects ? (
-              <div className="py-24 text-center text-xs font-mono uppercase text-white/40 animate-pulse">
+              <div className="py-24 text-center text-xs font-sans text-white/40 animate-pulse">
                 Loading Case Studies...
               </div>
             ) : projects.length === 0 ? (
-              <div className="py-24 text-center border border-dashed border-white/10 bg-white/[0.01]">
+              <div className="py-24 text-center border border-dashed border-white/10 rounded-2xl bg-white/[0.01]">
                 <Briefcase size={40} className="mx-auto text-white/20 mb-3" />
-                <p className="text-sm font-mono uppercase text-white/40">No case studies found</p>
+                <p className="text-sm font-sans text-white/50">No case studies found</p>
                 <button
                   onClick={() => handleOpenProjectModal()}
-                  className="mt-4 inline-flex items-center gap-2 px-4 py-2 text-xs font-mono uppercase text-cyan-400 border border-cyan-400/30 hover:bg-cyan-400/10"
+                  className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-sans font-semibold text-cyan-400 border border-cyan-400/30 hover:bg-cyan-400/10 transition-colors"
                 >
                   <Plus size={14} /> Add First Case Study
                 </button>
@@ -1178,32 +1177,31 @@ export default function AdminPage() {
                 {projects.map((proj) => (
                   <div
                     key={proj.id}
-                    className="group relative border border-white/10 bg-[#0c0c0c]/90 backdrop-blur-md p-6 hover:border-cyan-400/40 transition-all duration-500 flex flex-col justify-between"
+                    className="group relative rounded-2xl border border-white/10 bg-[#0c0c0f]/90 backdrop-blur-xl p-6 hover:border-cyan-400/40 hover:bg-[#111218] transition-all duration-300 flex flex-col justify-between shadow-xl"
                   >
-                    <CornerBrackets className="border-white/20 group-hover:border-cyan-400/40" />
                     <div>
                       <div className="flex items-center justify-between border-b border-white/5 pb-3 mb-4">
                         <span className="text-xs font-mono text-cyan-400 font-bold">{proj.num}</span>
-                        <span className="text-[11px] font-mono uppercase px-2.5 py-0.5 bg-white/5 text-white/80 border border-white/10">
+                        <span className="text-[11px] font-sans font-medium px-2.5 py-0.5 rounded-full bg-cyan-400/10 text-cyan-300 border border-cyan-400/20">
                           {proj.category}
                         </span>
                       </div>
 
-                      <h3 className="text-xl font-bold uppercase font-mono text-white group-hover:text-cyan-400 transition-colors">
+                      <h3 className="text-lg sm:text-xl font-bold text-white font-sans tracking-tight group-hover:text-cyan-400 transition-colors">
                         {proj.title}
                       </h3>
-                      <p className="mt-2 text-xs text-white/60 font-light italic font-sans line-clamp-2 leading-relaxed">
+                      <p className="mt-2 text-xs sm:text-sm text-white/70 font-sans leading-relaxed line-clamp-2">
                         {proj.description}
                       </p>
 
-                      <div className="mt-4 flex items-center gap-2 text-[11px] font-mono text-white/40">
-                        <span>Image:</span>
-                        <span className="truncate text-white/70 max-w-[280px]">{proj.image}</span>
+                      <div className="mt-4 flex items-center gap-2 text-xs font-sans text-white/40">
+                        <span className="text-white/50 font-medium">Image:</span>
+                        <span className="truncate text-white/70 max-w-[280px] font-mono text-[11px]">{proj.image}</span>
                       </div>
                       {proj.liveUrl && (
-                        <div className="mt-1 flex items-center gap-2 text-[11px] font-mono text-cyan-400">
-                          <span>Live Link:</span>
-                          <span className="truncate max-w-[280px] underline">{proj.liveUrl}</span>
+                        <div className="mt-1.5 flex items-center gap-2 text-xs font-sans text-cyan-400">
+                          <span className="text-white/50 font-medium">Live Link:</span>
+                          <span className="truncate max-w-[280px] underline font-mono text-[11px]">{proj.liveUrl}</span>
                         </div>
                       )}
                     </div>
@@ -1211,14 +1209,13 @@ export default function AdminPage() {
                     <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-end gap-2.5">
                       <button
                         onClick={() => handleOpenProjectModal(proj)}
-                        className="relative inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-mono uppercase bg-white/5 hover:bg-white/10 text-white border border-white/10 transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-sans font-medium bg-white/5 hover:bg-white/10 text-white border border-white/10 transition-colors cursor-pointer"
                       >
                         <Pencil size={13} /> Edit
-                        <CornerBrackets className="border-white/20" />
                       </button>
                       <button
                         onClick={() => handleDeleteProject(proj.id, proj.title)}
-                        className="relative inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-mono uppercase bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-sans font-medium bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition-colors cursor-pointer"
                       >
                         <Trash2 size={13} /> Delete
                       </button>
@@ -1237,38 +1234,37 @@ export default function AdminPage() {
           <div>
             <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
-                <h2 className="text-2xl font-bold uppercase font-mono text-white flex items-center gap-2.5">
+                <h2 className="text-xl sm:text-2xl font-bold text-white font-sans tracking-tight flex items-center gap-2.5">
                   <Cpu size={22} className="text-cyan-400" />
-                  <span>Software We Own (Proprietary SaaS)</span>
+                  <span>Software We Own</span>
                 </h2>
-                <p className="text-xs text-white/50 font-sans mt-1">
-                  Controls the 2-column SaaS products grid on the public homepage (Dalil OS, Cafe OS, etc.).
+                <p className="text-xs sm:text-sm text-white/60 font-sans mt-1">
+                  Manage proprietary SaaS platforms showcased on the public homepage.
                 </p>
               </div>
 
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => handleOpenProductModal()}
-                  className="group relative inline-flex items-center gap-2 bg-logo-gradient px-5 py-3 text-xs font-mono font-bold uppercase text-black hover:opacity-90 transition-opacity cursor-pointer shadow-[0_0_20px_rgba(0,229,255,0.25)]"
+                  className="group relative inline-flex items-center gap-2 bg-logo-gradient px-4 py-2.5 rounded-xl text-xs font-sans font-bold uppercase tracking-wider text-black hover:opacity-95 transition-all cursor-pointer shadow-lg shadow-cyan-500/20"
                 >
                   <Plus size={16} />
-                  <span>Add New SaaS Product</span>
-                  <CornerBrackets className="border-black/40" />
+                  <span>Add SaaS Product</span>
                 </button>
               </div>
             </div>
 
             {loadingProducts ? (
-              <div className="py-24 text-center text-xs font-mono uppercase text-white/40 animate-pulse">
+              <div className="py-24 text-center text-xs font-sans text-white/40 animate-pulse">
                 Loading Products...
               </div>
             ) : products.length === 0 ? (
-              <div className="py-24 text-center border border-dashed border-white/10 bg-white/[0.01]">
+              <div className="py-24 text-center border border-dashed border-white/10 rounded-2xl bg-white/[0.01]">
                 <Cpu size={40} className="mx-auto text-white/20 mb-3" />
-                <p className="text-sm font-mono uppercase text-white/40">No software products found</p>
+                <p className="text-sm font-sans text-white/50">No software products found</p>
                 <button
                   onClick={() => handleOpenProductModal()}
-                  className="mt-4 inline-flex items-center gap-2 px-4 py-2 text-xs font-mono uppercase text-cyan-400 border border-cyan-400/30 hover:bg-cyan-400/10"
+                  className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-sans font-semibold text-cyan-400 border border-cyan-400/30 hover:bg-cyan-400/10 transition-colors"
                 >
                   <Plus size={14} /> Add First Product
                 </button>
@@ -1278,52 +1274,51 @@ export default function AdminPage() {
                 {products.map((prod) => (
                   <div
                     key={prod.id}
-                    className="group relative border border-white/10 bg-[#0c0c0c]/90 backdrop-blur-md p-6 hover:border-cyan-400/40 transition-all duration-500 flex flex-col justify-between"
+                    className="group relative rounded-2xl border border-white/10 bg-[#0c0c0f]/90 backdrop-blur-xl p-6 hover:border-cyan-400/40 hover:bg-[#111218] transition-all duration-300 flex flex-col justify-between shadow-xl"
                   >
-                    <CornerBrackets className="border-white/20 group-hover:border-cyan-400/40" />
                     <div>
                       <div className="flex items-center justify-between border-b border-white/5 pb-3 mb-4">
-                        <span className="text-[11px] font-mono uppercase px-2.5 py-0.5 bg-white/5 text-cyan-400 border border-cyan-400/25">
+                        <span className="text-[11px] font-sans font-medium px-2.5 py-0.5 rounded-full bg-cyan-400/10 text-cyan-300 border border-cyan-400/20">
                           {prod.tag}
                         </span>
-                        <span className="text-[10px] font-mono uppercase text-white/40">
+                        <span className="text-xs font-sans text-white/40 font-medium">
                           {prod.status || 'Active Product'}
                         </span>
                       </div>
 
                       <div className="flex items-baseline gap-3">
-                        <h3 className="text-2xl font-bold uppercase font-mono text-white group-hover:text-cyan-400 transition-colors">
+                        <h3 className="text-lg sm:text-xl font-bold text-white font-sans tracking-tight group-hover:text-cyan-400 transition-colors">
                           {prod.name}
                         </h3>
                         {prod.banglaName && (
-                          <span className="text-lg font-normal text-white/40">
+                          <span className="text-base font-normal text-white/45 font-sans">
                             {prod.banglaName}
                           </span>
                         )}
                       </div>
 
-                      <p className="mt-3 text-xs text-white/60 font-light italic font-sans leading-relaxed">
+                      <p className="mt-2 text-xs sm:text-sm text-white/70 font-sans leading-relaxed">
                         {prod.description}
                       </p>
 
                       {/* Feature Tags */}
                       <div className="mt-4 flex flex-wrap gap-1.5">
                         {Array.isArray(prod.features) && prod.features.map((feat, idx) => (
-                          <span key={idx} className="px-2.5 py-0.5 text-[10px] font-mono uppercase bg-white/[0.03] text-white/80 border border-white/5">
-                            #{feat}
+                          <span key={idx} className="px-2.5 py-1 text-[11px] font-sans rounded-md bg-white/[0.04] text-white/75 border border-white/5">
+                            {feat}
                           </span>
                         ))}
                       </div>
 
-                      <div className="mt-4 pt-3 border-t border-white/5 flex flex-col gap-1 text-[11px] font-mono text-white/40">
+                      <div className="mt-4 pt-3 border-t border-white/5 flex flex-col gap-1.5 text-xs font-sans text-white/40">
                         <div className="truncate">
-                          <span className="text-white/30">Screenshot: </span>
-                          <span className="text-white/70">{prod.image}</span>
+                          <span className="text-white/50 font-medium">Screenshot: </span>
+                          <span className="text-white/70 font-mono text-[11px]">{prod.image}</span>
                         </div>
                         {prod.liveUrl && (
                           <div className="truncate text-cyan-400">
-                            <span className="text-white/30">Live Demo: </span>
-                            <a href={prod.liveUrl} target="_blank" rel="noopener noreferrer" className="underline">
+                            <span className="text-white/50 font-medium">Live Demo: </span>
+                            <a href={prod.liveUrl} target="_blank" rel="noopener noreferrer" className="underline font-mono text-[11px]">
                               {prod.liveUrl}
                             </a>
                           </div>
@@ -1334,14 +1329,13 @@ export default function AdminPage() {
                     <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-end gap-2.5">
                       <button
                         onClick={() => handleOpenProductModal(prod)}
-                        className="relative inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-mono uppercase bg-white/5 hover:bg-white/10 text-white border border-white/10 transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-sans font-medium bg-white/5 hover:bg-white/10 text-white border border-white/10 transition-colors cursor-pointer"
                       >
                         <Pencil size={13} /> Edit
-                        <CornerBrackets className="border-white/20" />
                       </button>
                       <button
                         onClick={() => handleDeleteProduct(prod.id, prod.name)}
-                        className="relative inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-mono uppercase bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-sans font-medium bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition-colors cursor-pointer"
                       >
                         <Trash2 size={13} /> Delete
                       </button>
@@ -1360,38 +1354,37 @@ export default function AdminPage() {
           <div>
             <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
-                <h2 className="text-2xl font-bold uppercase font-mono text-white flex items-center gap-2.5">
+                <h2 className="text-xl sm:text-2xl font-bold text-white font-sans tracking-tight flex items-center gap-2.5">
                   <Layers size={22} className="text-cyan-400" />
-                  <span>Services Catalog (What You Get)</span>
+                  <span>Services Catalog</span>
                 </h2>
-                <p className="text-xs text-white/50 font-sans mt-1">
-                  Controls the interactive services accordion and pricing cards on the public homepage.
+                <p className="text-xs sm:text-sm text-white/60 font-sans mt-1">
+                  Manage interactive services accordion and offerings on the public homepage.
                 </p>
               </div>
 
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => handleOpenServiceModal()}
-                  className="group relative inline-flex items-center gap-2 bg-logo-gradient px-5 py-3 text-xs font-mono font-bold uppercase text-black hover:opacity-90 transition-opacity cursor-pointer shadow-[0_0_20px_rgba(0,229,255,0.25)]"
+                  className="group relative inline-flex items-center gap-2 bg-logo-gradient px-4 py-2.5 rounded-xl text-xs font-sans font-bold uppercase tracking-wider text-black hover:opacity-95 transition-all cursor-pointer shadow-lg shadow-cyan-500/20"
                 >
                   <Plus size={16} />
-                  <span>Add New Service</span>
-                  <CornerBrackets className="border-black/40" />
+                  <span>Add Service</span>
                 </button>
               </div>
             </div>
 
             {loadingServices ? (
-              <div className="py-24 text-center text-xs font-mono uppercase text-white/40 animate-pulse">
+              <div className="py-24 text-center text-xs font-sans text-white/40 animate-pulse">
                 Loading Services...
               </div>
             ) : services.length === 0 ? (
-              <div className="py-24 text-center border border-dashed border-white/10 bg-white/[0.01]">
+              <div className="py-24 text-center border border-dashed border-white/10 rounded-2xl bg-white/[0.01]">
                 <Layers size={40} className="mx-auto text-white/20 mb-3" />
-                <p className="text-sm font-mono uppercase text-white/40">No services found</p>
+                <p className="text-sm font-sans text-white/50">No services found</p>
                 <button
                   onClick={() => handleOpenServiceModal()}
-                  className="mt-4 inline-flex items-center gap-2 px-4 py-2 text-xs font-mono uppercase text-cyan-400 border border-cyan-400/30 hover:bg-cyan-400/10"
+                  className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-sans font-semibold text-cyan-400 border border-cyan-400/30 hover:bg-cyan-400/10 transition-colors"
                 >
                   <Plus size={14} /> Add First Service
                 </button>
@@ -1401,30 +1394,29 @@ export default function AdminPage() {
                 {services.map((srv) => (
                   <div
                     key={srv.id}
-                    className="group relative border border-white/10 bg-[#0c0c0c]/90 backdrop-blur-md p-6 hover:border-cyan-400/40 transition-all duration-500 flex flex-col justify-between"
+                    className="group relative rounded-2xl border border-white/10 bg-[#0c0c0f]/90 backdrop-blur-xl p-6 hover:border-cyan-400/40 hover:bg-[#111218] transition-all duration-300 flex flex-col justify-between shadow-xl"
                   >
-                    <CornerBrackets className="border-white/20 group-hover:border-cyan-400/40" />
                     <div>
                       <div className="flex items-center justify-between border-b border-white/5 pb-3 mb-3">
                         <span className="text-xs font-mono text-cyan-400 font-bold">{srv.num}</span>
-                        <span className="text-[11px] font-mono text-emerald-400 font-semibold">
+                        <span className="text-xs font-sans text-emerald-400 font-medium px-2 py-0.5 rounded-full bg-emerald-400/10 border border-emerald-400/20">
                           {srv.pricing}
                         </span>
                       </div>
 
-                      <h3 className="text-lg font-bold uppercase font-mono text-white group-hover:text-cyan-400 transition-colors">
+                      <h3 className="text-lg font-bold text-white font-sans tracking-tight group-hover:text-cyan-400 transition-colors">
                         {srv.title}
                       </h3>
-                      <p className="mt-2 text-xs text-white/60 font-light italic font-sans line-clamp-2 leading-relaxed">
+                      <p className="mt-2 text-xs sm:text-sm text-white/70 font-sans leading-relaxed line-clamp-2">
                         {srv.description}
                       </p>
 
                       {/* Deliverables list */}
-                      <div className="mt-4 space-y-1">
-                        <p className="text-[10px] font-mono uppercase text-white/40">What we offer:</p>
+                      <div className="mt-4 space-y-1.5">
+                        <p className="text-[11px] font-sans font-medium uppercase tracking-wider text-white/40">What we offer:</p>
                         {Array.isArray(srv.features) && srv.features.map((feat, idx) => (
-                          <div key={idx} className="text-[11px] font-mono text-white/70 flex items-center gap-1.5">
-                            <span className="text-cyan-400">▪</span> {feat}
+                          <div key={idx} className="text-xs font-sans text-white/80 flex items-center gap-1.5">
+                            <span className="text-cyan-400 text-xs">✓</span> {feat}
                           </div>
                         ))}
                       </div>
@@ -1433,14 +1425,13 @@ export default function AdminPage() {
                     <div className="mt-6 pt-3 border-t border-white/5 flex items-center justify-end gap-2.5">
                       <button
                         onClick={() => handleOpenServiceModal(srv)}
-                        className="relative inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-mono uppercase bg-white/5 hover:bg-white/10 text-white border border-white/10 transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-sans font-medium bg-white/5 hover:bg-white/10 text-white border border-white/10 transition-colors cursor-pointer"
                       >
                         <Pencil size={13} /> Edit
-                        <CornerBrackets className="border-white/20" />
                       </button>
                       <button
                         onClick={() => handleDeleteService(srv.id, srv.title)}
-                        className="relative inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-mono uppercase bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-sans font-medium bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition-colors cursor-pointer"
                       >
                         <Trash2 size={13} /> Delete
                       </button>
@@ -1459,38 +1450,37 @@ export default function AdminPage() {
           <div>
             <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
-                <h2 className="text-2xl font-bold uppercase font-mono text-white flex items-center gap-2.5">
+                <h2 className="text-xl sm:text-2xl font-bold text-white font-sans tracking-tight flex items-center gap-2.5">
                   <Users size={22} className="text-cyan-400" />
-                  <span>Teachers &amp; Leadership (Why Choose Us)</span>
+                  <span>Teachers &amp; Leadership</span>
                 </h2>
-                <p className="text-xs text-white/50 font-sans mt-1">
-                  Manage faculty, instructors, mentors, and leadership profiles. Photo can be selected/uploaded directly from files!
+                <p className="text-xs sm:text-sm text-white/60 font-sans mt-1">
+                  Manage mentors, instructors, and executive leadership profiles with direct photo upload.
                 </p>
               </div>
 
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => handleOpenTeamModal()}
-                  className="group relative inline-flex items-center gap-2 bg-logo-gradient px-5 py-3 text-xs font-mono font-bold uppercase text-black hover:opacity-90 transition-opacity cursor-pointer shadow-[0_0_20px_rgba(0,229,255,0.25)]"
+                  className="group relative inline-flex items-center gap-2 bg-logo-gradient px-4 py-2.5 rounded-xl text-xs font-sans font-bold uppercase tracking-wider text-black hover:opacity-95 transition-all cursor-pointer shadow-lg shadow-cyan-500/20"
                 >
                   <Plus size={16} />
-                  <span>Add New Teacher / Leader</span>
-                  <CornerBrackets className="border-black/40" />
+                  <span>Add Member</span>
                 </button>
               </div>
             </div>
 
             {loadingTeam ? (
-              <div className="py-24 text-center text-xs font-mono uppercase text-white/40 animate-pulse">
+              <div className="py-24 text-center text-xs font-sans text-white/40 animate-pulse">
                 Loading Team &amp; Faculty...
               </div>
             ) : team.length === 0 ? (
-              <div className="py-24 text-center border border-dashed border-white/10 bg-white/[0.01]">
+              <div className="py-24 text-center border border-dashed border-white/10 rounded-2xl bg-white/[0.01]">
                 <Users size={40} className="mx-auto text-white/20 mb-3" />
-                <p className="text-sm font-mono uppercase text-white/40">No faculty members found</p>
+                <p className="text-sm font-sans text-white/50">No faculty members found</p>
                 <button
                   onClick={() => handleOpenTeamModal()}
-                  className="mt-4 inline-flex items-center gap-2 px-4 py-2 text-xs font-mono uppercase text-cyan-400 border border-cyan-400/30 hover:bg-cyan-400/10"
+                  className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-sans font-semibold text-cyan-400 border border-cyan-400/30 hover:bg-cyan-400/10 transition-colors"
                 >
                   <Plus size={14} /> Add First Member
                 </button>
@@ -1500,14 +1490,12 @@ export default function AdminPage() {
                 {team.map((member) => (
                   <div
                     key={member.id}
-                    className="group relative border border-white/10 bg-[#0c0c0c]/90 backdrop-blur-md p-6 hover:border-cyan-400/40 transition-all duration-500 flex flex-col justify-between"
+                    className="group relative rounded-2xl border border-white/10 bg-[#0c0c0f]/90 backdrop-blur-xl p-6 hover:border-cyan-400/40 hover:bg-[#111218] transition-all duration-300 flex flex-col justify-between shadow-xl"
                   >
-                    <CornerBrackets className="border-white/20 group-hover:border-cyan-400/40" />
                     <div>
                       {/* Photo & Basic info */}
                       <div className="flex items-start gap-4 mb-4">
-                        <div className="relative h-16 w-16 shrink-0 rounded-xl overflow-hidden border border-white/10 bg-slate-900 filter group-hover:drop-shadow-[0_0_12px_rgba(0,229,255,0.25)] transition-all">
-                          {/* Use standard img for dynamic direct URL support */}
+                        <div className="relative h-16 w-16 shrink-0 rounded-2xl overflow-hidden border border-white/15 bg-slate-900 group-hover:border-cyan-400/40 transition-all shadow-md">
                           <img
                             src={member.photo || '/images/rezhone-ceo.jpg'}
                             alt={member.name}
@@ -1515,30 +1503,30 @@ export default function AdminPage() {
                           />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className="text-lg font-bold uppercase font-mono text-white truncate group-hover:text-cyan-400 transition-colors">
+                          <h3 className="text-lg font-bold text-white font-sans tracking-tight truncate group-hover:text-cyan-400 transition-colors">
                             {member.name}
                           </h3>
-                          <p className="text-xs text-cyan-400 font-mono truncate">
+                          <p className="text-xs font-medium text-cyan-400 font-sans truncate mt-0.5">
                             {member.role}
                           </p>
-                          <span className="inline-block mt-1 text-[10px] font-mono uppercase px-2 py-0.5 bg-white/5 text-white/60 rounded border border-white/5">
+                          <span className="inline-block mt-1 text-[11px] font-sans font-medium px-2 py-0.5 bg-white/5 text-white/70 rounded-full border border-white/10">
                             {member.experience || '5+ Years Exp'}
                           </span>
                         </div>
                       </div>
 
                       <div className="space-y-2 border-t border-white/5 pt-3">
-                        <p className="text-[11px] text-white/40 font-mono uppercase">
+                        <p className="text-[11px] text-cyan-400/90 font-mono uppercase tracking-wider font-semibold">
                           {member.department || 'CORE FACULTY'}
                         </p>
-                        <p className="text-xs text-white/70 italic font-sans leading-relaxed line-clamp-3">
+                        <p className="text-xs sm:text-sm text-white/70 font-sans leading-relaxed line-clamp-3">
                           &ldquo;{member.quote || member.bio}&rdquo;
                         </p>
 
                         {/* Skills badges */}
-                        <div className="mt-3 flex flex-wrap gap-1">
+                        <div className="mt-3 flex flex-wrap gap-1.5">
                           {Array.isArray(member.skills) && member.skills.slice(0, 4).map((sk, idx) => (
-                            <span key={idx} className="px-2 py-0.5 text-[10px] font-mono bg-white/[0.03] text-white/80 border border-white/5">
+                            <span key={idx} className="px-2 py-0.5 text-[10px] font-sans rounded-md bg-white/[0.04] text-white/75 border border-white/5">
                               {sk}
                             </span>
                           ))}
@@ -1547,23 +1535,22 @@ export default function AdminPage() {
                     </div>
 
                     <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
-                      <span className={`text-[10px] font-mono uppercase ${
+                      <span className={`text-[11px] font-sans font-medium ${
                         member.isHighlighted !== false ? 'text-emerald-400' : 'text-white/40'
                       }`}>
-                        {member.isHighlighted !== false ? '● Visible in Why Choose Us' : '○ Hidden'}
+                        {member.isHighlighted !== false ? '● Visible' : '○ Hidden'}
                       </span>
 
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => handleOpenTeamModal(member)}
-                          className="relative inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-mono uppercase bg-white/5 hover:bg-white/10 text-white border border-white/10 transition-colors cursor-pointer"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-sans font-medium bg-white/5 hover:bg-white/10 text-white border border-white/10 transition-colors cursor-pointer"
                         >
                           <Pencil size={13} /> Edit
-                          <CornerBrackets className="border-white/20" />
                         </button>
                         <button
                           onClick={() => handleDeleteTeam(member.id, member.name)}
-                          className="relative inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-mono uppercase bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition-colors cursor-pointer"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-sans font-medium bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition-colors cursor-pointer"
                         >
                           <Trash2 size={13} /> Delete
                         </button>
@@ -1583,38 +1570,37 @@ export default function AdminPage() {
           <div>
             <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
-                <h2 className="text-2xl font-bold uppercase font-mono text-white flex items-center gap-2.5">
+                <h2 className="text-xl sm:text-2xl font-bold text-white font-sans tracking-tight flex items-center gap-2.5">
                   <Star size={22} className="text-cyan-400" />
-                  <span>Client Stories (Reviews)</span>
+                  <span>Client Stories</span>
                 </h2>
-                <p className="text-xs text-white/50 font-sans mt-1">
-                  Controls the founder testimonials and reviews slider on the public homepage.
+                <p className="text-xs sm:text-sm text-white/60 font-sans mt-1">
+                  Manage client testimonials and reviews showcased on the public homepage.
                 </p>
               </div>
 
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => handleOpenReviewModal()}
-                  className="group relative inline-flex items-center gap-2 bg-logo-gradient px-5 py-3 text-xs font-mono font-bold uppercase text-black hover:opacity-90 transition-opacity cursor-pointer shadow-[0_0_20px_rgba(0,229,255,0.25)]"
+                  className="group relative inline-flex items-center gap-2 bg-logo-gradient px-4 py-2.5 rounded-xl text-xs font-sans font-bold uppercase tracking-wider text-black hover:opacity-95 transition-all cursor-pointer shadow-lg shadow-cyan-500/20"
                 >
                   <Plus size={16} />
-                  <span>Add New Review</span>
-                  <CornerBrackets className="border-black/40" />
+                  <span>Add Review</span>
                 </button>
               </div>
             </div>
 
             {loadingReviews ? (
-              <div className="py-24 text-center text-xs font-mono uppercase text-white/40 animate-pulse">
+              <div className="py-24 text-center text-xs font-sans text-white/40 animate-pulse">
                 Loading Client Reviews...
               </div>
             ) : reviews.length === 0 ? (
-              <div className="py-24 text-center border border-dashed border-white/10 bg-white/[0.01]">
+              <div className="py-24 text-center border border-dashed border-white/10 rounded-2xl bg-white/[0.01]">
                 <Star size={40} className="mx-auto text-white/20 mb-3" />
-                <p className="text-sm font-mono uppercase text-white/40">No reviews found</p>
+                <p className="text-sm font-sans text-white/50">No reviews found</p>
                 <button
                   onClick={() => handleOpenReviewModal()}
-                  className="mt-4 inline-flex items-center gap-2 px-4 py-2 text-xs font-mono uppercase text-cyan-400 border border-cyan-400/30 hover:bg-cyan-400/10"
+                  className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-sans font-semibold text-cyan-400 border border-cyan-400/30 hover:bg-cyan-400/10 transition-colors"
                 >
                   <Plus size={14} /> Add First Review
                 </button>
@@ -1624,9 +1610,8 @@ export default function AdminPage() {
                 {reviews.map((rev) => (
                   <div
                     key={rev.id}
-                    className="group relative border border-white/10 bg-[#0c0c0c]/90 backdrop-blur-md p-6 hover:border-cyan-400/40 transition-all duration-500 flex flex-col justify-between"
+                    className="group relative rounded-2xl border border-white/10 bg-[#0c0c0f]/90 backdrop-blur-xl p-6 hover:border-cyan-400/40 hover:bg-[#111218] transition-all duration-300 flex flex-col justify-between shadow-xl"
                   >
-                    <CornerBrackets className="border-white/20 group-hover:border-cyan-400/40" />
                     <div>
                       <div className="flex items-center justify-between border-b border-white/5 pb-3 mb-3">
                         <div className="flex items-center gap-1 text-amber-400">
@@ -1635,18 +1620,18 @@ export default function AdminPage() {
                           ))}
                         </div>
                         {rev.country && (
-                          <span className="text-[11px] font-mono text-white/50">
+                          <span className="text-xs font-sans text-white/50">
                             {rev.country}
                           </span>
                         )}
                       </div>
 
-                      <p className="text-xs text-white/80 font-light italic font-sans leading-relaxed line-clamp-4">
+                      <p className="text-xs sm:text-sm text-white/80 font-sans leading-relaxed line-clamp-4">
                         &ldquo;{rev.quote}&rdquo;
                       </p>
 
                       {rev.metrics && (
-                        <div className="mt-3 inline-block px-2.5 py-0.5 bg-cyan-400/10 text-cyan-400 border border-cyan-400/25 text-[10px] font-mono font-semibold">
+                        <div className="mt-3 inline-block px-2.5 py-0.5 rounded-full bg-cyan-400/10 text-cyan-300 border border-cyan-400/20 text-xs font-sans font-medium">
                           {rev.metrics}
                         </div>
                       )}
@@ -1654,10 +1639,10 @@ export default function AdminPage() {
 
                     <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
                       <div>
-                        <h4 className="text-sm font-bold uppercase font-mono text-white">
+                        <h4 className="text-sm font-bold text-white font-sans tracking-tight">
                           {rev.clientName}
                         </h4>
-                        <p className="text-[11px] text-white/50 font-mono">
+                        <p className="text-xs text-white/50 font-sans mt-0.5">
                           {rev.role} {rev.company ? `· ${rev.company}` : ''}
                         </p>
                       </div>
@@ -1665,14 +1650,13 @@ export default function AdminPage() {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => handleOpenReviewModal(rev)}
-                          className="relative inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-mono uppercase bg-white/5 hover:bg-white/10 text-white border border-white/10 transition-colors cursor-pointer"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-sans font-medium bg-white/5 hover:bg-white/10 text-white border border-white/10 transition-colors cursor-pointer"
                         >
                           <Pencil size={13} /> Edit
-                          <CornerBrackets className="border-white/20" />
                         </button>
                         <button
                           onClick={() => handleDeleteReview(rev.id, rev.clientName)}
-                          className="relative inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-mono uppercase bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition-colors cursor-pointer"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-sans font-medium bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition-colors cursor-pointer"
                         >
                           <Trash2 size={13} /> Delete
                         </button>
@@ -1691,27 +1675,26 @@ export default function AdminPage() {
         {activeTab === 'settings' && (
           <div className="max-w-4xl mx-auto">
             <div className="mb-8 border-b border-white/5 pb-4">
-              <h2 className="text-2xl font-bold uppercase font-mono text-white flex items-center gap-2.5">
+              <h2 className="text-xl sm:text-2xl font-bold text-white font-sans tracking-tight flex items-center gap-2.5">
                 <Settings size={22} className="text-cyan-400" />
-                <span>Get In Touch &amp; Global Site Settings</span>
+                <span>Contact Coordinates &amp; Global Settings</span>
               </h2>
-              <p className="text-xs text-white/50 font-sans mt-1">
-                Updating these coordinates will automatically update the floating WhatsApp button, header quick chat, contact page, and footer across the whole website.
+              <p className="text-xs sm:text-sm text-white/60 font-sans mt-1">
+                Updating these coordinates automatically updates the floating WhatsApp button, header quick chat, contact section, and footer across the entire website.
               </p>
             </div>
 
-            <form onSubmit={handleSaveSettings} className="space-y-8">
+            <form onSubmit={handleSaveSettings} className="space-y-6">
               {/* WhatsApp & Phone Coordinates */}
-              <div className="relative border border-white/10 bg-[#0c0c0c]/90 backdrop-blur-md p-6 sm:p-8 space-y-6">
-                <CornerBrackets className="border-white/30" />
-                <h3 className="text-sm font-mono uppercase text-cyan-400 font-bold flex items-center gap-2">
+              <div className="relative rounded-2xl border border-white/10 bg-[#0c0c0f]/90 backdrop-blur-xl p-6 sm:p-8 space-y-6 shadow-xl">
+                <h3 className="text-sm font-sans font-bold text-cyan-300 flex items-center gap-2 tracking-wide">
                   <Phone size={16} />
                   <span>WhatsApp &amp; Direct Phone Coordinates</span>
                 </h3>
 
                 <div className="grid gap-6 sm:grid-cols-2">
                   <div>
-                    <label className="block text-xs font-mono uppercase text-white/70 mb-2">
+                    <label className="block text-xs font-sans font-medium text-white/70 mb-2">
                       WhatsApp Raw Number (No +, No spaces, No dashes)
                     </label>
                     <input
@@ -1720,15 +1703,15 @@ export default function AdminPage() {
                       placeholder="8801909711808"
                       value={settings.whatsappNumber || ''}
                       onChange={(e) => setSettings({ ...settings, whatsappNumber: e.target.value })}
-                      className="w-full px-4 py-3 bg-black/60 border border-white/10 font-mono text-sm text-white focus:outline-none focus:border-cyan-400"
+                      className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl font-mono text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                     />
-                    <p className="mt-1.5 text-[11px] text-white/40 font-mono">
+                    <p className="mt-1.5 text-xs text-white/45 font-sans">
                       Controls floating WhatsApp button &amp; header chat. Example: 8801909711808
                     </p>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-mono uppercase text-white/70 mb-2">
+                    <label className="block text-xs font-sans font-medium text-white/70 mb-2">
                       Display Phone Number
                     </label>
                     <input
@@ -1737,9 +1720,9 @@ export default function AdminPage() {
                       placeholder="+880 1909-711808"
                       value={settings.displayPhone || ''}
                       onChange={(e) => setSettings({ ...settings, displayPhone: e.target.value })}
-                      className="w-full px-4 py-3 bg-black/60 border border-white/10 font-mono text-sm text-white focus:outline-none focus:border-cyan-400"
+                      className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl font-sans text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                     />
-                    <p className="mt-1.5 text-[11px] text-white/40 font-mono">
+                    <p className="mt-1.5 text-xs text-white/45 font-sans">
                       Formatted phone shown on Contact cards.
                     </p>
                   </div>
@@ -1747,16 +1730,15 @@ export default function AdminPage() {
               </div>
 
               {/* Email & Working Hours */}
-              <div className="relative border border-white/10 bg-[#0c0c0c]/90 backdrop-blur-md p-6 sm:p-8 space-y-6">
-                <CornerBrackets className="border-white/30" />
-                <h3 className="text-sm font-mono uppercase text-cyan-400 font-bold flex items-center gap-2">
+              <div className="relative rounded-2xl border border-white/10 bg-[#0c0c0f]/90 backdrop-blur-xl p-6 sm:p-8 space-y-6 shadow-xl">
+                <h3 className="text-sm font-sans font-bold text-cyan-300 flex items-center gap-2 tracking-wide">
                   <Mail size={16} />
                   <span>Official Email &amp; Operation Hours</span>
                 </h3>
 
                 <div className="grid gap-6 sm:grid-cols-2">
                   <div>
-                    <label className="block text-xs font-mono uppercase text-white/70 mb-2">
+                    <label className="block text-xs font-sans font-medium text-white/70 mb-2">
                       Official Email Address
                     </label>
                     <input
@@ -1765,12 +1747,12 @@ export default function AdminPage() {
                       placeholder="drivenitsolution@gmail.com"
                       value={settings.officialEmail || ''}
                       onChange={(e) => setSettings({ ...settings, officialEmail: e.target.value })}
-                      className="w-full px-4 py-3 bg-black/60 border border-white/10 font-mono text-sm text-white focus:outline-none focus:border-cyan-400"
+                      className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl font-sans text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-mono uppercase text-white/70 mb-2">
+                    <label className="block text-xs font-sans font-medium text-white/70 mb-2">
                       Working Hours / WhatsApp Status
                     </label>
                     <input
@@ -1778,13 +1760,13 @@ export default function AdminPage() {
                       placeholder="Mon-Fri from 8am to 6pm (Official WhatsApp Active)"
                       value={settings.workingHours || ''}
                       onChange={(e) => setSettings({ ...settings, workingHours: e.target.value })}
-                      className="w-full px-4 py-3 bg-black/60 border border-white/10 font-mono text-sm text-white focus:outline-none focus:border-cyan-400"
+                      className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl font-sans text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-mono uppercase text-white/70 mb-2">
+                  <label className="block text-xs font-sans font-medium text-white/70 mb-2">
                     Physical / HQ Address
                   </label>
                   <input
@@ -1792,22 +1774,21 @@ export default function AdminPage() {
                     placeholder="Dhaka, Bangladesh · Remote-First Worldwide"
                     value={settings.officeAddress || ''}
                     onChange={(e) => setSettings({ ...settings, officeAddress: e.target.value })}
-                    className="w-full px-4 py-3 bg-black/60 border border-white/10 font-mono text-sm text-white focus:outline-none focus:border-cyan-400"
+                    className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl font-sans text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                   />
                 </div>
               </div>
 
               {/* Social Media Links */}
-              <div className="relative border border-white/10 bg-[#0c0c0c]/90 backdrop-blur-md p-6 sm:p-8 space-y-6">
-                <CornerBrackets className="border-white/30" />
-                <h3 className="text-sm font-mono uppercase text-cyan-400 font-bold flex items-center gap-2">
+              <div className="relative rounded-2xl border border-white/10 bg-[#0c0c0f]/90 backdrop-blur-xl p-6 sm:p-8 space-y-6 shadow-xl">
+                <h3 className="text-sm font-sans font-bold text-cyan-300 flex items-center gap-2 tracking-wide">
                   <Globe size={16} />
                   <span>Social Media Profiles</span>
                 </h3>
 
                 <div className="grid gap-6 sm:grid-cols-2">
                   <div>
-                    <label className="block text-xs font-mono uppercase text-white/70 mb-2">
+                    <label className="block text-xs font-sans font-medium text-white/70 mb-2">
                       LinkedIn URL
                     </label>
                     <input
@@ -1818,12 +1799,12 @@ export default function AdminPage() {
                         ...settings,
                         socials: { ...settings.socials, linkedin: e.target.value }
                       })}
-                      className="w-full px-4 py-3 bg-black/60 border border-white/10 font-mono text-sm text-white focus:outline-none focus:border-cyan-400"
+                      className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl font-sans text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-mono uppercase text-white/70 mb-2">
+                    <label className="block text-xs font-sans font-medium text-white/70 mb-2">
                       Facebook URL
                     </label>
                     <input
@@ -1834,12 +1815,12 @@ export default function AdminPage() {
                         ...settings,
                         socials: { ...settings.socials, facebook: e.target.value }
                       })}
-                      className="w-full px-4 py-3 bg-black/60 border border-white/10 font-mono text-sm text-white focus:outline-none focus:border-cyan-400"
+                      className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl font-sans text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-mono uppercase text-white/70 mb-2">
+                    <label className="block text-xs font-sans font-medium text-white/70 mb-2">
                       GitHub URL
                     </label>
                     <input
@@ -1850,12 +1831,12 @@ export default function AdminPage() {
                         ...settings,
                         socials: { ...settings.socials, github: e.target.value }
                       })}
-                      className="w-full px-4 py-3 bg-black/60 border border-white/10 font-mono text-sm text-white focus:outline-none focus:border-cyan-400"
+                      className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl font-sans text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-mono uppercase text-white/70 mb-2">
+                    <label className="block text-xs font-sans font-medium text-white/70 mb-2">
                       X / Twitter URL
                     </label>
                     <input
@@ -1866,22 +1847,21 @@ export default function AdminPage() {
                         ...settings,
                         socials: { ...settings.socials, twitter: e.target.value }
                       })}
-                      className="w-full px-4 py-3 bg-black/60 border border-white/10 font-mono text-sm text-white focus:outline-none focus:border-cyan-400"
+                      className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl font-sans text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Submit Button */}
-              <div className="flex justify-end pt-4">
+              <div className="flex justify-end pt-2">
                 <button
                   type="submit"
                   disabled={savingSettings}
-                  className="group relative inline-flex items-center gap-2.5 px-8 py-4 bg-logo-gradient text-black font-mono font-bold text-xs uppercase hover:opacity-95 transition-opacity cursor-pointer shadow-[0_0_30px_rgba(0,229,255,0.3)] disabled:opacity-50"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-sans font-bold text-xs uppercase tracking-wider hover:opacity-95 transition-all cursor-pointer shadow-lg shadow-cyan-500/25 disabled:opacity-50"
                 >
                   <Save size={16} />
                   <span>{savingSettings ? 'Saving Settings...' : 'Save & Publish Global Settings'}</span>
-                  <CornerBrackets className="border-black/40" />
                 </button>
               </div>
             </form>
@@ -1896,11 +1876,11 @@ export default function AdminPage() {
             {/* Top Toolbar */}
             <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
-                <h2 className="text-2xl font-bold uppercase font-mono text-white flex items-center gap-2.5">
+                <h2 className="text-xl sm:text-2xl font-bold text-white font-sans tracking-tight flex items-center gap-2.5">
                   <ShieldCheck size={22} className="text-cyan-400" />
-                  <span>Users & Access Control</span>
+                  <span>Users &amp; Access Control</span>
                 </h2>
-                <p className="text-xs text-white/50 font-sans mt-1">
+                <p className="text-xs sm:text-sm text-white/60 font-sans mt-1">
                   Manage administrators, permission levels (Super Admin vs Admin), and active Google login accounts.
                 </p>
               </div>
@@ -1912,14 +1892,13 @@ export default function AdminPage() {
                       setUserForm({ name: '', email: '', role: 'admin' });
                       setIsUserModalOpen(true);
                     }}
-                    className="group relative inline-flex items-center gap-2 bg-logo-gradient px-5 py-3 text-xs font-mono font-bold uppercase text-black hover:opacity-90 transition-opacity cursor-pointer shadow-[0_0_20px_rgba(0,229,255,0.25)]"
+                    className="group relative inline-flex items-center gap-2 bg-logo-gradient px-4 py-2.5 rounded-xl text-xs font-sans font-bold uppercase tracking-wider text-black hover:opacity-95 transition-all cursor-pointer shadow-lg shadow-cyan-500/20"
                   >
                     <UserPlus size={16} />
-                    <span>Add New Administrator</span>
-                    <CornerBrackets className="border-black/40" />
+                    <span>Add Administrator</span>
                   </button>
                 ) : (
-                  <span className="px-3.5 py-2 text-xs font-mono text-white/50 bg-white/5 border border-white/10 flex items-center gap-2">
+                  <span className="px-3.5 py-2 text-xs font-sans text-white/50 bg-white/5 rounded-xl border border-white/10 flex items-center gap-2">
                     <Lock size={13} />
                     <span>View Only (Super Admin Required to Modify)</span>
                   </span>
@@ -1929,24 +1908,22 @@ export default function AdminPage() {
 
             {/* Permission Matrix Info Cards */}
             <div className="mb-8 grid gap-4 sm:grid-cols-2">
-              <div className="relative border border-cyan-500/30 bg-cyan-950/20 p-5 font-mono text-xs text-white">
-                <CornerBrackets className="border-cyan-400/40" />
-                <div className="flex items-center gap-2 font-bold text-cyan-400 uppercase text-xs mb-2">
-                  <Crown size={15} />
-                  <span>Super Admin Privilege Level</span>
+              <div className="relative rounded-2xl border border-cyan-500/30 bg-cyan-950/20 p-5 font-sans text-xs text-white">
+                <div className="flex items-center gap-2 font-bold text-cyan-300 text-sm mb-2">
+                  <Crown size={16} />
+                  <span>Super Admin Privilege</span>
                 </div>
-                <p className="text-[11px] text-white/70 font-sans leading-relaxed">
-                  Has 100% full authority across the entire platform. Can add new administrators, promote or demote roles, kick/remove users from the admin panel, and edit all website sectors.
+                <p className="text-xs text-white/70 leading-relaxed">
+                  Has full authority across the entire platform. Can add new administrators, promote or demote roles, remove users from the admin panel, and edit all website sectors.
                 </p>
               </div>
 
-              <div className="relative border border-white/10 bg-white/[0.02] p-5 font-mono text-xs text-white">
-                <CornerBrackets className="border-white/20" />
-                <div className="flex items-center gap-2 font-bold text-white/80 uppercase text-xs mb-2">
-                  <Shield size={15} className="text-slate-400" />
-                  <span>Admin Privilege Level</span>
+              <div className="relative rounded-2xl border border-white/10 bg-white/[0.02] p-5 font-sans text-xs text-white">
+                <div className="flex items-center gap-2 font-bold text-white/90 text-sm mb-2">
+                  <Shield size={16} className="text-slate-400" />
+                  <span>Admin Privilege</span>
                 </div>
-                <p className="text-[11px] text-white/60 font-sans leading-relaxed">
+                <p className="text-xs text-white/60 leading-relaxed">
                   Standard operational access. Can view the system and edit content sectors, but <strong className="text-white">CANNOT</strong> add users, remove administrators, or alter permission levels.
                 </p>
               </div>
@@ -1954,14 +1931,14 @@ export default function AdminPage() {
 
             {/* Users Roster List / Cards */}
             {loadingUsers ? (
-              <div className="py-24 text-center text-xs font-mono uppercase text-white/40 animate-pulse flex items-center justify-center gap-2">
+              <div className="py-24 text-center text-xs font-sans text-white/40 animate-pulse flex items-center justify-center gap-2">
                 <Loader2 size={16} className="animate-spin text-cyan-400" />
                 <span>Loading Administrative Personnel Directory...</span>
               </div>
             ) : usersList.length === 0 ? (
-              <div className="py-24 text-center border border-dashed border-white/10 bg-white/[0.01]">
+              <div className="py-24 text-center border border-dashed border-white/10 rounded-2xl bg-white/[0.01]">
                 <Users size={40} className="mx-auto text-white/20 mb-3" />
-                <p className="text-sm font-mono uppercase text-white/40">No administrators found</p>
+                <p className="text-sm font-sans text-white/50">No administrators found</p>
               </div>
             ) : (
               <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -1973,12 +1950,10 @@ export default function AdminPage() {
                   return (
                     <div
                       key={usr.id}
-                      className={`group relative border bg-[#0c0c0c]/90 backdrop-blur-md p-6 flex flex-col justify-between transition-all duration-300 ${
+                      className={`group relative rounded-2xl border bg-[#0c0c0f]/90 backdrop-blur-xl p-6 flex flex-col justify-between transition-all duration-300 shadow-xl ${
                         isUserSuper ? 'border-cyan-500/30 hover:border-cyan-400/60' : 'border-white/10 hover:border-white/25'
                       }`}
                     >
-                      <CornerBrackets className={isUserSuper ? 'border-cyan-400/40' : 'border-white/20'} />
-
                       <div>
                         {/* Top Profile Header */}
                         <div className="flex items-start gap-4 mb-5">
@@ -1992,23 +1967,23 @@ export default function AdminPage() {
 
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
-                              <h3 className="text-base font-bold font-mono text-white truncate">
+                              <h3 className="text-base font-bold font-sans text-white truncate">
                                 {usr.name}
                               </h3>
                               {isCurrent && (
-                                <span className="px-1.5 py-0.5 rounded text-[9px] font-mono uppercase bg-cyan-400/10 text-cyan-300 border border-cyan-400/30">
+                                <span className="px-2 py-0.5 rounded-full text-[10px] font-sans font-semibold bg-cyan-400/10 text-cyan-300 border border-cyan-400/30">
                                   You
                                 </span>
                               )}
                             </div>
-                            <p className="text-xs text-white/50 font-mono truncate mt-0.5">
+                            <p className="text-xs text-white/55 font-sans truncate mt-0.5">
                               {usr.email}
                             </p>
 
                             {/* Role Badge */}
                             <div className="mt-2.5 flex items-center gap-2">
                               <span
-                                className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-mono uppercase font-bold tracking-wider ${
+                                className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-sans rounded-full font-semibold ${
                                   isUserSuper
                                     ? 'bg-cyan-500/15 text-cyan-300 border border-cyan-400/40 shadow-[0_0_12px_rgba(0,229,255,0.2)]'
                                     : 'bg-white/5 text-white/80 border border-white/15'
@@ -2018,7 +1993,7 @@ export default function AdminPage() {
                                 <span>{isUserSuper ? 'Super Admin' : 'Admin'}</span>
                               </span>
 
-                              <span className="inline-flex items-center gap-1 text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5">
+                              <span className="inline-flex items-center gap-1 text-[11px] font-sans text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
                                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                                 <span>Active</span>
                               </span>
@@ -2027,16 +2002,16 @@ export default function AdminPage() {
                         </div>
 
                         {/* Telemetry / Log details */}
-                        <div className="border-t border-white/5 pt-3.5 space-y-1.5 text-[11px] font-mono">
-                          <div className="flex justify-between text-white/40">
+                        <div className="border-t border-white/5 pt-3.5 space-y-1.5 text-xs font-sans">
+                          <div className="flex justify-between text-white/45">
                             <span>Account Added:</span>
-                            <span className="text-white/70">
+                            <span className="text-white/75 font-mono text-[11px]">
                               {usr.createdAt ? new Date(usr.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Initial'}
                             </span>
                           </div>
-                          <div className="flex justify-between text-white/40">
+                          <div className="flex justify-between text-white/45">
                             <span>Last Google Login:</span>
-                            <span className="text-cyan-400/90 truncate max-w-[170px]">
+                            <span className="text-cyan-400/90 truncate max-w-[170px] font-mono text-[11px]">
                               {usr.lastLogin ? new Date(usr.lastLogin).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Never logged in'}
                             </span>
                           </div>
@@ -2052,7 +2027,7 @@ export default function AdminPage() {
                               disabled={isActionLoading || isCurrent}
                               onClick={() => handleToggleUserRole(usr)}
                               title={isCurrent ? 'You cannot change your own role' : `Change to ${isUserSuper ? 'regular Admin' : 'Super Admin'}`}
-                              className={`flex-1 px-3 py-2 text-[10px] font-mono uppercase font-bold border transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
+                              className={`flex-1 px-3 py-2 text-xs font-sans rounded-lg font-medium border transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
                                 isUserSuper
                                   ? 'bg-white/5 hover:bg-white/10 text-white/80 border-white/15'
                                   : 'bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border-cyan-500/30'
@@ -2066,14 +2041,14 @@ export default function AdminPage() {
                               disabled={isActionLoading || isCurrent}
                               onClick={() => handleDeleteUser(usr)}
                               title={isCurrent ? 'You cannot remove yourself' : 'Remove from Admin Panel'}
-                              className="px-3 py-2 text-[10px] font-mono uppercase font-bold bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-500/30 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5"
+                              className="px-3 py-2 text-xs font-sans rounded-lg font-medium bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-500/30 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5"
                             >
-                              <Trash2 size={12} className="text-rose-400" />
+                              <Trash2 size={13} className="text-rose-400" />
                               <span>Remove</span>
                             </button>
                           </>
                         ) : (
-                          <div className="w-full text-center py-1 text-[10px] font-mono uppercase text-white/40 italic">
+                          <div className="w-full text-center py-1 text-xs font-sans text-white/40 italic">
                             Super Admin Protected
                           </div>
                         )}
@@ -2213,23 +2188,22 @@ export default function AdminPage() {
       {/* ========================================================= */}
       {isProjectModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
-          <div className="relative w-full max-w-xl bg-[#0c0c0e] border border-cyan-500/20 p-6 sm:p-8 shadow-[0_0_60px_rgba(0,0,0,0.8)]">
-            <CornerBrackets className="border-cyan-400/50" />
+          <div className="relative w-full max-w-xl rounded-2xl bg-[#0c0c0f] border border-white/15 p-6 sm:p-8 shadow-2xl">
             <button
               onClick={() => setIsProjectModalOpen(false)}
-              className="absolute top-6 right-6 text-white/40 hover:text-white"
+              className="absolute top-6 right-6 text-white/40 hover:text-white transition-colors"
             >
               <X size={20} />
             </button>
 
-            <h3 className="text-xl font-bold uppercase font-mono text-white mb-6">
+            <h3 className="text-xl font-bold text-white font-sans tracking-tight mb-6">
               {currentProject.id ? 'Edit Case Study' : 'Add New Case Study'}
             </h3>
 
             <form onSubmit={handleSaveProject} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                  <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                     Number Tag (e.g. /001/)
                   </label>
                   <input
@@ -2237,17 +2211,17 @@ export default function AdminPage() {
                     required
                     value={currentProject.num}
                     onChange={(e) => setCurrentProject({ ...currentProject, num: e.target.value })}
-                    className="w-full px-3 py-2 bg-black/60 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                  <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                     Category
                   </label>
                   <select
                     value={currentProject.category}
                     onChange={(e) => setCurrentProject({ ...currentProject, category: e.target.value })}
-                    className="w-full px-3 py-2 bg-black/60 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-sans text-xs text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                   >
                     <option value="Web Design & Development">Web Design &amp; Development</option>
                     <option value="AI & Meta Ad Expert">AI &amp; Meta Ad Expert</option>
@@ -2259,7 +2233,7 @@ export default function AdminPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                   Project Title
                 </label>
                 <input
@@ -2268,12 +2242,12 @@ export default function AdminPage() {
                   placeholder="e.g. Nexus Enterprise Platform"
                   value={currentProject.title}
                   onChange={(e) => setCurrentProject({ ...currentProject, title: e.target.value })}
-                  className="w-full px-3 py-2 bg-black/60 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-sans text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                   Description
                 </label>
                 <textarea
@@ -2282,13 +2256,13 @@ export default function AdminPage() {
                   placeholder="Explain what was engineered and results achieved..."
                   value={currentProject.description}
                   onChange={(e) => setCurrentProject({ ...currentProject, description: e.target.value })}
-                  className="w-full px-3 py-2 bg-black/60 border border-white/10 font-sans text-xs text-white resize-none focus:outline-none focus:border-cyan-400"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-sans text-sm text-white resize-none focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                 />
               </div>
 
               {/* Image with file upload */}
               <div>
-                <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                   Showcase Mockup Image
                 </label>
                 <div className="flex gap-2 items-center">
@@ -2298,7 +2272,7 @@ export default function AdminPage() {
                     placeholder="/images/projects/web-development-showcase.webp"
                     value={currentProject.image}
                     onChange={(e) => setCurrentProject({ ...currentProject, image: e.target.value })}
-                    className="flex-1 px-3 py-2 bg-black/60 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400"
+                    className="flex-1 px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                   />
                   <input
                     type="file"
@@ -2311,7 +2285,7 @@ export default function AdminPage() {
                     type="button"
                     onClick={() => projectFileInputRef.current?.click()}
                     disabled={isUploadingProjectImage}
-                    className="px-3 py-2 bg-white/10 hover:bg-white/20 text-white font-mono text-xs uppercase cursor-pointer border border-white/10 flex items-center gap-1.5"
+                    className="px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-sans text-xs font-medium cursor-pointer border border-white/10 flex items-center gap-1.5 transition-colors"
                   >
                     {isUploadingProjectImage ? <Loader2 size={13} className="animate-spin" /> : <UploadCloud size={13} />}
                     <span>Upload</span>
@@ -2320,7 +2294,7 @@ export default function AdminPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                   Live Site Visit Link (Leave empty if showcase only)
                 </label>
                 <input
@@ -2328,7 +2302,7 @@ export default function AdminPage() {
                   placeholder="https://example.com"
                   value={currentProject.liveUrl || ''}
                   onChange={(e) => setCurrentProject({ ...currentProject, liveUrl: e.target.value })}
-                  className="w-full px-3 py-2 bg-black/60 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                 />
               </div>
 
@@ -2336,16 +2310,15 @@ export default function AdminPage() {
                 <button
                   type="button"
                   onClick={() => setIsProjectModalOpen(false)}
-                  className="px-4 py-2 text-xs font-mono uppercase text-white/60 hover:text-white"
+                  className="px-4 py-2 rounded-xl text-xs font-sans font-medium text-white/60 hover:text-white transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="relative px-6 py-2.5 bg-logo-gradient text-black font-mono font-bold text-xs uppercase hover:opacity-95 cursor-pointer shadow-[0_0_15px_rgba(0,229,255,0.25)]"
+                  className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-sans font-bold text-xs uppercase tracking-wider hover:opacity-95 cursor-pointer shadow-lg shadow-cyan-500/20 transition-all"
                 >
                   Save Case Study
-                  <CornerBrackets className="border-black/40" />
                 </button>
               </div>
             </form>
@@ -2358,23 +2331,22 @@ export default function AdminPage() {
       {/* ========================================================= */}
       {isProductModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
-          <div className="relative w-full max-w-xl bg-[#0c0c0e] border border-cyan-500/20 p-6 sm:p-8 shadow-[0_0_60px_rgba(0,0,0,0.8)]">
-            <CornerBrackets className="border-cyan-400/50" />
+          <div className="relative w-full max-w-xl rounded-2xl bg-[#0c0c0f] border border-white/15 p-6 sm:p-8 shadow-2xl">
             <button
               onClick={() => setIsProductModalOpen(false)}
-              className="absolute top-6 right-6 text-white/40 hover:text-white"
+              className="absolute top-6 right-6 text-white/40 hover:text-white transition-colors"
             >
               <X size={20} />
             </button>
 
-            <h3 className="text-xl font-bold uppercase font-mono text-white mb-6">
+            <h3 className="text-xl font-bold text-white font-sans tracking-tight mb-6">
               {currentProduct.id ? 'Edit SaaS Product' : 'Add New SaaS Product'}
             </h3>
 
             <form onSubmit={handleSaveProduct} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                  <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                     Software Name
                   </label>
                   <input
@@ -2383,11 +2355,11 @@ export default function AdminPage() {
                     placeholder="e.g. Dalil OS"
                     value={currentProduct.name}
                     onChange={(e) => setCurrentProduct({ ...currentProduct, name: e.target.value })}
-                    className="w-full px-3 py-2 bg-black/60 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-sans text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                  <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                     Bangla Name (Optional)
                   </label>
                   <input
@@ -2395,13 +2367,13 @@ export default function AdminPage() {
                     placeholder="e.g. দলিল OS"
                     value={currentProduct.banglaName || ''}
                     onChange={(e) => setCurrentProduct({ ...currentProduct, banglaName: e.target.value })}
-                    className="w-full px-3 py-2 bg-black/60 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-sans text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                   Tag / Industry Category
                 </label>
                 <input
@@ -2410,12 +2382,12 @@ export default function AdminPage() {
                   placeholder="SaaS · Legal-tech · Bangladesh"
                   value={currentProduct.tag}
                   onChange={(e) => setCurrentProduct({ ...currentProduct, tag: e.target.value })}
-                  className="w-full px-3 py-2 bg-black/60 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-sans text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                   Description
                 </label>
                 <textarea
@@ -2424,16 +2396,16 @@ export default function AdminPage() {
                   placeholder="Explain what the platform does and for whom..."
                   value={currentProduct.description}
                   onChange={(e) => setCurrentProduct({ ...currentProduct, description: e.target.value })}
-                  className="w-full px-3 py-2 bg-black/60 border border-white/10 font-sans text-xs text-white resize-none focus:outline-none focus:border-cyan-400"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-sans text-sm text-white resize-none focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                 />
               </div>
 
               {/* Feature bullet points */}
               <div>
-                <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                   Key Features / Deliverables
                 </label>
-                <div className="flex gap-2 mb-2">
+                <div className="flex gap-2 mb-2.5">
                   <input
                     type="text"
                     placeholder="Type feature (e.g. Cloud POS & Analytics)"
@@ -2445,24 +2417,24 @@ export default function AdminPage() {
                         handleAddProductFeature();
                       }
                     }}
-                    className="flex-1 px-3 py-2 bg-black/60 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400"
+                    className="flex-1 px-3.5 py-2 rounded-xl bg-black/50 border border-white/10 font-sans text-xs text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                   />
                   <button
                     type="button"
                     onClick={handleAddProductFeature}
-                    className="px-3.5 py-2 bg-white/10 hover:bg-white/20 text-white font-mono text-xs uppercase cursor-pointer border border-white/10"
+                    className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-sans text-xs font-medium cursor-pointer border border-white/10 transition-colors"
                   >
                     Add
                   </button>
                 </div>
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex flex-wrap gap-2">
                   {currentProduct.features.map((feat, idx) => (
-                    <span key={idx} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white/5 text-white/80 border border-white/10 text-[11px] font-mono">
+                    <span key={idx} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 text-xs font-sans font-medium">
                       <span>#{feat}</span>
                       <button
                         type="button"
                         onClick={() => handleRemoveProductFeature(idx)}
-                        className="text-white/40 hover:text-rose-400 ml-1"
+                        className="text-white/40 hover:text-rose-400 ml-0.5"
                       >
                         ×
                       </button>
@@ -2473,17 +2445,17 @@ export default function AdminPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                  <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                     Screenshot Path / File
                   </label>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 items-center">
                     <input
                       type="text"
                       required
                       placeholder="/products/cafe-os.png"
                       value={currentProduct.image}
                       onChange={(e) => setCurrentProduct({ ...currentProduct, image: e.target.value })}
-                      className="flex-1 px-3 py-2 bg-black/60 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400"
+                      className="flex-1 px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                     />
                     <input
                       type="file"
@@ -2496,15 +2468,15 @@ export default function AdminPage() {
                       type="button"
                       onClick={() => productFileInputRef.current?.click()}
                       disabled={isUploadingProductImage}
-                      className="px-3 py-2 bg-white/10 hover:bg-white/20 text-white font-mono text-xs uppercase cursor-pointer border border-white/10 flex items-center gap-1"
+                      className="px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-sans text-xs font-medium cursor-pointer border border-white/10 flex items-center gap-1.5 transition-colors"
                     >
-                      {isUploadingProductImage ? <Loader2 size={12} className="animate-spin" /> : <UploadCloud size={12} />}
+                      {isUploadingProductImage ? <Loader2 size={13} className="animate-spin" /> : <UploadCloud size={13} />}
                       <span>Upload</span>
                     </button>
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                  <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                     Live Demo Link
                   </label>
                   <input
@@ -2512,7 +2484,7 @@ export default function AdminPage() {
                     placeholder="https://dalilos.com"
                     value={currentProduct.liveUrl || ''}
                     onChange={(e) => setCurrentProduct({ ...currentProduct, liveUrl: e.target.value })}
-                    className="w-full px-3 py-2 bg-black/60 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                   />
                 </div>
               </div>
@@ -2521,16 +2493,15 @@ export default function AdminPage() {
                 <button
                   type="button"
                   onClick={() => setIsProductModalOpen(false)}
-                  className="px-4 py-2 text-xs font-mono uppercase text-white/60 hover:text-white"
+                  className="px-4 py-2 rounded-xl text-xs font-sans font-medium text-white/60 hover:text-white transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="relative px-6 py-2.5 bg-logo-gradient text-black font-mono font-bold text-xs uppercase hover:opacity-95 cursor-pointer shadow-[0_0_15px_rgba(0,229,255,0.25)]"
+                  className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-sans font-bold text-xs uppercase tracking-wider hover:opacity-95 cursor-pointer shadow-lg shadow-cyan-500/20 transition-all"
                 >
                   Save Product
-                  <CornerBrackets className="border-black/40" />
                 </button>
               </div>
             </form>
@@ -2543,23 +2514,22 @@ export default function AdminPage() {
       {/* ========================================================= */}
       {isServiceModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
-          <div className="relative w-full max-w-xl bg-[#0c0c0e] border border-cyan-500/20 p-6 sm:p-8 shadow-[0_0_60px_rgba(0,0,0,0.8)]">
-            <CornerBrackets className="border-cyan-400/50" />
+          <div className="relative w-full max-w-xl rounded-2xl bg-[#0c0c0f] border border-white/15 p-6 sm:p-8 shadow-2xl">
             <button
               onClick={() => setIsServiceModalOpen(false)}
-              className="absolute top-6 right-6 text-white/40 hover:text-white"
+              className="absolute top-6 right-6 text-white/40 hover:text-white transition-colors"
             >
               <X size={20} />
             </button>
 
-            <h3 className="text-xl font-bold uppercase font-mono text-white mb-6">
+            <h3 className="text-xl font-bold text-white font-sans tracking-tight mb-6">
               {currentService.id ? 'Edit Service' : 'Add New Service'}
             </h3>
 
             <form onSubmit={handleSaveService} className="space-y-4">
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                  <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                     Number Tag
                   </label>
                   <input
@@ -2567,11 +2537,11 @@ export default function AdminPage() {
                     required
                     value={currentService.num}
                     onChange={(e) => setCurrentService({ ...currentService, num: e.target.value })}
-                    className="w-full px-3 py-2 bg-black/60 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                   />
                 </div>
                 <div className="col-span-2">
-                  <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                  <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                     Pricing Text
                   </label>
                   <input
@@ -2580,13 +2550,13 @@ export default function AdminPage() {
                     placeholder="From $599 per project"
                     value={currentService.pricing}
                     onChange={(e) => setCurrentService({ ...currentService, pricing: e.target.value })}
-                    className="w-full px-3 py-2 bg-black/60 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-sans text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                   Service Title
                 </label>
                 <input
@@ -2602,13 +2572,13 @@ export default function AdminPage() {
                       shortTitle: currentService.shortTitle || val
                     });
                   }}
-                  className="w-full px-3 py-2 bg-black/60 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-sans text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                  <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                     Short Title (Vertical tab)
                   </label>
                   <input
@@ -2616,17 +2586,17 @@ export default function AdminPage() {
                     required
                     value={currentService.shortTitle || currentService.title}
                     onChange={(e) => setCurrentService({ ...currentService, shortTitle: e.target.value })}
-                    className="w-full px-3 py-2 bg-black/60 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-sans text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                  <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                     Display Icon
                   </label>
                   <select
                     value={currentService.icon || 'Code2'}
                     onChange={(e) => setCurrentService({ ...currentService, icon: e.target.value })}
-                    className="w-full px-3 py-2 bg-black/60 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-sans text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                   >
                     <option value="Code2">Code2 (Engineering)</option>
                     <option value="Palette">Palette (Creative &amp; Graphics)</option>
@@ -2641,7 +2611,7 @@ export default function AdminPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                   Description
                 </label>
                 <textarea
@@ -2649,16 +2619,16 @@ export default function AdminPage() {
                   required
                   value={currentService.description}
                   onChange={(e) => setCurrentService({ ...currentService, description: e.target.value })}
-                  className="w-full px-3 py-2 bg-black/60 border border-white/10 font-sans text-xs text-white resize-none focus:outline-none focus:border-cyan-400"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-sans text-sm text-white resize-none focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                 />
               </div>
 
               {/* What We Offer (Deliverables list) */}
               <div>
-                <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                   Deliverables &amp; Features
                 </label>
-                <div className="flex gap-2 mb-2">
+                <div className="flex gap-2 mb-2.5">
                   <input
                     type="text"
                     placeholder="Type deliverable (e.g. CMS & E-Commerce)"
@@ -2670,24 +2640,24 @@ export default function AdminPage() {
                         handleAddServiceFeature();
                       }
                     }}
-                    className="flex-1 px-3 py-2 bg-black/60 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400"
+                    className="flex-1 px-3.5 py-2 rounded-xl bg-black/50 border border-white/10 font-sans text-xs text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                   />
                   <button
                     type="button"
                     onClick={handleAddServiceFeature}
-                    className="px-3.5 py-2 bg-white/10 hover:bg-white/20 text-white font-mono text-xs uppercase cursor-pointer border border-white/10"
+                    className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-sans text-xs font-medium cursor-pointer border border-white/10 transition-colors"
                   >
                     Add
                   </button>
                 </div>
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex flex-wrap gap-2">
                   {currentService.features.map((feat, idx) => (
-                    <span key={idx} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white/5 text-white/80 border border-white/10 text-[11px] font-mono">
+                    <span key={idx} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 text-xs font-sans font-medium">
                       <span>{feat}</span>
                       <button
                         type="button"
                         onClick={() => handleRemoveServiceFeature(idx)}
-                        className="text-white/40 hover:text-rose-400 ml-1"
+                        className="text-white/40 hover:text-rose-400 ml-0.5"
                       >
                         ×
                       </button>
@@ -2700,16 +2670,15 @@ export default function AdminPage() {
                 <button
                   type="button"
                   onClick={() => setIsServiceModalOpen(false)}
-                  className="px-4 py-2 text-xs font-mono uppercase text-white/60 hover:text-white"
+                  className="px-4 py-2 rounded-xl text-xs font-sans font-medium text-white/60 hover:text-white transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="relative px-6 py-2.5 bg-logo-gradient text-black font-mono font-bold text-xs uppercase hover:opacity-95 cursor-pointer shadow-[0_0_15px_rgba(0,229,255,0.25)]"
+                  className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-sans font-bold text-xs uppercase tracking-wider hover:opacity-95 cursor-pointer shadow-lg shadow-cyan-500/20 transition-all"
                 >
                   Save Service
-                  <CornerBrackets className="border-black/40" />
                 </button>
               </div>
             </form>
@@ -2722,32 +2691,30 @@ export default function AdminPage() {
       {/* ========================================================= */}
       {isTeamModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
-          <div className="relative w-full max-w-xl bg-[#0c0c0e] border border-cyan-500/20 p-6 sm:p-8 shadow-[0_0_60px_rgba(0,0,0,0.8)] max-h-[90vh] overflow-y-auto">
-            <CornerBrackets className="border-cyan-400/50" />
+          <div className="relative w-full max-w-xl rounded-2xl bg-[#0c0c0f] border border-white/15 p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => setIsTeamModalOpen(false)}
-              className="absolute top-6 right-6 text-white/40 hover:text-white"
+              className="absolute top-6 right-6 text-white/40 hover:text-white transition-colors"
             >
               <X size={20} />
             </button>
 
-            <h3 className="text-xl font-bold uppercase font-mono text-white mb-6">
+            <h3 className="text-xl font-bold text-white font-sans tracking-tight mb-6">
               {currentMember.id ? 'Edit Teacher / Leader' : 'Add New Teacher / Leader'}
             </h3>
 
-            <form onSubmit={handleSaveTeam} className="space-y-5">
+            <form onSubmit={handleSaveTeam} className="space-y-4">
               
               {/* Photo Upload & Preview Box (Direct File Select Feature) */}
-              <div className="border border-cyan-400/25 bg-cyan-950/15 p-5 relative">
-                <CornerBrackets className="border-cyan-400/40" />
-                <label className="block text-xs font-mono uppercase text-cyan-400 font-bold mb-3 flex items-center gap-2">
+              <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4 relative">
+                <label className="block text-xs font-sans font-medium text-cyan-300 mb-3 flex items-center gap-2">
                   <ImageIcon size={15} />
                   <span>Teacher / Instructor Photo (Choose from Device)</span>
                 </label>
 
-                <div className="flex flex-col sm:flex-row items-center gap-5">
+                <div className="flex flex-col sm:flex-row items-center gap-4">
                   {/* Avatar Preview */}
-                  <div className="relative h-24 w-24 shrink-0 rounded-xl overflow-hidden border-2 border-cyan-400/40 bg-slate-950 shadow-[0_0_24px_rgba(0,229,255,0.25)] flex items-center justify-center">
+                  <div className="relative h-20 w-20 shrink-0 rounded-xl overflow-hidden border border-white/15 bg-black/60 shadow-lg flex items-center justify-center">
                     {photoPreview ? (
                       <img
                         src={photoPreview}
@@ -2755,12 +2722,12 @@ export default function AdminPage() {
                         className="h-full w-full object-cover"
                       />
                     ) : (
-                      <ImageIcon size={32} className="text-white/20" />
+                      <ImageIcon size={28} className="text-white/20" />
                     )}
                   </div>
 
                   {/* Upload Action */}
-                  <div className="flex-1 w-full flex flex-col gap-2.5">
+                  <div className="flex-1 w-full flex flex-col gap-2">
                     <input
                       type="file"
                       accept="image/*"
@@ -2775,37 +2742,36 @@ export default function AdminPage() {
                         type="button"
                         onClick={() => teacherFileInputRef.current?.click()}
                         disabled={isUploadingPhoto}
-                        className="relative inline-flex items-center gap-2 px-5 py-2.5 bg-logo-gradient text-black font-mono font-bold text-xs uppercase cursor-pointer hover:opacity-95 shadow-[0_0_15px_rgba(0,229,255,0.25)] transition-all disabled:opacity-50"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-sans font-medium text-xs cursor-pointer border border-white/10 transition-colors disabled:opacity-50"
                       >
                         {isUploadingPhoto ? (
                           <>
-                            <Loader2 size={14} className="animate-spin" />
+                            <Loader2 size={13} className="animate-spin" />
                             <span>Uploading photo...</span>
                           </>
                         ) : (
                           <>
-                            <UploadCloud size={14} />
+                            <UploadCloud size={13} />
                             <span>Select Photo from File</span>
                           </>
                         )}
-                        <CornerBrackets className="border-black/40" />
                       </button>
 
                       {currentMember.photo && (
-                        <span className="text-[11px] font-mono text-emerald-400 flex items-center gap-1 bg-emerald-500/10 px-2.5 py-1 border border-emerald-500/20 rounded">
-                          <CheckCircle2 size={13} /> Photo Active
+                        <span className="text-xs font-sans text-emerald-400 flex items-center gap-1 bg-emerald-500/10 px-2.5 py-1 border border-emerald-500/20 rounded-full">
+                          <CheckCircle2 size={12} /> Photo Active
                         </span>
                       )}
                     </div>
 
                     <p className="text-[11px] text-white/50 font-sans">
-                      Click button to pick any photo (JPG, PNG, WEBP) from your computer or phone.
+                      Select any photo (JPG, PNG, WEBP) from your computer or phone.
                     </p>
 
                     {/* Quick presets from Docs / existing files */}
-                    <div className="mt-1 pt-2 border-t border-white/5">
-                      <span className="text-[10px] font-mono uppercase text-white/40 block mb-1">
-                        Or Pick Existing Team / Docs Photo:
+                    <div className="pt-2 border-t border-white/5">
+                      <span className="text-[10px] font-sans text-white/40 block mb-1">
+                        Or Pick Existing Team Photo:
                       </span>
                       <div className="flex flex-wrap gap-1.5">
                         {[
@@ -2817,7 +2783,7 @@ export default function AdminPage() {
                             key={preset.url}
                             type="button"
                             onClick={() => handleSelectQuickPhoto(preset.url)}
-                            className="px-2 py-0.5 text-[10px] font-mono bg-white/5 hover:bg-cyan-400/20 text-white/70 hover:text-cyan-300 border border-white/10 rounded cursor-pointer transition-colors"
+                            className="px-2.5 py-1 text-xs font-sans bg-white/5 hover:bg-cyan-400/20 text-white/70 hover:text-cyan-300 border border-white/10 rounded-lg cursor-pointer transition-colors"
                           >
                             {preset.label}
                           </button>
@@ -2835,7 +2801,7 @@ export default function AdminPage() {
                           setCurrentMember({ ...currentMember, photo: e.target.value });
                           setPhotoPreview(e.target.value);
                         }}
-                        className="w-full px-3 py-1.5 bg-black/60 border border-white/10 font-mono text-[11px] text-white/80 focus:outline-none focus:border-cyan-400"
+                        className="w-full px-3 py-1.5 rounded-xl bg-black/50 border border-white/10 font-mono text-xs text-white/80 focus:outline-none focus:border-cyan-400"
                       />
                     </div>
                   </div>
@@ -2845,7 +2811,7 @@ export default function AdminPage() {
               {/* Name and Role */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                  <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                     Full Name
                   </label>
                   <input
@@ -2854,11 +2820,11 @@ export default function AdminPage() {
                     placeholder="e.g. Sharafat Islam"
                     value={currentMember.name}
                     onChange={(e) => setCurrentMember({ ...currentMember, name: e.target.value })}
-                    className="w-full px-3 py-2 bg-black/60 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-sans text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                  <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                     Role / Title
                   </label>
                   <input
@@ -2867,14 +2833,14 @@ export default function AdminPage() {
                     placeholder="e.g. Graphic Designer"
                     value={currentMember.role}
                     onChange={(e) => setCurrentMember({ ...currentMember, role: e.target.value })}
-                    className="w-full px-3 py-2 bg-black/60 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-sans text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                  <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                     Department / Specialty
                   </label>
                   <input
@@ -2882,11 +2848,11 @@ export default function AdminPage() {
                     placeholder="Creative Studio"
                     value={currentMember.department || ''}
                     onChange={(e) => setCurrentMember({ ...currentMember, department: e.target.value })}
-                    className="w-full px-3 py-2 bg-black/60 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-sans text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                  <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                     Experience Badge
                   </label>
                   <input
@@ -2894,13 +2860,13 @@ export default function AdminPage() {
                     placeholder="3+ Years Experience"
                     value={currentMember.experience || ''}
                     onChange={(e) => setCurrentMember({ ...currentMember, experience: e.target.value })}
-                    className="w-full px-3 py-2 bg-black/60 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-sans text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                   Tagline / Header Card Title
                 </label>
                 <input
@@ -2908,12 +2874,12 @@ export default function AdminPage() {
                   placeholder="Visual Identity & Aesthetic Direction"
                   value={currentMember.tagline || ''}
                   onChange={(e) => setCurrentMember({ ...currentMember, tagline: e.target.value })}
-                  className="w-full px-3 py-2 bg-black/60 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-sans text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                   Quote / Teaching Philosophy
                 </label>
                 <textarea
@@ -2921,12 +2887,12 @@ export default function AdminPage() {
                   placeholder="Transforming brand concepts into unforgettable visual masterpieces..."
                   value={currentMember.quote || ''}
                   onChange={(e) => setCurrentMember({ ...currentMember, quote: e.target.value })}
-                  className="w-full px-3 py-2 bg-black/60 border border-white/10 font-sans text-xs text-white resize-none focus:outline-none focus:border-cyan-400"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-sans text-sm text-white resize-none focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                   Skills (Comma Separated)
                 </label>
                 <input
@@ -2934,7 +2900,7 @@ export default function AdminPage() {
                   placeholder="Brand Identity Design, Figma, Adobe Suite, Vector Graphics"
                   value={skillsInput}
                   onChange={(e) => setSkillsInput(e.target.value)}
-                  className="w-full px-3 py-2 bg-black/60 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-sans text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                 />
               </div>
 
@@ -2944,9 +2910,9 @@ export default function AdminPage() {
                   id="isHighlighted"
                   checked={currentMember.isHighlighted !== false}
                   onChange={(e) => setCurrentMember({ ...currentMember, isHighlighted: e.target.checked })}
-                  className="rounded bg-black border-white/20 text-cyan-400 focus:ring-0 cursor-pointer"
+                  className="rounded-lg bg-black/60 border-white/20 text-cyan-400 focus:ring-0 cursor-pointer w-4 h-4"
                 />
-                <label htmlFor="isHighlighted" className="text-xs font-mono text-white/80 cursor-pointer">
+                <label htmlFor="isHighlighted" className="text-xs font-sans text-white/80 cursor-pointer">
                   Feature card on Homepage (&quot;Why Choose Us&quot;)
                 </label>
               </div>
@@ -2955,16 +2921,15 @@ export default function AdminPage() {
                 <button
                   type="button"
                   onClick={() => setIsTeamModalOpen(false)}
-                  className="px-4 py-2 text-xs font-mono uppercase text-white/60 hover:text-white"
+                  className="px-4 py-2 rounded-xl text-xs font-sans font-medium text-white/60 hover:text-white transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="relative px-6 py-2.5 bg-logo-gradient text-black font-mono font-bold text-xs uppercase hover:opacity-95 cursor-pointer shadow-[0_0_15px_rgba(0,229,255,0.25)]"
+                  className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-sans font-bold text-xs uppercase tracking-wider hover:opacity-95 cursor-pointer shadow-lg shadow-cyan-500/20 transition-all"
                 >
                   Save Profile
-                  <CornerBrackets className="border-black/40" />
                 </button>
               </div>
             </form>
@@ -2977,23 +2942,22 @@ export default function AdminPage() {
       {/* ========================================================= */}
       {isReviewModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
-          <div className="relative w-full max-w-xl bg-[#0c0c0e] border border-cyan-500/20 p-6 sm:p-8 shadow-[0_0_60px_rgba(0,0,0,0.8)]">
-            <CornerBrackets className="border-cyan-400/50" />
+          <div className="relative w-full max-w-xl rounded-2xl bg-[#0c0c0f] border border-white/15 p-6 sm:p-8 shadow-2xl">
             <button
               onClick={() => setIsReviewModalOpen(false)}
-              className="absolute top-6 right-6 text-white/40 hover:text-white"
+              className="absolute top-6 right-6 text-white/40 hover:text-white transition-colors"
             >
               <X size={20} />
             </button>
 
-            <h3 className="text-xl font-bold uppercase font-mono text-white mb-6">
+            <h3 className="text-xl font-bold text-white font-sans tracking-tight mb-6">
               {currentReview.id ? 'Edit Review' : 'Add New Client Story'}
             </h3>
 
             <form onSubmit={handleSaveReview} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                  <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                     Client Name
                   </label>
                   <input
@@ -3002,11 +2966,11 @@ export default function AdminPage() {
                     placeholder="e.g. Marcus Vance"
                     value={currentReview.clientName}
                     onChange={(e) => setCurrentReview({ ...currentReview, clientName: e.target.value })}
-                    className="w-full px-3 py-2 bg-black/60 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-sans text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                  <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                     Role &amp; Company
                   </label>
                   <input
@@ -3014,14 +2978,14 @@ export default function AdminPage() {
                     placeholder="e.g. Co-founder, Nexus Capital"
                     value={currentReview.role}
                     onChange={(e) => setCurrentReview({ ...currentReview, role: e.target.value })}
-                    className="w-full px-3 py-2 bg-black/60 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-sans text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                  <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                     Country / Location
                   </label>
                   <input
@@ -3029,17 +2993,17 @@ export default function AdminPage() {
                     placeholder="United States"
                     value={currentReview.country || ''}
                     onChange={(e) => setCurrentReview({ ...currentReview, country: e.target.value })}
-                    className="w-full px-3 py-2 bg-black/60 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-sans text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                  <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                     Rating (Stars)
                   </label>
                   <select
                     value={currentReview.rating}
                     onChange={(e) => setCurrentReview({ ...currentReview, rating: Number(e.target.value) })}
-                    className="w-full px-3 py-2 bg-black/60 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-sans text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                   >
                     <option value={5}>5 Stars ★★★★★</option>
                     <option value={4}>4 Stars ★★★★☆</option>
@@ -3048,7 +3012,7 @@ export default function AdminPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                   Full Testimonial Quote
                 </label>
                 <textarea
@@ -3057,12 +3021,12 @@ export default function AdminPage() {
                   placeholder="What did the client say about our velocity and architecture?"
                   value={currentReview.quote}
                   onChange={(e) => setCurrentReview({ ...currentReview, quote: e.target.value })}
-                  className="w-full px-3 py-2 bg-black/60 border border-white/10 font-sans text-xs text-white resize-none focus:outline-none focus:border-cyan-400"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-sans text-sm text-white resize-none focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase text-white/60 mb-1">
+                <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
                   Key Metric / Result Tag (Optional)
                 </label>
                 <input
@@ -3070,7 +3034,7 @@ export default function AdminPage() {
                   placeholder="+340% Conversions · 99.9% Uptime"
                   value={currentReview.metrics || ''}
                   onChange={(e) => setCurrentReview({ ...currentReview, metrics: e.target.value })}
-                  className="w-full px-3 py-2 bg-black/60 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-sans text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                 />
               </div>
 
@@ -3078,16 +3042,15 @@ export default function AdminPage() {
                 <button
                   type="button"
                   onClick={() => setIsReviewModalOpen(false)}
-                  className="px-4 py-2 text-xs font-mono uppercase text-white/60 hover:text-white"
+                  className="px-4 py-2 rounded-xl text-xs font-sans font-medium text-white/60 hover:text-white transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="relative px-6 py-2.5 bg-logo-gradient text-black font-mono font-bold text-xs uppercase hover:opacity-95 cursor-pointer shadow-[0_0_15px_rgba(0,229,255,0.25)]"
+                  className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-sans font-bold text-xs uppercase tracking-wider hover:opacity-95 cursor-pointer shadow-lg shadow-cyan-500/20 transition-all"
                 >
                   Save Review
-                  <CornerBrackets className="border-black/40" />
                 </button>
               </div>
             </form>
@@ -3099,12 +3062,10 @@ export default function AdminPage() {
       {/* MODAL: ADD NEW ADMINISTRATOR (SUPER ADMIN ONLY)           */}
       {/* ========================================================= */}
       {isUserModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm">
-          <div className="relative w-full max-w-md border border-white/10 bg-[#0c0c0c] p-6 sm:p-8 shadow-2xl">
-            <CornerBrackets className="border-cyan-400/50" />
-            
-            <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
-              <h3 className="text-lg font-bold uppercase font-mono text-white flex items-center gap-2">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 backdrop-blur-md">
+          <div className="relative w-full max-w-md rounded-2xl border border-white/15 bg-[#0c0c0f] p-6 sm:p-8 shadow-2xl">
+            <div className="flex items-center justify-between pb-4 mb-6 border-b border-white/10">
+              <h3 className="text-lg font-bold text-white font-sans flex items-center gap-2">
                 <UserPlus size={18} className="text-cyan-400" />
                 <span>Add Administrator</span>
               </h3>
@@ -3116,9 +3077,9 @@ export default function AdminPage() {
               </button>
             </div>
 
-            <form onSubmit={handleAddUser} className="space-y-4 font-mono">
+            <form onSubmit={handleAddUser} className="space-y-4 font-sans">
               <div>
-                <label className="block text-xs uppercase text-white/70 mb-1.5">
+                <label className="block text-xs font-medium text-white/70 mb-1.5">
                   Full Name
                 </label>
                 <input
@@ -3127,12 +3088,12 @@ export default function AdminPage() {
                   placeholder="e.g. Sharafat Islam"
                   value={userForm.name}
                   onChange={(e) => setUserForm({ ...userForm, name: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-black/60 border border-white/15 text-xs text-white focus:outline-none focus:border-cyan-400"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                 />
               </div>
 
               <div>
-                <label className="block text-xs uppercase text-white/70 mb-1.5">
+                <label className="block text-xs font-medium text-white/70 mb-1.5">
                   Google Account Email
                 </label>
                 <input
@@ -3141,21 +3102,21 @@ export default function AdminPage() {
                   placeholder="e.g. sharafat.drivenit@gmail.com"
                   value={userForm.email}
                   onChange={(e) => setUserForm({ ...userForm, email: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-black/60 border border-white/15 text-xs text-white focus:outline-none focus:border-cyan-400"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                 />
-                <p className="text-[10px] text-white/40 font-sans mt-1">
+                <p className="text-[11px] text-white/40 mt-1.5">
                   They will use this exact Gmail address when clicking &ldquo;Sign in with Google&rdquo;.
                 </p>
               </div>
 
               <div>
-                <label className="block text-xs uppercase text-white/70 mb-1.5">
+                <label className="block text-xs font-medium text-white/70 mb-1.5">
                   Assigned Administrative Role
                 </label>
                 <select
                   value={userForm.role}
                   onChange={(e) => setUserForm({ ...userForm, role: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-black/60 border border-white/15 text-xs text-white focus:outline-none focus:border-cyan-400 cursor-pointer"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 cursor-pointer"
                 >
                   <option value="admin">Admin (Standard Content Operations)</option>
                   <option value="super_admin">Super Admin (Full Authority + User Management)</option>
@@ -3166,14 +3127,14 @@ export default function AdminPage() {
                 <button
                   type="button"
                   onClick={() => setIsUserModalOpen(false)}
-                  className="px-4 py-2.5 text-xs uppercase text-white/60 hover:text-white border border-white/10 cursor-pointer"
+                  className="px-4 py-2 rounded-xl text-xs font-medium text-white/60 hover:text-white transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={savingUser}
-                  className="px-5 py-2.5 text-xs font-bold uppercase bg-logo-gradient text-black hover:opacity-90 transition-opacity cursor-pointer shadow-[0_0_15px_rgba(0,229,255,0.25)]"
+                  className="px-5 py-2.5 rounded-xl text-xs font-bold uppercase bg-gradient-to-r from-cyan-400 to-blue-500 text-black hover:opacity-95 transition-opacity cursor-pointer shadow-lg shadow-cyan-500/20"
                 >
                   {savingUser ? 'Adding...' : 'Save & Grant Access'}
                 </button>

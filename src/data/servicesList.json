@@ -116,5 +116,21 @@
     ],
     "slug": "mobile-application-development-",
     "order": 7
+  },
+  {
+    "id": "srv-1794398514266",
+    "num": "/008/",
+    "title": "Testing AI Cloud Service",
+    "shortTitle": "Testing AI",
+    "icon": "Code2",
+    "pricing": "From $599 per project",
+    "description": "Automated cloud testing, dynamic API verification and end-to-end sync testing.",
+    "features": [
+      "Bespoke Architecture",
+      "High Velocity Delivery",
+      "SEO & Performance 95+"
+    ],
+    "slug": "testing-ai-cloud-service",
+    "order": 8
   }
 ]
