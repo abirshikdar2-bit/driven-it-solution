@@ -8,10 +8,6 @@ import { subscribeToDataChanges, getLocalCache, saveLocalCache } from '@/lib/syn
 export default function ClientStories({ reviews: propReviews = null }) {
   const [reviews, setReviews] = useState(() => {
     if (Array.isArray(propReviews) && propReviews.length > 0) return propReviews;
-    if (typeof window !== 'undefined') {
-      const cached = getLocalCache('reviews');
-      if (Array.isArray(cached) && cached.length > 0) return cached;
-    }
     return Array.isArray(initialReviews) ? initialReviews : [];
   });
 
@@ -20,14 +16,9 @@ export default function ClientStories({ reviews: propReviews = null }) {
       const res = await fetch(`/api/reviews?t=${Date.now()}`, { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
-        if (Array.isArray(data) && data.length > 0) {
-          const cached = getLocalCache('reviews');
-          if (Array.isArray(cached) && cached.length > data.length) {
-            setReviews(cached);
-          } else {
-            setReviews(data);
-            saveLocalCache('reviews', data);
-          }
+        if (Array.isArray(data)) {
+          setReviews(data);
+          saveLocalCache('reviews', data);
         }
       }
     } catch (e) {
@@ -36,20 +27,18 @@ export default function ClientStories({ reviews: propReviews = null }) {
   }, []);
 
   useEffect(() => {
-    if (Array.isArray(propReviews) && propReviews.length > 0) {
+    if (Array.isArray(propReviews)) {
       setReviews(propReviews);
     }
   }, [propReviews]);
 
   useEffect(() => {
-    const cached = getLocalCache('reviews');
-    if (Array.isArray(cached) && cached.length > 0) {
-      setReviews(cached);
+    if (!propReviews) {
+      fetchReviews();
     }
-    fetchReviews();
     const unsubscribe = subscribeToDataChanges((event) => {
       if (event.entity === 'reviews' || event.entity === 'all') {
-        if (event.meta?.data && Array.isArray(event.meta.data) && event.meta.data.length > 0) {
+        if (event.meta?.data && Array.isArray(event.meta.data)) {
           setReviews(event.meta.data);
           saveLocalCache('reviews', event.meta.data);
         } else {
@@ -58,7 +47,7 @@ export default function ClientStories({ reviews: propReviews = null }) {
       }
     });
     return () => unsubscribe();
-  }, [fetchReviews]);
+  }, [propReviews, fetchReviews]);
 
   return (
     <section id="reviews" className="mx-auto w-full max-w-[1520px] px-4 sm:px-6 lg:px-8 py-28 relative">

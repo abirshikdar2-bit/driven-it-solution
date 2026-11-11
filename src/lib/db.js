@@ -102,7 +102,7 @@ export async function getTeam() {
         .from('team')
         .select('*')
         .order('order', { ascending: true });
-      if (!error && Array.isArray(data) && data.length > 0) {
+      if (!error && Array.isArray(data)) {
         return data;
       }
     } catch (err) {
@@ -127,7 +127,7 @@ export async function saveTeam(teamList) {
 
 export async function deleteTeamMember(id) {
   const current = await getTeam();
-  const filtered = current.filter((m) => m.id !== id);
+  const filtered = current.filter((m) => String(m.id) !== String(id));
   writeLocalJson('team.json', filtered);
 
   if (isSupabaseConfigured && supabase) {
@@ -148,7 +148,7 @@ export async function getProjects() {
         .from('projects')
         .select('*')
         .order('created_at', { ascending: true });
-      if (!error && Array.isArray(data) && data.length > 0) {
+      if (!error && Array.isArray(data)) {
         return data;
       }
     } catch (err) {
@@ -173,7 +173,7 @@ export async function saveProjects(projectsList) {
 
 export async function deleteProjectItem(id) {
   const current = await getProjects();
-  const filtered = current.filter((p) => p.id !== id);
+  const filtered = current.filter((p) => String(p.id) !== String(id));
   writeLocalJson('projects.json', filtered);
 
   if (isSupabaseConfigured && supabase) {
@@ -194,7 +194,7 @@ export async function getServices() {
         .from('services')
         .select('*')
         .order('order', { ascending: true });
-      if (!error && Array.isArray(data) && data.length > 0) {
+      if (!error && Array.isArray(data)) {
         return data;
       }
     } catch (err) {
@@ -219,7 +219,7 @@ export async function saveServices(servicesList) {
 
 export async function deleteServiceItem(id) {
   const current = await getServices();
-  const filtered = current.filter((s) => s.id !== id);
+  const filtered = current.filter((s) => String(s.id) !== String(id));
   writeLocalJson('servicesList.json', filtered);
 
   if (isSupabaseConfigured && supabase) {
@@ -240,7 +240,7 @@ export async function getProducts() {
         .from('products')
         .select('*')
         .order('order', { ascending: true });
-      if (!error && Array.isArray(data) && data.length > 0) {
+      if (!error && Array.isArray(data)) {
         return data;
       }
     } catch (err) {
@@ -265,7 +265,7 @@ export async function saveProducts(productsList) {
 
 export async function deleteProductItem(id) {
   const current = await getProducts();
-  const filtered = current.filter((p) => p.id !== id);
+  const filtered = current.filter((p) => String(p.id) !== String(id));
   writeLocalJson('products.json', filtered);
 
   if (isSupabaseConfigured && supabase) {
@@ -284,8 +284,9 @@ export async function getReviews() {
     try {
       const { data, error } = await supabase
         .from('reviews')
-        .select('*');
-      if (!error && Array.isArray(data) && data.length > 0) {
+        .select('*')
+        .order('created_at', { ascending: true });
+      if (!error && Array.isArray(data)) {
         return data;
       }
     } catch (err) {
@@ -310,7 +311,7 @@ export async function saveReviews(reviewsList) {
 
 export async function deleteReviewItem(id) {
   const current = await getReviews();
-  const filtered = current.filter((r) => r.id !== id);
+  const filtered = current.filter((r) => String(r.id) !== String(id));
   writeLocalJson('reviews.json', filtered);
 
   if (isSupabaseConfigured && supabase) {
@@ -365,8 +366,9 @@ export async function getAdminsConfig() {
     try {
       const { data, error } = await supabase
         .from('admins')
-        .select('*');
-      if (!error && Array.isArray(data) && data.length > 0) {
+        .select('*')
+        .order('created_at', { ascending: true });
+      if (!error && Array.isArray(data)) {
         return { googleClientId: '', allowAnyGoogleAccount: true, users: data };
       }
     } catch (err) {
@@ -387,4 +389,27 @@ export async function saveAdminsConfig(config) {
     }
   }
   return true;
+}
+
+export async function deleteAdminUser(id, email) {
+  const config = await getAdminsConfig();
+  config.users = (config.users || []).filter((u) => {
+    if (id && String(u.id) === String(id)) return false;
+    if (email && u.email?.toLowerCase() === email?.toLowerCase()) return false;
+    return true;
+  });
+  writeLocalJson('admins.json', config);
+
+  if (isSupabaseConfigured && supabase) {
+    try {
+      if (id) {
+        await supabase.from('admins').delete().eq('id', id);
+      } else if (email) {
+        await supabase.from('admins').delete().eq('email', email);
+      }
+    } catch (err) {
+      console.warn('Supabase deleteAdminUser error:', err);
+    }
+  }
+  return config;
 }

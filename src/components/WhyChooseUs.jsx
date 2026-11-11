@@ -9,10 +9,6 @@ import { subscribeToDataChanges, getLocalCache, saveLocalCache } from '@/lib/syn
 export default function WhyChooseUs({ team = null }) {
   const [teamMembers, setTeamMembers] = useState(() => {
     if (Array.isArray(team) && team.length > 0) return team;
-    if (typeof window !== 'undefined') {
-      const cached = getLocalCache('team');
-      if (Array.isArray(cached) && cached.length > 0) return cached;
-    }
     return Array.isArray(initialTeam) ? initialTeam : [];
   });
 
@@ -21,14 +17,9 @@ export default function WhyChooseUs({ team = null }) {
       const res = await fetch(`/api/team?t=${Date.now()}`, { cache: 'no-store' });
       if (res.ok) {
         const json = await res.json();
-        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
-          const cached = getLocalCache('team');
-          if (Array.isArray(cached) && cached.length > json.data.length) {
-            setTeamMembers(cached);
-          } else {
-            setTeamMembers(json.data);
-            saveLocalCache('team', json.data);
-          }
+        if (json.success && Array.isArray(json.data)) {
+          setTeamMembers(json.data);
+          saveLocalCache('team', json.data);
         }
       }
     } catch (err) {
@@ -37,20 +28,18 @@ export default function WhyChooseUs({ team = null }) {
   }, []);
 
   useEffect(() => {
-    if (Array.isArray(team) && team.length > 0) {
+    if (Array.isArray(team)) {
       setTeamMembers(team);
     }
   }, [team]);
 
   useEffect(() => {
-    const cached = getLocalCache('team');
-    if (Array.isArray(cached) && cached.length > 0) {
-      setTeamMembers(cached);
+    if (!team) {
+      loadTeam();
     }
-    loadTeam();
     const unsubscribe = subscribeToDataChanges((event) => {
       if (event.entity === 'team' || event.entity === 'all') {
-        if (event.meta?.data && Array.isArray(event.meta.data) && event.meta.data.length > 0) {
+        if (event.meta?.data && Array.isArray(event.meta.data)) {
           setTeamMembers(event.meta.data);
           saveLocalCache('team', event.meta.data);
         } else {
@@ -59,7 +48,7 @@ export default function WhyChooseUs({ team = null }) {
       }
     });
     return () => unsubscribe();
-  }, [loadTeam]);
+  }, [team, loadTeam]);
 
   const highlighted = teamMembers.filter(m => m.isHighlighted !== false);
   const visibleMembers = highlighted.length > 0 ? highlighted : teamMembers;

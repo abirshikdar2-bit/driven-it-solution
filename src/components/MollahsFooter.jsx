@@ -40,11 +40,13 @@ export default function MollahsFooter({ settings: propSettings = null }) {
   }, [propSettings]);
 
   useEffect(() => {
-    const cached = getLocalCache('settings');
-    if (cached && cached.whatsappNumber) {
-      setSettings(cached);
+    if (!propSettings) {
+      const cached = getLocalCache('settings');
+      if (cached && cached.whatsappNumber) {
+        setSettings(cached);
+      }
+      loadSettings();
     }
-    loadSettings();
     const unsubscribe = subscribeToDataChanges((event) => {
       if (event.entity === 'settings' || event.entity === 'all') {
         if (event.meta?.data && event.meta.data.whatsappNumber) {
@@ -56,7 +58,7 @@ export default function MollahsFooter({ settings: propSettings = null }) {
       }
     });
     return () => unsubscribe();
-  }, [loadSettings]);
+  }, [propSettings, loadSettings]);
   return (
     <footer className="relative overflow-hidden border-t border-white/5 bg-[#050505]">
       {/* Ambient Blue Radial Glow at Bottom */}

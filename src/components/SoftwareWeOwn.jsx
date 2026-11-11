@@ -10,10 +10,6 @@ import { subscribeToDataChanges, getLocalCache, saveLocalCache } from '@/lib/syn
 export default function SoftwareWeOwn({ products: propProducts = null }) {
   const [products, setProducts] = useState(() => {
     if (Array.isArray(propProducts) && propProducts.length > 0) return propProducts;
-    if (typeof window !== 'undefined') {
-      const cached = getLocalCache('products');
-      if (Array.isArray(cached) && cached.length > 0) return cached;
-    }
     return Array.isArray(initialProducts) ? initialProducts : [];
   });
 
@@ -22,14 +18,9 @@ export default function SoftwareWeOwn({ products: propProducts = null }) {
       const res = await fetch(`/api/products?t=${Date.now()}`, { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
-        if (Array.isArray(data) && data.length > 0) {
-          const cached = getLocalCache('products');
-          if (Array.isArray(cached) && cached.length > data.length) {
-            setProducts(cached);
-          } else {
-            setProducts(data);
-            saveLocalCache('products', data);
-          }
+        if (Array.isArray(data)) {
+          setProducts(data);
+          saveLocalCache('products', data);
         }
       }
     } catch (err) {
@@ -38,20 +29,18 @@ export default function SoftwareWeOwn({ products: propProducts = null }) {
   }, []);
 
   useEffect(() => {
-    if (Array.isArray(propProducts) && propProducts.length > 0) {
+    if (Array.isArray(propProducts)) {
       setProducts(propProducts);
     }
   }, [propProducts]);
 
   useEffect(() => {
-    const cached = getLocalCache('products');
-    if (Array.isArray(cached) && cached.length > 0) {
-      setProducts(cached);
+    if (!propProducts) {
+      loadProducts();
     }
-    loadProducts();
     const unsubscribe = subscribeToDataChanges((event) => {
       if (event.entity === 'products' || event.entity === 'all') {
-        if (event.meta?.data && Array.isArray(event.meta.data) && event.meta.data.length > 0) {
+        if (event.meta?.data && Array.isArray(event.meta.data)) {
           setProducts(event.meta.data);
           saveLocalCache('products', event.meta.data);
         } else {
@@ -60,7 +49,7 @@ export default function SoftwareWeOwn({ products: propProducts = null }) {
       }
     });
     return () => unsubscribe();
-  }, [loadProducts]);
+  }, [propProducts, loadProducts]);
 
   return (
     <section id="products" className="mx-auto w-full max-w-[1520px] px-4 sm:px-6 lg:px-8 relative py-28">

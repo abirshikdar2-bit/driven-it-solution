@@ -46,7 +46,7 @@ export default function WhatYouGet({ services: propServices = null }) {
       const res = await fetch(`/api/services?t=${Date.now()}`, { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
-        if (Array.isArray(data) && data.length > 0) {
+        if (Array.isArray(data)) {
           setServices(data);
         }
       }
@@ -57,21 +57,23 @@ export default function WhatYouGet({ services: propServices = null }) {
 
   // Update when prop changes
   useEffect(() => {
-    if (Array.isArray(propServices) && propServices.length > 0) {
+    if (Array.isArray(propServices)) {
       setServices(propServices);
     }
   }, [propServices]);
 
   // Direct real-time subscription for immediate cross-tab updates
   useEffect(() => {
-    loadServices();
+    if (!propServices) {
+      loadServices();
+    }
     const unsubscribe = subscribeToDataChanges((event) => {
       if (event.entity === 'services' || event.entity === 'all') {
         loadServices();
       }
     });
     return () => unsubscribe();
-  }, [loadServices]);
+  }, [propServices, loadServices]);
 
   // Smooth hover intent: 75ms buffer prevents erratic switching during rapid cursor transit
   const handleMouseEnter = (idx) => {

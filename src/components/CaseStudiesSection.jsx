@@ -156,10 +156,6 @@ function ProjectCard({ project, index }) {
 export default function CaseStudiesSection({ projects: propProjects = null }) {
   const [projects, setProjects] = useState(() => {
     if (Array.isArray(propProjects) && propProjects.length > 0) return propProjects;
-    if (typeof window !== 'undefined') {
-      const cached = getLocalCache('projects');
-      if (Array.isArray(cached) && cached.length > 0) return cached;
-    }
     return defaultProjects;
   });
 
@@ -168,14 +164,9 @@ export default function CaseStudiesSection({ projects: propProjects = null }) {
       const res = await fetch(`/api/projects?t=${Date.now()}`, { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
-        if (Array.isArray(data) && data.length > 0) {
-          const cached = getLocalCache('projects');
-          if (Array.isArray(cached) && cached.length > data.length) {
-            setProjects(cached);
-          } else {
-            setProjects(data);
-            saveLocalCache('projects', data);
-          }
+        if (Array.isArray(data)) {
+          setProjects(data);
+          saveLocalCache('projects', data);
         }
       }
     } catch (err) {
@@ -184,20 +175,18 @@ export default function CaseStudiesSection({ projects: propProjects = null }) {
   }, []);
 
   useEffect(() => {
-    if (Array.isArray(propProjects) && propProjects.length > 0) {
+    if (Array.isArray(propProjects)) {
       setProjects(propProjects);
     }
   }, [propProjects]);
 
   useEffect(() => {
-    const cached = getLocalCache('projects');
-    if (Array.isArray(cached) && cached.length > 0) {
-      setProjects(cached);
+    if (!propProjects) {
+      loadProjects();
     }
-    loadProjects();
     const unsubscribe = subscribeToDataChanges((event) => {
       if (event.entity === 'projects' || event.entity === 'all') {
-        if (event.meta?.data && Array.isArray(event.meta.data) && event.meta.data.length > 0) {
+        if (event.meta?.data && Array.isArray(event.meta.data)) {
           setProjects(event.meta.data);
           saveLocalCache('projects', event.meta.data);
         } else {
@@ -206,7 +195,7 @@ export default function CaseStudiesSection({ projects: propProjects = null }) {
       }
     });
     return () => unsubscribe();
-  }, [loadProjects]);
+  }, [propProjects, loadProjects]);
 
   return (
     <section id="work" className="mx-auto w-full max-w-[1520px] px-4 sm:px-6 lg:px-8 relative py-28">

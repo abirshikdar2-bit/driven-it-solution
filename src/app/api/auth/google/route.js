@@ -1,30 +1,5 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-
-const ADMINS_FILE = path.join(process.cwd(), 'src', 'data', 'admins.json');
-
-function getAdminConfig() {
-  try {
-    if (fs.existsSync(ADMINS_FILE)) {
-      const raw = fs.readFileSync(ADMINS_FILE, 'utf-8');
-      const data = JSON.parse(raw);
-      if (!Array.isArray(data.users)) data.users = [];
-      return data;
-    }
-  } catch (err) {
-    console.error('Failed to read admins.json:', err);
-  }
-  return { googleClientId: '', allowAnyGoogleAccount: true, users: [] };
-}
-
-function saveAdminConfig(config) {
-  try {
-    fs.writeFileSync(ADMINS_FILE, JSON.stringify(config, null, 2), 'utf-8');
-  } catch (err) {
-    console.error('Failed to save admins.json:', err);
-  }
-}
+import { getAdminsConfig, saveAdminsConfig } from '@/lib/db';
 
 // Parse JWT without external libraries
 function decodeGoogleJWT(token) {
@@ -47,7 +22,7 @@ function decodeGoogleJWT(token) {
 }
 
 export async function GET(req) {
-  const config = getAdminConfig();
+  const config = await getAdminsConfig();
   const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || config.googleClientId || '';
 
   const cookie = req.cookies.get('driven_admin_session');
@@ -81,7 +56,7 @@ export async function GET(req) {
 export async function POST(req) {
   try {
     const body = await req.json();
-    const config = getAdminConfig();
+    const config = await getAdminsConfig();
     const { action, credential, demoUser } = body;
 
     // 1. Handle Logout
@@ -152,7 +127,7 @@ export async function POST(req) {
       config.users.push(targetUser);
     }
 
-    saveAdminConfig(config);
+    await saveAdminsConfig(config);
 
     const sessionUser = {
       id: targetUser.id,

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { 
@@ -36,7 +36,7 @@ import CornerBrackets, { SectionBadge } from '@/components/CornerBrackets';
 import FlowFieldCanvas from '@/components/FlowFieldCanvas';
 import DrivenItWordmark from '@/components/DrivenItWordmark';
 import AdminGoogleAuthModal from '@/components/AdminGoogleAuthModal';
-import { broadcastDataChange, getLocalCache, saveLocalCache } from '@/lib/syncEvents';
+import { broadcastDataChange, subscribeToDataChanges, getLocalCache, saveLocalCache } from '@/lib/syncEvents';
 
 export default function AdminPage() {
   // Authentication State
@@ -315,19 +315,15 @@ export default function AdminPage() {
   };
 
   // ================= FETCH DATA =================
-  const fetchProjects = async () => {
+  // ================= FETCH DATA (REAL-TIME SUPABASE SYNCHRONIZATION) =================
+  const fetchProjects = useCallback(async () => {
     try {
       setLoadingProjects(true);
       const res = await fetch(`/api/projects?t=${Date.now()}`, { cache: 'no-store' });
       const data = await res.json();
       if (Array.isArray(data)) {
-        const cached = getLocalCache('projects');
-        if (Array.isArray(cached) && cached.length > data.length) {
-          setProjects(cached);
-        } else {
-          setProjects(data);
-          saveLocalCache('projects', data);
-        }
+        setProjects(data);
+        saveLocalCache('projects', data);
       }
     } catch (err) {
       const cached = getLocalCache('projects');
@@ -339,21 +335,16 @@ export default function AdminPage() {
     } finally {
       setLoadingProjects(false);
     }
-  };
+  }, []);
 
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
       setLoadingProducts(true);
       const res = await fetch(`/api/products?t=${Date.now()}`, { cache: 'no-store' });
       const data = await res.json();
       if (Array.isArray(data)) {
-        const cached = getLocalCache('products');
-        if (Array.isArray(cached) && cached.length > data.length) {
-          setProducts(cached);
-        } else {
-          setProducts(data);
-          saveLocalCache('products', data);
-        }
+        setProducts(data);
+        saveLocalCache('products', data);
       }
     } catch (err) {
       const cached = getLocalCache('products');
@@ -365,21 +356,16 @@ export default function AdminPage() {
     } finally {
       setLoadingProducts(false);
     }
-  };
+  }, []);
 
-  const fetchServices = async () => {
+  const fetchServices = useCallback(async () => {
     try {
       setLoadingServices(true);
       const res = await fetch(`/api/services?t=${Date.now()}`, { cache: 'no-store' });
       const data = await res.json();
       if (Array.isArray(data)) {
-        const cached = getLocalCache('services');
-        if (Array.isArray(cached) && cached.length > data.length) {
-          setServices(cached);
-        } else {
-          setServices(data);
-          saveLocalCache('services', data);
-        }
+        setServices(data);
+        saveLocalCache('services', data);
       }
     } catch (err) {
       const cached = getLocalCache('services');
@@ -391,21 +377,16 @@ export default function AdminPage() {
     } finally {
       setLoadingServices(false);
     }
-  };
+  }, []);
 
-  const fetchTeam = async () => {
+  const fetchTeam = useCallback(async () => {
     try {
       setLoadingTeam(true);
       const res = await fetch(`/api/team?t=${Date.now()}`, { cache: 'no-store' });
       const json = await res.json();
       if (json.success && Array.isArray(json.data)) {
-        const cached = getLocalCache('team');
-        if (Array.isArray(cached) && cached.length > json.data.length) {
-          setTeam(cached);
-        } else {
-          setTeam(json.data);
-          saveLocalCache('team', json.data);
-        }
+        setTeam(json.data);
+        saveLocalCache('team', json.data);
       }
     } catch (err) {
       const cached = getLocalCache('team');
@@ -417,21 +398,16 @@ export default function AdminPage() {
     } finally {
       setLoadingTeam(false);
     }
-  };
+  }, []);
 
-  const fetchReviews = async () => {
+  const fetchReviews = useCallback(async () => {
     try {
       setLoadingReviews(true);
       const res = await fetch(`/api/reviews?t=${Date.now()}`, { cache: 'no-store' });
       const data = await res.json();
       if (Array.isArray(data)) {
-        const cached = getLocalCache('reviews');
-        if (Array.isArray(cached) && cached.length > data.length) {
-          setReviews(cached);
-        } else {
-          setReviews(data);
-          saveLocalCache('reviews', data);
-        }
+        setReviews(data);
+        saveLocalCache('reviews', data);
       }
     } catch (err) {
       const cached = getLocalCache('reviews');
@@ -443,31 +419,67 @@ export default function AdminPage() {
     } finally {
       setLoadingReviews(false);
     }
-  };
+  }, []);
 
-  const fetchSettings = async () => {
+  const fetchSettings = useCallback(async () => {
     try {
       setLoadingSettings(true);
       const res = await fetch(`/api/settings?t=${Date.now()}`, { cache: 'no-store' });
       const data = await res.json();
-      if (data && data.whatsappNumber) {
+      if (data && typeof data === 'object') {
         setSettings(data);
+        saveLocalCache('settings', data);
       }
     } catch (err) {
       showToast('Failed to load settings', 'error');
     } finally {
       setLoadingSettings(false);
     }
-  };
+  }, []);
 
-  useEffect(() => {
+  const fetchAll = useCallback(() => {
     fetchProjects();
     fetchProducts();
     fetchServices();
     fetchTeam();
     fetchReviews();
     fetchSettings();
-  }, []);
+  }, [fetchProjects, fetchProducts, fetchServices, fetchTeam, fetchReviews, fetchSettings]);
+
+  useEffect(() => {
+    fetchAll();
+
+    // 1. Cross-tab & multi-window event subscriber
+    const unsub = subscribeToDataChanges((event) => {
+      const entity = event.entity || 'all';
+      if (entity === 'projects') fetchProjects();
+      else if (entity === 'products') fetchProducts();
+      else if (entity === 'services') fetchServices();
+      else if (entity === 'team') fetchTeam();
+      else if (entity === 'reviews') fetchReviews();
+      else if (entity === 'settings') fetchSettings();
+      else fetchAll();
+    });
+
+    // 2. Window focus: when coming back from Supabase dashboard or other tab, refresh instantly
+    const handleFocus = () => {
+      fetchAll();
+    };
+    window.addEventListener('focus', handleFocus);
+
+    // 3. Periodic heartbeat (every 10 seconds) when tab is active to pull Supabase table changes
+    const interval = setInterval(() => {
+      if (typeof document !== 'undefined' && document.visibilityState === 'visible') {
+        fetchAll();
+      }
+    }, 10000);
+
+    return () => {
+      unsub();
+      window.removeEventListener('focus', handleFocus);
+      clearInterval(interval);
+    };
+  }, [fetchAll, fetchProjects, fetchProducts, fetchServices, fetchTeam, fetchReviews, fetchSettings]);
 
   // ================= GENERAL UPLOAD HANDLER =================
   const uploadFile = async (file) => {
@@ -554,7 +566,7 @@ export default function AdminPage() {
     try {
       const res = await fetch(`/api/projects?id=${id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to delete project');
-      const updated = projects.filter(p => p.id !== id);
+      const updated = projects.filter(p => String(p.id) !== String(id));
       setProjects(updated);
       saveLocalCache('projects', updated);
       showToast('Case study deleted successfully!');
@@ -652,7 +664,7 @@ export default function AdminPage() {
     try {
       const res = await fetch(`/api/products?id=${id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to delete product');
-      const updated = products.filter(p => p.id !== id);
+      const updated = products.filter(p => String(p.id) !== String(id));
       setProducts(updated);
       saveLocalCache('products', updated);
       showToast('Product deleted successfully!');
@@ -735,7 +747,7 @@ export default function AdminPage() {
     try {
       const res = await fetch(`/api/services?id=${id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to delete service');
-      const updated = services.filter(s => s.id !== id);
+      const updated = services.filter(s => String(s.id) !== String(id));
       setServices(updated);
       saveLocalCache('services', updated);
       showToast('Service deleted successfully!');
@@ -833,10 +845,9 @@ export default function AdminPage() {
 
       const json = await res.json();
       if (!res.ok || !json.success) throw new Error(json.error || 'Operation failed');
-      const savedMember = json.data;
-      const updated = isEditing
-        ? team.map(m => m.id === savedMember.id ? savedMember : m)
-        : [...team, savedMember];
+      const updated = Array.isArray(json.data)
+        ? json.data
+        : (isEditing ? team.map(m => m.id === (json.member?.id || json.data?.id) ? (json.member || json.data) : m) : [...team, json.member || json.data]);
 
       setTeam(updated);
       saveLocalCache('team', updated);
@@ -854,7 +865,7 @@ export default function AdminPage() {
       const res = await fetch(`/api/team?id=${id}`, { method: 'DELETE' });
       const json = await res.json();
       if (!res.ok || !json.success) throw new Error(json.error || 'Failed to delete member');
-      const updated = team.filter(m => m.id !== id);
+      const updated = Array.isArray(json.data) ? json.data : team.filter(m => String(m.id) !== String(id));
       setTeam(updated);
       saveLocalCache('team', updated);
       showToast('Profile deleted successfully!');
@@ -918,7 +929,7 @@ export default function AdminPage() {
     try {
       const res = await fetch(`/api/reviews?id=${id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to delete review');
-      const updated = reviews.filter(r => r.id !== id);
+      const updated = reviews.filter(r => String(r.id) !== String(id));
       setReviews(updated);
       saveLocalCache('reviews', updated);
       showToast('Review deleted successfully!');

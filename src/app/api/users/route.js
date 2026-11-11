@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { getAdminsConfig, saveAdminsConfig, deleteAdminUser } from '@/lib/db';
 
 const NO_CACHE_HEADERS = {
   'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
@@ -8,39 +7,13 @@ const NO_CACHE_HEADERS = {
   Expires: '0'
 };
 
-const ADMINS_FILE = path.join(process.cwd(), 'src', 'data', 'admins.json');
-
-function getAdminConfig() {
-  try {
-    if (fs.existsSync(ADMINS_FILE)) {
-      const raw = fs.readFileSync(ADMINS_FILE, 'utf-8');
-      const data = JSON.parse(raw);
-      if (!Array.isArray(data.users)) data.users = [];
-      return data;
-    }
-  } catch (err) {
-    console.error('Failed to read admins.json:', err);
-  }
-  return { googleClientId: '', allowAnyGoogleAccount: true, users: [] };
-}
-
-function saveAdminConfig(config) {
-  try {
-    fs.writeFileSync(ADMINS_FILE, JSON.stringify(config, null, 2), 'utf-8');
-    return true;
-  } catch (err) {
-    console.error('Failed to save admins.json:', err);
-    return false;
-  }
-}
-
 // Helper: check if caller has super_admin role
-function isSuperAdmin(req) {
+async function isSuperAdmin(req) {
   const cookie = req.cookies.get('driven_admin_session');
   if (!cookie || !cookie.value) return false;
   try {
     const user = JSON.parse(cookie.value);
-    const config = getAdminConfig();
+    const config = await getAdminsConfig();
     const found = config.users.find(
       (u) => u.email.toLowerCase() === (user.email || '').toLowerCase()
     );
@@ -52,7 +25,7 @@ function isSuperAdmin(req) {
 
 // 1. GET: List all registered admin users
 export async function GET() {
-  const config = getAdminConfig();
+  const config = await getAdminsConfig();
   return NextResponse.json({
     success: true,
     data: config.users || []
@@ -61,7 +34,7 @@ export async function GET() {
 
 // 2. POST: Add / Pre-authorize a new admin user
 export async function POST(req) {
-  if (!isSuperAdmin(req)) {
+  if (!(await isSuperAdmin(req))) {
     return NextResponse.json(
       { success: false, message: 'Permission Denied: Only Super Admins can add new administrators.' },
       { status: 403 }
@@ -76,7 +49,7 @@ export async function POST(req) {
       return NextResponse.json({ success: false, message: 'Valid email is required.' }, { status: 400 });
     }
 
-    const config = getAdminConfig();
+    const config = await getAdminsConfig();
     const emailLower = email.trim().toLowerCase();
 
     const exists = config.users.find((u) => u.email.toLowerCase() === emailLower);
@@ -96,7 +69,7 @@ export async function POST(req) {
     };
 
     config.users.push(newUser);
-    saveAdminConfig(config);
+    await saveAdminsConfig(config);
 
     return NextResponse.json({ success: true, data: newUser });
   } catch (err) {
@@ -107,7 +80,7 @@ export async function POST(req) {
 
 // 3. PUT: Update Role (super_admin <-> admin) or Status (active <-> suspended)
 export async function PUT(req) {
-  if (!isSuperAdmin(req)) {
+  if (!(await isSuperAdmin(req))) {
     return NextResponse.json(
       { success: false, message: 'Permission Denied: Only Super Admins can change user roles or permissions.' },
       { status: 403 }
@@ -122,7 +95,7 @@ export async function PUT(req) {
       return NextResponse.json({ success: false, message: 'User ID is required.' }, { status: 400 });
     }
 
-    const config = getAdminConfig();
+    const config = await getAdminsConfig();
     const userIndex = config.users.findIndex((u) => u.id === id);
 
     if (userIndex === -1) {
@@ -150,7 +123,7 @@ export async function PUT(req) {
       targetUser.status = status;
     }
 
-    saveAdminConfig(config);
+    await saveAdminsConfig(config);
 
     return NextResponse.json({ success: true, data: targetUser });
   } catch (err) {
@@ -161,7 +134,7 @@ export async function PUT(req) {
 
 // 4. DELETE: Remove user from admin panel
 export async function DELETE(req) {
-  if (!isSuperAdmin(req)) {
+  if (!(await isSuperAdmin(req))) {
     return NextResponse.json(
       { success: false, message: 'Permission Denied: Only Super Admins can remove administrators.' },
       { status: 403 }
@@ -176,7 +149,7 @@ export async function DELETE(req) {
       return NextResponse.json({ success: false, message: 'User ID is required.' }, { status: 400 });
     }
 
-    const config = getAdminConfig();
+    const config = await getAdminsConfig();
     const user = config.users.find((u) => u.id === id);
 
     if (!user) {
@@ -194,8 +167,7 @@ export async function DELETE(req) {
       }
     }
 
-    config.users = config.users.filter((u) => u.id !== id);
-    saveAdminConfig(config);
+    await deleteAdminUser(id, user.email);
 
     return NextResponse.json({ success: true, message: 'User removed successfully.' });
   } catch (err) {

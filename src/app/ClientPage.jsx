@@ -33,21 +33,46 @@ export default function ClientPage({
   initialSettings = null
 }) {
   const [team, setTeam] = useState(
-    Array.isArray(initialTeam) && initialTeam.length > 0 ? initialTeam : defaultTeam
+    Array.isArray(initialTeam) ? initialTeam : defaultTeam
   );
   const [projects, setProjects] = useState(
-    Array.isArray(initialProjects) && initialProjects.length > 0 ? initialProjects : defaultProjects
+    Array.isArray(initialProjects) ? initialProjects : defaultProjects
   );
   const [services, setServices] = useState(
-    Array.isArray(initialServices) && initialServices.length > 0 ? initialServices : defaultServices
+    Array.isArray(initialServices) ? initialServices : defaultServices
   );
   const [products, setProducts] = useState(
-    Array.isArray(initialProducts) && initialProducts.length > 0 ? initialProducts : defaultProducts
+    Array.isArray(initialProducts) ? initialProducts : defaultProducts
   );
   const [reviews, setReviews] = useState(
-    Array.isArray(initialReviews) && initialReviews.length > 0 ? initialReviews : defaultReviews
+    Array.isArray(initialReviews) ? initialReviews : defaultReviews
   );
   const [settings, setSettings] = useState(initialSettings || defaultSettings);
+
+  // Sync state if props change (e.g. from server dynamic refresh)
+  useEffect(() => {
+    if (Array.isArray(initialTeam)) setTeam(initialTeam);
+  }, [initialTeam]);
+
+  useEffect(() => {
+    if (Array.isArray(initialProjects)) setProjects(initialProjects);
+  }, [initialProjects]);
+
+  useEffect(() => {
+    if (Array.isArray(initialServices)) setServices(initialServices);
+  }, [initialServices]);
+
+  useEffect(() => {
+    if (Array.isArray(initialProducts)) setProducts(initialProducts);
+  }, [initialProducts]);
+
+  useEffect(() => {
+    if (Array.isArray(initialReviews)) setReviews(initialReviews);
+  }, [initialReviews]);
+
+  useEffect(() => {
+    if (initialSettings && typeof initialSettings === 'object') setSettings(initialSettings);
+  }, [initialSettings]);
 
   // Granular fetchers with strict zero-cache policy
   const refreshTeam = useCallback(async () => {
@@ -55,7 +80,7 @@ export default function ClientPage({
       const res = await fetch(`/api/team?t=${Date.now()}`, { cache: 'no-store' });
       if (res.ok) {
         const json = await res.json();
-        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+        if (json.success && Array.isArray(json.data)) {
           setTeam(json.data);
         }
       }
@@ -69,7 +94,7 @@ export default function ClientPage({
       const res = await fetch(`/api/projects?t=${Date.now()}`, { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
-        if (Array.isArray(data) && data.length > 0) {
+        if (Array.isArray(data)) {
           setProjects(data);
         }
       }
@@ -83,7 +108,7 @@ export default function ClientPage({
       const res = await fetch(`/api/services?t=${Date.now()}`, { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
-        if (Array.isArray(data) && data.length > 0) {
+        if (Array.isArray(data)) {
           setServices(data);
         }
       }
@@ -97,7 +122,7 @@ export default function ClientPage({
       const res = await fetch(`/api/products?t=${Date.now()}`, { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
-        if (Array.isArray(data) && data.length > 0) {
+        if (Array.isArray(data)) {
           setProducts(data);
         }
       }
@@ -111,7 +136,7 @@ export default function ClientPage({
       const res = await fetch(`/api/reviews?t=${Date.now()}`, { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
-        if (Array.isArray(data) && data.length > 0) {
+        if (Array.isArray(data)) {
           setReviews(data);
         }
       }
@@ -125,7 +150,7 @@ export default function ClientPage({
       const res = await fetch(`/api/settings?t=${Date.now()}`, { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
-        if (data && data.whatsappNumber) {
+        if (data && typeof data === 'object') {
           setSettings(data);
         }
       }
@@ -161,6 +186,11 @@ export default function ClientPage({
       else refreshAll();
     });
 
+    const handleFocus = () => {
+      refreshAll();
+    };
+    window.addEventListener('focus', handleFocus);
+
     // 8-second background heartbeat when tab is active (for cross-device / multi-admin edits)
     const interval = setInterval(() => {
       if (typeof document !== 'undefined' && document.visibilityState === 'visible') {
@@ -170,6 +200,7 @@ export default function ClientPage({
 
     return () => {
       unsubscribe();
+      window.removeEventListener('focus', handleFocus);
       clearInterval(interval);
     };
   }, [refreshTeam, refreshProjects, refreshServices, refreshProducts, refreshReviews, refreshSettings, refreshAll]);
