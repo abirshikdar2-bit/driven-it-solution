@@ -79,7 +79,7 @@ export default function GlobalReach() {
   return (
     <section id="reach" className="mx-auto w-full max-w-[1520px] px-4 sm:px-6 lg:px-8 relative pt-16 pb-8 sm:pt-20 sm:pb-10 font-sans">
       {/* Header matching Mollahs IT 1:1 */}
-      <div className="mb-14 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+      <div className="mb-10 sm:mb-14">
         <div>
           {/* Badge: 100% Exact Copy of Mollahs IT */}
           <span className="relative inline-flex items-center gap-3 bg-white/[0.03] px-3 py-2 text-[11px] font-medium uppercase tracking-wide text-white">
@@ -102,10 +102,6 @@ export default function GlobalReach() {
             A team without borders
           </h2>
         </div>
-
-        <p className="max-w-[20rem] text-base leading-snug text-white/60">
-          Our team works remotely as digital nomads across countries — so we build with first-hand feel for the culture, trends and buyers of every market. Clients in 9 countries and counting.
-        </p>
       </div>
 
       {/* Main Map Visual Container */}

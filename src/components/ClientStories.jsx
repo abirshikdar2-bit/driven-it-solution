@@ -52,7 +52,7 @@ export default function ClientStories({ reviews: propReviews = null }) {
   return (
     <section id="reviews" className="mx-auto w-full max-w-[1520px] px-4 sm:px-6 lg:px-8 pt-8 pb-12 sm:pt-10 sm:pb-16 relative">
       {/* Section Header */}
-      <div className="mb-14 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+      <div className="mb-10 sm:mb-14">
         <div>
           <SectionBadge>Reviews</SectionBadge>
 
@@ -60,10 +60,6 @@ export default function ClientStories({ reviews: propReviews = null }) {
             Client stories
           </h2>
         </div>
-
-        <p className="max-w-[22rem] text-sm sm:text-base leading-relaxed text-white/60 font-light italic font-sans">
-          Honest feedback from founder-led teams we&apos;ve worked with — built on deep technical trust, consistency, and long-term collaboration.
-        </p>
       </div>
 
       {/* Testimonials Bento Grid */}
