@@ -72,7 +72,13 @@ export async function POST(req) {
     let sub = '';
 
     // 2. Extract User Info
-    if (credential) {
+    if (body.supabaseUser) {
+      const su = body.supabaseUser;
+      rawEmail = su.email || '';
+      rawName = su.user_metadata?.full_name || su.user_metadata?.name || (rawEmail ? rawEmail.split('@')[0] : 'Admin User');
+      rawPicture = su.user_metadata?.avatar_url || su.user_metadata?.picture || `https://api.dicebear.com/7.x/bottts/svg?seed=${rawName}`;
+      sub = su.id || '';
+    } else if (credential) {
       const payload = decodeGoogleJWT(credential);
       if (!payload || !payload.email) {
         return NextResponse.json({ success: false, message: 'Invalid Google Token' }, { status: 400 });
@@ -81,13 +87,13 @@ export async function POST(req) {
       rawName = payload.name || payload.email.split('@')[0];
       rawPicture = payload.picture || '';
       sub = payload.sub;
-    } else if (action === 'demo_login') {
-      rawEmail = demoUser?.email || 'abirshikdar.official@gmail.com';
-      rawName = demoUser?.name || 'Abir Shikdar';
-      rawPicture = demoUser?.picture || 'https://api.dicebear.com/7.x/bottts/svg?seed=AbirAdmin';
-      sub = 'demo-superadmin-sub';
+    } else if (action === 'demo_login' || body.email) {
+      rawEmail = body.email || demoUser?.email || 'abirshikdar2@gmail.com';
+      rawName = body.name || demoUser?.name || 'Abir Shikdar';
+      rawPicture = body.picture || demoUser?.picture || 'https://api.dicebear.com/7.x/bottts/svg?seed=AbirAdmin';
+      sub = `admin-${Date.now()}`;
     } else {
-      return NextResponse.json({ success: false, message: 'No credential provided' }, { status: 400 });
+      return NextResponse.json({ success: false, message: 'No credential or user provided' }, { status: 400 });
     }
 
     const emailLower = rawEmail.toLowerCase();

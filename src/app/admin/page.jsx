@@ -36,6 +36,7 @@ import CornerBrackets, { SectionBadge } from '@/components/CornerBrackets';
 import FlowFieldCanvas from '@/components/FlowFieldCanvas';
 import DrivenItWordmark from '@/components/DrivenItWordmark';
 import AdminGoogleAuthModal from '@/components/AdminGoogleAuthModal';
+import { getBrowserSupabase } from '@/lib/supabase';
 import { broadcastDataChange, subscribeToDataChanges, getLocalCache, saveLocalCache } from '@/lib/syncEvents';
 
 export default function AdminPage() {
@@ -101,6 +102,10 @@ export default function AdminPage() {
 
   const handleLogout = async () => {
     try {
+      const supabase = getBrowserSupabase();
+      if (supabase) {
+        await supabase.auth.signOut();
+      }
       await fetch('/api/auth/google', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
