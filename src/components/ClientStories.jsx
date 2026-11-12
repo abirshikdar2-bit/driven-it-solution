@@ -50,7 +50,7 @@ export default function ClientStories({ reviews: propReviews = null }) {
   }, [propReviews, fetchReviews]);
 
   return (
-    <section id="reviews" className="mx-auto w-full max-w-[1520px] px-4 sm:px-6 lg:px-8 py-28 relative">
+    <section id="reviews" className="mx-auto w-full max-w-[1520px] px-4 sm:px-6 lg:px-8 pt-8 pb-12 sm:pt-10 sm:pb-16 relative">
       {/* Section Header */}
       <div className="mb-14 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <div>

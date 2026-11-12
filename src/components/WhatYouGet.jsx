@@ -107,7 +107,7 @@ export default function WhatYouGet({ services: propServices = null }) {
   }, []);
 
   return (
-    <section id="services" className="mx-auto w-full max-w-[1520px] px-4 sm:px-6 lg:px-8 py-28">
+    <section id="services" className="mx-auto w-full max-w-[1520px] px-4 sm:px-6 lg:px-8 pt-8 pb-8 sm:pt-10 sm:pb-10">
       {/* Section Header */}
       <div className="mb-14 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <div>
@@ -226,21 +226,6 @@ export default function WhatYouGet({ services: propServices = null }) {
             </div>
           );
         })}
-      </div>
-
-      {/* Bottom CTA Bar */}
-      <div className="mt-12 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center border-t border-white/5 pt-8">
-        <p className="text-lg font-medium uppercase text-white tracking-wide">
-          Not sure which service fits? Let&apos;s talk.
-        </p>
-        <Link
-          href="/contact"
-          className="relative inline-flex items-center gap-2 border border-white/10 bg-white/[0.03] px-6 py-3 text-xs font-mono uppercase font-bold tracking-wider text-white transition-all hover:bg-logo-gradient hover:text-black hover:border-transparent"
-        >
-          <span>Get in touch</span>
-          <ArrowUpRight className="h-4 w-4" />
-          <CornerBrackets className="border-white/30" />
-        </Link>
       </div>
     </section>
   );

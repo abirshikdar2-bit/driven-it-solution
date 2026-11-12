@@ -76,7 +76,7 @@ export default function ContactSection({ settings: propSettings = null }) {
   };
 
   return (
-    <section id="contact" className="relative py-28 px-4 sm:px-6 lg:px-8 bg-[#050505] overflow-hidden border-t border-white/5">
+    <section id="contact" className="relative pt-12 pb-16 sm:pt-16 sm:pb-20 px-4 sm:px-6 lg:px-8 bg-[#050505] overflow-hidden border-t border-white/5">
       {/* 100% Exact FlowField Background matching Mollahs IT */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <FlowFieldCanvas

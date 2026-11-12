@@ -52,7 +52,7 @@ export default function SoftwareWeOwn({ products: propProducts = null }) {
   }, [propProducts, loadProducts]);
 
   return (
-    <section id="products" className="mx-auto w-full max-w-[1520px] px-4 sm:px-6 lg:px-8 relative py-28">
+    <section id="products" className="mx-auto w-full max-w-[1520px] px-4 sm:px-6 lg:px-8 relative pt-8 pb-8 sm:pt-10 sm:pb-10">
       {/* Header */}
       <div className="mb-14 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <div>

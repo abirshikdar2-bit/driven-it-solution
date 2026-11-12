@@ -77,7 +77,7 @@ export default function GlobalReach() {
   const points = Array.from(uniquePointsMap.values());
 
   return (
-    <section id="reach" className="mx-auto w-full max-w-[1520px] px-4 sm:px-6 lg:px-8 relative py-28 font-sans">
+    <section id="reach" className="mx-auto w-full max-w-[1520px] px-4 sm:px-6 lg:px-8 relative pt-16 pb-8 sm:pt-20 sm:pb-10 font-sans">
       {/* Header matching Mollahs IT 1:1 */}
       <div className="mb-14 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <div>
