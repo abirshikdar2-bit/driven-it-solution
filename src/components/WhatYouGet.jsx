@@ -109,16 +109,13 @@ export default function WhatYouGet({ services: propServices = null }) {
   return (
     <section id="services" className="mx-auto w-full max-w-[1520px] px-4 sm:px-6 lg:px-8 pt-8 pb-8 sm:pt-10 sm:pb-10">
       {/* Section Header */}
-      <div className="mb-14 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+      <div className="mb-10 sm:mb-14">
         <div>
           <SectionBadge>Services</SectionBadge>
           <h2 className="mt-6 text-[clamp(2.5rem,1.6rem+3vw,3.8rem)] font-semibold uppercase leading-[0.95] tracking-[-0.035em] text-white">
             What you get
           </h2>
         </div>
-        <p className="max-w-[22rem] text-base leading-snug text-white/60 font-light italic font-sans">
-          A focused set of digital marketing, web engineering, branding and custom automation services, delivered to a brief, a timeline and a price.
-        </p>
       </div>
 
       {/* Horizontal Accordion */}

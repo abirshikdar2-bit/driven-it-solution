@@ -54,7 +54,7 @@ export default function SoftwareWeOwn({ products: propProducts = null }) {
   return (
     <section id="products" className="mx-auto w-full max-w-[1520px] px-4 sm:px-6 lg:px-8 relative pt-8 pb-8 sm:pt-10 sm:pb-10">
       {/* Header */}
-      <div className="mb-14 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+      <div className="mb-10 sm:mb-14">
         <div>
           <SectionBadge>Products</SectionBadge>
 
@@ -62,10 +62,6 @@ export default function SoftwareWeOwn({ products: propProducts = null }) {
             Software we own
           </h2>
         </div>
-
-        <p className="max-w-[22rem] text-sm sm:text-base leading-relaxed text-white/60 font-light italic font-sans">
-          Beyond client work, we engineer, build, and run our own proprietary SaaS platforms — the same high-level engineering, with our name on the invoice.
-        </p>
       </div>
 
       {/* 2-Column Product Grid */}
