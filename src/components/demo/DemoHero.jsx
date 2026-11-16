@@ -6,7 +6,7 @@ export default function DemoHero({ settings }) {
   const whatsappNum = settings?.whatsappNumber || '8801909711808';
 
   return (
-    <section className="relative pt-32 sm:pt-40 pb-20 md:pb-28 overflow-hidden bg-[#050811]">
+    <section className="relative pt-36 sm:pt-44 pb-20 md:pb-28 overflow-hidden bg-[#050811]">
       {/* Dynamic Background Glow & Ambient Mesh */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] sm:w-[900px] h-[400px] sm:h-[500px] bg-gradient-to-tr from-cyan-600/20 via-sky-500/15 to-indigo-600/10 blur-[130px] rounded-full pointer-events-none -z-10" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(14,165,233,0.15),rgba(255,255,255,0))] pointer-events-none -z-10" />

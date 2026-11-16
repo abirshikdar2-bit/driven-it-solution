@@ -28,7 +28,7 @@ export default function DemoNavbar({ settings }) {
   const whatsappNum = settings?.whatsappNumber || '8801909711808';
 
   return (
-    <header className="fixed top-0 inset-x-0 z-50 transition-all duration-300 px-4 sm:px-6 lg:px-8 pt-4">
+    <header className="fixed top-10 inset-x-0 z-40 transition-all duration-300 px-4 sm:px-6 lg:px-8">
       <div
         className={`max-w-7xl mx-auto rounded-full transition-all duration-300 border ${
           scrolled

@@ -208,12 +208,12 @@ export default function DemoClientPage({
   return (
     <div className="relative min-h-screen bg-[#050811] text-[#f3f4f6] flex flex-col selection:bg-cyan-400 selection:text-black">
       {/* Top Demo Banner Indicator */}
-      <div className="bg-gradient-to-r from-cyan-950 via-[#0a1526] to-indigo-950 border-b border-cyan-500/20 py-2 px-4 text-center text-xs text-cyan-300 font-medium z-50">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      <div className="fixed top-0 inset-x-0 z-50 h-9 bg-gradient-to-r from-cyan-950 via-[#0a1526] to-indigo-950 border-b border-cyan-500/20 px-4 text-xs text-cyan-300 font-medium flex items-center">
+        <div className="max-w-7xl mx-auto w-full flex items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
             <span className="font-semibold text-white">✨ DEMO PREVIEW:</span>
-            <span>100% Original, Bespoke Architecture (Zero Copyright Conflict)</span>
+            <span className="hidden sm:inline">100% Original, Bespoke Architecture (Zero Copyright Conflict)</span>
           </div>
           <div className="flex items-center gap-4 text-[11px]">
             <a
