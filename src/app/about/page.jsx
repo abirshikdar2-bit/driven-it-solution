@@ -69,7 +69,7 @@ export default function AboutPage() {
           </h1>
 
           <p className="mt-4 text-base sm:text-lg text-white/60 font-light max-w-2xl">
-            A tight-knit collective of senior software engineers, digital marketing tacticians, visual identity designers, and AI advertising experts.
+            A tight-knit collective of senior software engineers, digital marketing tacticians, visual identity designers, and performance advertising experts.
           </p>
         </div>
 

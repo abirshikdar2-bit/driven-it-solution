@@ -13,7 +13,7 @@ const blogPosts = [
     id: 'meta-capi-guide-2026',
     title: 'Why Client-Side Meta Pixels Fail & How CAPI Restores 35%+ Lost Ad Telemetry',
     summary: 'A deep-dive into iOS privacy restrictions, ad-blockers, and why server-side Conversions API (CAPI) is essential to scale ad ROAS in 2026.',
-    category: 'AI & Meta Ads',
+    category: 'Performance & Meta Ads',
     date: 'Nov 04, 2026',
     readTime: '6 min read',
     tags: ['Meta CAPI', 'Ad Telemetry', 'ROAS Scaler'],
@@ -23,7 +23,7 @@ const blogPosts = [
     id: 'nextjs-16-turbopack-production',
     title: 'Next.js 16 & Turbopack: Engineering Sub-50ms Global Core Web Vitals',
     summary: 'Architectural lessons from shipping high-traffic enterprise applications with partial prerendering, streaming server components, and edge caching.',
-    category: 'AI Web Development',
+    category: 'Modern Web Engineering',
     date: 'Oct 28, 2026',
     readTime: '8 min read',
     tags: ['Next.js 16', 'Performance', 'Full-Stack'],
@@ -33,7 +33,7 @@ const blogPosts = [
     id: 'swiss-typography-luxury-branding',
     title: 'The Art of Swiss Minimalism: Why Restrained Typography Commands Higher Retainers',
     summary: 'How international typographic style and grid-aligned design tokens build authority and customer trust for high-ticket technology studios.',
-    category: 'Creative AI Branding',
+    category: 'Creative Studio Branding',
     date: 'Oct 19, 2026',
     readTime: '5 min read',
     tags: ['Design Systems', 'Figma', 'Typography'],
@@ -53,7 +53,7 @@ const blogPosts = [
     id: 'ai-seo-programmatic-growth',
     title: 'Programmatic SEO & Knowledge Graph Optimization: Dominating Search Results',
     summary: 'How semantic vector search and dynamic content generation allow e-commerce and SaaS brands to rank for thousands of high-intent search queries.',
-    category: 'AI SEO & Analytics',
+    category: 'Technical SEO & Analytics',
     date: 'Oct 05, 2026',
     readTime: '9 min read',
     tags: ['SEO', 'Knowledge Graph', 'Organic Traffic'],
@@ -63,7 +63,7 @@ const blogPosts = [
     id: 'headless-ecommerce-high-conversions',
     title: 'Headless E-commerce with Next.js & Shopify: Tripling Mobile Checkout Velocity',
     summary: 'Eliminating bloated checkout scripts and utilizing instant optimistic UI updates to dramatically boost mobile conversion rates.',
-    category: 'AI E-commerce',
+    category: 'Headless E-commerce',
     date: 'Sep 27, 2026',
     readTime: '6 min read',
     tags: ['E-commerce', 'Shopify', 'Conversion Rate'],
@@ -77,12 +77,12 @@ export default function BlogPage() {
 
   const categories = [
     'All',
-    'AI Web Development',
+    'Modern Web Engineering',
     'Intelligent Automation',
-    'Creative AI Branding',
-    'AI & Meta Ads',
-    'AI SEO & Analytics',
-    'AI E-commerce'
+    'Creative Studio Branding',
+    'Performance & Meta Ads',
+    'Technical SEO & Analytics',
+    'Headless E-commerce'
   ];
 
   const filteredPosts = blogPosts.filter((post) => {
@@ -217,18 +217,22 @@ export default function BlogPage() {
               ))}
             </div>
           ) : (
-            /* Empty state matching Mollahs IT */
-            <div className="text-center py-32 rounded-[3.5rem] bg-[#0b0c10]/80 backdrop-blur-2xl border border-white/5 relative overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent transition-all duration-700" />
-              <div className="relative z-10">
-                <Search size={64} className="mx-auto mb-8 text-cyan-500/20" />
-                <h3 className="text-3xl font-bold text-white mb-4 font-display tracking-tight">
-                  No matching insights
-                </h3>
-                <p className="text-gray-500 italic font-light">
-                  Try adjusting your search keywords or filter categories.
-                </p>
+            /* Empty state matching Driven IT luxury system */
+            <div className="relative border border-white/10 bg-[#070707] py-20 px-8 text-center flex flex-col items-center justify-center">
+              <CornerBrackets className="border-white/20" />
+              
+              {/* Magnifying Glass Icon */}
+              <div className="mb-5 flex items-center justify-center w-12 h-12 rounded-full bg-white/[0.04] border border-white/10 text-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.15)]">
+                <Search size={22} className="text-cyan-400" />
               </div>
+
+              <h3 className="text-xl sm:text-2xl font-bold uppercase tracking-tight text-white mb-2 font-sans">
+                NO POSTS FOUND
+              </h3>
+
+              <p className="text-xs sm:text-sm text-white/60 font-light italic font-sans max-w-md">
+                Try adjusting your search keywords or filter categories. We publish new guides regularly.
+              </p>
             </div>
           )}
         </div>

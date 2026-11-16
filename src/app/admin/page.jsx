@@ -32,7 +32,8 @@ import {
   UserPlus,
   Lock,
   AlertTriangle,
-  ShieldAlert
+  ShieldAlert,
+  Search
 } from 'lucide-react';
 import CornerBrackets, { SectionBadge } from '@/components/CornerBrackets';
 import FlowFieldCanvas from '@/components/FlowFieldCanvas';
@@ -268,11 +269,13 @@ export default function AdminPage() {
   const [photoPreview, setPhotoPreview] = useState('');
   const teacherFileInputRef = useRef(null);
 
-  // File Upload State for Projects/Products
+  // File Upload State for Projects/Products/Reviews
   const [isUploadingProjectImage, setIsUploadingProjectImage] = useState(false);
   const projectFileInputRef = useRef(null);
   const [isUploadingProductImage, setIsUploadingProductImage] = useState(false);
   const productFileInputRef = useRef(null);
+  const [isUploadingReviewAvatar, setIsUploadingReviewAvatar] = useState(false);
+  const reviewFileInputRef = useRef(null);
 
   // ================= 1. PROJECTS (CASE STUDIES) STATE =================
   const [projects, setProjects] = useState([]);
@@ -1029,6 +1032,27 @@ export default function AdminPage() {
   };
 
   // ================= 5. REVIEW HANDLERS =================
+  const handleReviewAvatarUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 50 * 1024 * 1024) {
+      showToast('Image size exceeds 50MB limit', 'error');
+      if (e.target) e.target.value = '';
+      return;
+    }
+    try {
+      setIsUploadingReviewAvatar(true);
+      const uploadedUrl = await uploadFile(file);
+      setCurrentReview(prev => ({ ...prev, avatar: uploadedUrl }));
+      showToast('Client photo uploaded successfully!');
+    } catch (err) {
+      showToast(err.message, 'error');
+    } finally {
+      setIsUploadingReviewAvatar(false);
+      if (e.target) e.target.value = '';
+    }
+  };
+
   const handleOpenReviewModal = (rev = null) => {
     if (rev) {
       setCurrentReview(rev);
@@ -1334,12 +1358,19 @@ export default function AdminPage() {
                 Loading Case Studies...
               </div>
             ) : projects.length === 0 ? (
-              <div className="py-24 text-center border border-dashed border-white/10 rounded-2xl bg-white/[0.01]">
-                <Briefcase size={40} className="mx-auto text-white/20 mb-3" />
-                <p className="text-sm font-sans text-white/50">No case studies found</p>
+              <div className="py-20 text-center border border-white/10 rounded-2xl bg-black/40 flex flex-col items-center justify-center relative overflow-hidden">
+                <div className="mb-4 flex items-center justify-center w-12 h-12 rounded-full bg-white/[0.04] border border-white/10 text-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.15)]">
+                  <Search size={22} className="text-cyan-400" />
+                </div>
+                <h3 className="text-base sm:text-lg font-bold uppercase tracking-tight text-white mb-1.5 font-sans">
+                  NO CASE STUDIES FOUND
+                </h3>
+                <p className="text-xs text-white/50 font-sans max-w-sm mb-4">
+                  No case study entries currently exist in database. Add your first client project showcase below.
+                </p>
                 <button
                   onClick={() => handleOpenProjectModal()}
-                  className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-sans font-semibold text-cyan-400 border border-cyan-400/30 hover:bg-cyan-400/10 transition-colors"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-sans font-semibold text-cyan-400 border border-cyan-400/30 hover:bg-cyan-400/10 transition-colors cursor-pointer"
                 >
                   <Plus size={14} /> Add First Case Study
                 </button>
@@ -1446,12 +1477,19 @@ export default function AdminPage() {
                 Loading Products...
               </div>
             ) : products.length === 0 ? (
-              <div className="py-24 text-center border border-dashed border-white/10 rounded-2xl bg-white/[0.01]">
-                <Cpu size={40} className="mx-auto text-white/20 mb-3" />
-                <p className="text-sm font-sans text-white/50">No software products found</p>
+              <div className="py-20 text-center border border-white/10 rounded-2xl bg-black/40 flex flex-col items-center justify-center relative overflow-hidden">
+                <div className="mb-4 flex items-center justify-center w-12 h-12 rounded-full bg-white/[0.04] border border-white/10 text-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.15)]">
+                  <Search size={22} className="text-cyan-400" />
+                </div>
+                <h3 className="text-base sm:text-lg font-bold uppercase tracking-tight text-white mb-1.5 font-sans">
+                  NO SOFTWARE PRODUCTS FOUND
+                </h3>
+                <p className="text-xs text-white/50 font-sans max-w-sm mb-4">
+                  No proprietary software products currently listed. Add your first digital platform offering below.
+                </p>
                 <button
                   onClick={() => handleOpenProductModal()}
-                  className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-sans font-semibold text-cyan-400 border border-cyan-400/30 hover:bg-cyan-400/10 transition-colors"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-sans font-semibold text-cyan-400 border border-cyan-400/30 hover:bg-cyan-400/10 transition-colors cursor-pointer"
                 >
                   <Plus size={14} /> Add First Product
                 </button>
@@ -1566,12 +1604,19 @@ export default function AdminPage() {
                 Loading Services...
               </div>
             ) : services.length === 0 ? (
-              <div className="py-24 text-center border border-dashed border-white/10 rounded-2xl bg-white/[0.01]">
-                <Layers size={40} className="mx-auto text-white/20 mb-3" />
-                <p className="text-sm font-sans text-white/50">No services found</p>
+              <div className="py-20 text-center border border-white/10 rounded-2xl bg-black/40 flex flex-col items-center justify-center relative overflow-hidden">
+                <div className="mb-4 flex items-center justify-center w-12 h-12 rounded-full bg-white/[0.04] border border-white/10 text-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.15)]">
+                  <Search size={22} className="text-cyan-400" />
+                </div>
+                <h3 className="text-base sm:text-lg font-bold uppercase tracking-tight text-white mb-1.5 font-sans">
+                  NO SERVICES FOUND
+                </h3>
+                <p className="text-xs text-white/50 font-sans max-w-sm mb-4">
+                  No service offerings currently listed. Add your first service tier or package below.
+                </p>
                 <button
                   onClick={() => handleOpenServiceModal()}
-                  className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-sans font-semibold text-cyan-400 border border-cyan-400/30 hover:bg-cyan-400/10 transition-colors"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-sans font-semibold text-cyan-400 border border-cyan-400/30 hover:bg-cyan-400/10 transition-colors cursor-pointer"
                 >
                   <Plus size={14} /> Add First Service
                 </button>
@@ -1662,12 +1707,19 @@ export default function AdminPage() {
                 Loading Team &amp; Faculty...
               </div>
             ) : team.length === 0 ? (
-              <div className="py-24 text-center border border-dashed border-white/10 rounded-2xl bg-white/[0.01]">
-                <Users size={40} className="mx-auto text-white/20 mb-3" />
-                <p className="text-sm font-sans text-white/50">No faculty members found</p>
+              <div className="py-20 text-center border border-white/10 rounded-2xl bg-black/40 flex flex-col items-center justify-center relative overflow-hidden">
+                <div className="mb-4 flex items-center justify-center w-12 h-12 rounded-full bg-white/[0.04] border border-white/10 text-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.15)]">
+                  <Search size={22} className="text-cyan-400" />
+                </div>
+                <h3 className="text-base sm:text-lg font-bold uppercase tracking-tight text-white mb-1.5 font-sans">
+                  NO TEAM PROFILES FOUND
+                </h3>
+                <p className="text-xs text-white/50 font-sans max-w-sm mb-4">
+                  No leadership or team profiles currently listed. Add your first executive profile below.
+                </p>
                 <button
                   onClick={() => handleOpenTeamModal()}
-                  className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-sans font-semibold text-cyan-400 border border-cyan-400/30 hover:bg-cyan-400/10 transition-colors"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-sans font-semibold text-cyan-400 border border-cyan-400/30 hover:bg-cyan-400/10 transition-colors cursor-pointer"
                 >
                   <Plus size={14} /> Add First Member
                 </button>
@@ -1782,12 +1834,19 @@ export default function AdminPage() {
                 Loading Client Reviews...
               </div>
             ) : reviews.length === 0 ? (
-              <div className="py-24 text-center border border-dashed border-white/10 rounded-2xl bg-white/[0.01]">
-                <Star size={40} className="mx-auto text-white/20 mb-3" />
-                <p className="text-sm font-sans text-white/50">No reviews found</p>
+              <div className="py-20 text-center border border-white/10 rounded-2xl bg-black/40 flex flex-col items-center justify-center relative overflow-hidden">
+                <div className="mb-4 flex items-center justify-center w-12 h-12 rounded-full bg-white/[0.04] border border-white/10 text-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.15)]">
+                  <Search size={22} className="text-cyan-400" />
+                </div>
+                <h3 className="text-base sm:text-lg font-bold uppercase tracking-tight text-white mb-1.5 font-sans">
+                  NO CLIENT STORIES FOUND
+                </h3>
+                <p className="text-xs text-white/50 font-sans max-w-sm mb-4">
+                  No testimonials or client feedback currently recorded. Add your first client story below.
+                </p>
                 <button
                   onClick={() => handleOpenReviewModal()}
-                  className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-sans font-semibold text-cyan-400 border border-cyan-400/30 hover:bg-cyan-400/10 transition-colors"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-sans font-semibold text-cyan-400 border border-cyan-400/30 hover:bg-cyan-400/10 transition-colors cursor-pointer"
                 >
                   <Plus size={14} /> Add First Review
                 </button>
@@ -1825,13 +1884,31 @@ export default function AdminPage() {
                     </div>
 
                     <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
-                      <div>
-                        <h4 className="text-sm font-bold text-white font-sans tracking-tight">
-                          {rev.clientName}
-                        </h4>
-                        <p className="text-xs text-white/50 font-sans mt-0.5">
-                          {rev.role} {rev.company ? `· ${rev.company}` : ''}
-                        </p>
+                      <div className="flex items-center gap-3">
+                        {rev.avatar ? (
+                          <div className="relative w-10 h-10 rounded-full overflow-hidden border border-cyan-400/40 bg-zinc-900 shrink-0 shadow-[0_0_10px_rgba(34,211,238,0.2)]">
+                            <img
+                              src={rev.avatar}
+                              alt={rev.clientName}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                              }}
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-10 h-10 rounded-full bg-cyan-400/10 border border-cyan-400/30 flex items-center justify-center text-cyan-400 font-mono text-xs font-bold shrink-0">
+                            {rev.clientName ? rev.clientName.slice(0, 2).toUpperCase() : 'CL'}
+                          </div>
+                        )}
+                        <div>
+                          <h4 className="text-sm font-bold text-white font-sans tracking-tight">
+                            {rev.clientName}
+                          </h4>
+                          <p className="text-xs text-white/50 font-sans mt-0.5">
+                            {rev.role} {rev.company ? `· ${rev.company}` : ''}
+                          </p>
+                        </div>
                       </div>
 
                       <div className="flex items-center gap-2">
@@ -2411,7 +2488,7 @@ export default function AdminPage() {
                     className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-sans text-xs text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                   >
                     <option value="Web Design & Development">Web Design &amp; Development</option>
-                    <option value="AI & Meta Ad Expert">AI &amp; Meta Ad Expert</option>
+                    <option value="Meta Ads & Growth">Meta Ads &amp; Growth</option>
                     <option value="Graphics Designing">Graphics Designing</option>
                     <option value="Digital Marketing">Digital Marketing</option>
                     <option value="Custom Software">Custom Software</option>
@@ -2841,12 +2918,12 @@ export default function AdminPage() {
                   >
                     <option value="Code2">Code2 (Engineering)</option>
                     <option value="Palette">Palette (Creative &amp; Graphics)</option>
-                    <option value="Target">Target (AI &amp; Meta Ads)</option>
+                    <option value="Target">Target (Meta Ads &amp; Growth)</option>
                     <option value="Megaphone">Megaphone (Digital Marketing)</option>
                     <option value="LayoutDashboard">LayoutDashboard (Custom App/SaaS)</option>
                     <option value="Globe">Globe (Next.js Global Web)</option>
                     <option value="Smartphone">Smartphone (Mobile Apps)</option>
-                    <option value="Cpu">Cpu (AI Solutions)</option>
+                    <option value="Cpu">Cpu (Cloud &amp; Software Solutions)</option>
                   </select>
                 </div>
               </div>
@@ -3249,6 +3326,73 @@ export default function AdminPage() {
                     <option value={5}>5 Stars ★★★★★</option>
                     <option value={4}>4 Stars ★★★★☆</option>
                   </select>
+                </div>
+              </div>
+
+              {/* Client Avatar / Photo Upload (Direct Supabase Cloud Upload up to 50MB) */}
+              <div>
+                <label className="block text-xs font-sans font-medium text-white/70 mb-2">
+                  Client Profile Photo / Avatar (Direct Supabase Cloud Upload)
+                </label>
+                <div className="flex flex-col sm:flex-row items-center gap-4 p-4 rounded-xl bg-black/40 border border-white/10">
+                  {/* Live Preview Circle */}
+                  <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-cyan-400/40 bg-zinc-900 shrink-0 shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+                    {currentReview.avatar ? (
+                      <img
+                        src={currentReview.avatar}
+                        alt="Client Avatar Preview"
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.src = '/images/testimonials/avatar-1.webp';
+                        }}
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-cyan-400 font-mono text-base font-bold">
+                        {currentReview.clientName ? currentReview.clientName.slice(0, 2).toUpperCase() : 'CL'}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Controls */}
+                  <div className="flex-1 w-full space-y-2">
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="file"
+                        ref={reviewFileInputRef}
+                        onChange={handleReviewAvatarUpload}
+                        accept="image/*"
+                        className="hidden"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => reviewFileInputRef.current?.click()}
+                        disabled={isUploadingReviewAvatar}
+                        className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-sans font-medium bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 transition-all cursor-pointer disabled:opacity-50"
+                      >
+                        {isUploadingReviewAvatar ? (
+                          <>
+                            <div className="w-3.5 h-3.5 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+                            <span>Uploading to Cloud...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Upload size={14} />
+                            <span>Upload Client Photo</span>
+                          </>
+                        )}
+                      </button>
+
+                      <span className="text-[11px] text-white/40 font-mono">Up to 50MB</span>
+                    </div>
+
+                    <input
+                      type="text"
+                      placeholder="Or paste image URL (e.g. /images/testimonials/avatar-1.webp)"
+                      value={currentReview.avatar || ''}
+                      onChange={(e) => setCurrentReview({ ...currentReview, avatar: e.target.value })}
+                      className="w-full px-3 py-1.5 rounded-lg bg-black/60 border border-white/10 font-mono text-xs text-white/80 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
+                    />
+                  </div>
                 </div>
               </div>
 
