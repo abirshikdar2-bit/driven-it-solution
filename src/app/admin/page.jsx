@@ -553,6 +553,42 @@ export default function AdminPage() {
 
   // ================= GENERAL UPLOAD HANDLER =================
   const uploadFile = async (file) => {
+    // 1. Direct Signed Upload to Supabase Storage (Supports full-length tall screenshots up to 50MB, bypasses Vercel 4.5MB limit)
+    try {
+      const signRes = await fetch('/api/upload/sign', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fileName: file.name,
+          contentType: file.type || 'image/png'
+        })
+      });
+
+      if (signRes.ok) {
+        const signData = await signRes.json();
+        if (signData.success && signData.path && signData.token) {
+          const client = getBrowserSupabase();
+          if (client) {
+            const { error: uploadErr } = await client.storage
+              .from('driven_assets')
+              .uploadToSignedUrl(signData.path, signData.token, file, {
+                contentType: file.type || 'image/png'
+              });
+
+            if (!uploadErr && signData.publicUrl) {
+              return signData.publicUrl;
+            }
+            if (uploadErr) {
+              console.warn('Signed upload error, falling back:', uploadErr);
+            }
+          }
+        }
+      }
+    } catch (directErr) {
+      console.warn('Direct upload failed, using fallback:', directErr);
+    }
+
+    // 2. Standard Serverless route fallback
     const formData = new FormData();
     formData.append('file', file);
     const res = await fetch('/api/upload', {
@@ -589,8 +625,8 @@ export default function AdminPage() {
   const handleProjectFileUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 10 * 1024 * 1024) {
-      showToast('Image size exceeds 10MB limit', 'error');
+    if (file.size > 50 * 1024 * 1024) {
+      showToast('Image size exceeds 50MB limit', 'error');
       if (e.target) e.target.value = '';
       return;
     }
@@ -684,8 +720,8 @@ export default function AdminPage() {
   const handleProductFileUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 10 * 1024 * 1024) {
-      showToast('Image size exceeds 10MB limit', 'error');
+    if (file.size > 50 * 1024 * 1024) {
+      showToast('Image size exceeds 50MB limit', 'error');
       if (e.target) e.target.value = '';
       return;
     }
@@ -893,8 +929,8 @@ export default function AdminPage() {
   const handleTeacherPhotoUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 10 * 1024 * 1024) {
-      showToast('Image size exceeds 10MB limit', 'error');
+    if (file.size > 50 * 1024 * 1024) {
+      showToast('Image size exceeds 50MB limit', 'error');
       if (e.target) e.target.value = '';
       return;
     }
@@ -1343,13 +1379,16 @@ export default function AdminPage() {
 
                       {/* Case Study Image Thumbnail */}
                       {proj.image && (
-                        <div className="mt-3 relative w-full h-32 rounded-xl overflow-hidden border border-white/10 bg-black/60">
+                        <div className="mt-3 relative w-full h-36 rounded-xl overflow-hidden border border-white/10 bg-black/60 group/thumb cursor-pointer" title="Hover to preview full-length scroll">
                           <img
                             src={proj.image}
                             alt={proj.title}
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover object-top group-hover/thumb:object-bottom transition-all duration-[7000ms] ease-in-out"
                             onError={(e) => { e.currentTarget.style.display = 'none'; }}
                           />
+                          <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/80 border border-white/10 text-[9px] font-mono text-cyan-300 pointer-events-none">
+                            Full-Length Preview · Hover to Scroll
+                          </div>
                         </div>
                       )}
                     </div>
@@ -2412,10 +2451,10 @@ export default function AdminPage() {
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="block text-xs font-sans font-medium text-white/70">
-                    Showcase Mockup Image
+                    Full-Length Website Screenshot / Mockup
                   </label>
                   <span className="text-[10px] font-mono text-cyan-400">
-                    Supabase Storage Active
+                    Direct Cloud Upload · Up to 50MB
                   </span>
                 </div>
                 <div className="flex gap-2 items-center">
@@ -2448,7 +2487,7 @@ export default function AdminPage() {
                     ) : (
                       <>
                         <UploadCloud size={13} className="text-cyan-400" />
-                        <span>Upload Image</span>
+                        <span>Upload Screenshot</span>
                       </>
                     )}
                   </button>
@@ -2456,18 +2495,18 @@ export default function AdminPage() {
 
                 {/* Instant Live Image Preview Box */}
                 {currentProject.image && (
-                  <div className="mt-2.5 relative w-full h-36 rounded-xl border border-cyan-500/25 overflow-hidden bg-black/70 flex items-center justify-center group">
+                  <div className="mt-2.5 relative w-full h-44 rounded-xl border border-cyan-500/25 overflow-hidden bg-black/70 flex items-center justify-center group cursor-pointer" title="Hover to preview full-length scroll">
                     <img
                       src={currentProject.image}
                       alt="Project Preview"
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover object-top group-hover:object-bottom transition-all duration-[7000ms] ease-in-out"
                       onError={(e) => {
                         e.currentTarget.style.display = 'none';
                       }}
                     />
-                    <div className="absolute top-2 right-2 flex items-center gap-1.5">
-                      <span className="px-2 py-0.5 rounded bg-black/80 border border-cyan-400/30 text-[10px] font-mono text-cyan-300">
-                        Image Preview Ready
+                    <div className="absolute top-2 right-2 flex items-center gap-1.5 pointer-events-auto">
+                      <span className="px-2 py-0.5 rounded bg-black/85 border border-cyan-400/30 text-[10px] font-mono text-cyan-300">
+                        Full-Length Preview · Hover to Scroll
                       </span>
                       <button
                         type="button"
@@ -2480,6 +2519,9 @@ export default function AdminPage() {
                     </div>
                   </div>
                 )}
+                <p className="mt-1 text-[11px] font-sans text-white/40">
+                  Tip: Uploading a full-page vertical website screenshot creates a luxury animated scrolling showcase on the live homepage!
+                </p>
               </div>
 
               <div>
