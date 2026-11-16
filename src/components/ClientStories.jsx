@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { ArrowUpRight } from 'lucide-react';
 import CornerBrackets, { SectionBadge } from './CornerBrackets';
 import initialReviews from '../data/reviews.json';
 import { subscribeToDataChanges, getLocalCache, saveLocalCache } from '@/lib/syncEvents';
@@ -64,13 +65,50 @@ export default function ClientStories({ reviews: propReviews = null }) {
 
       {/* Testimonials Bento Grid */}
       {reviews.length === 0 ? (
-        <div className="py-20 text-center border border-dashed border-white/10 rounded-2xl p-8 bg-white/[0.01]">
-          <p className="text-white/60 text-sm font-mono tracking-wide">
-            // NO CLIENT STORIES LISTED · READY FOR NEW ENTRIES
-          </p>
-          <p className="text-xs text-white/35 mt-2 font-mono">
-            New client feedback added from the Admin Panel will appear here instantly.
-          </p>
+        <div className="relative border border-white/10 bg-gradient-to-b from-white/[0.03] to-transparent p-10 md:p-16 text-center overflow-hidden group">
+          <CornerBrackets className="border-cyan-400/30" />
+          
+          <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-48 bg-amber-500/10 blur-[100px] rounded-full pointer-events-none" />
+
+          <div className="relative z-10 max-w-2xl mx-auto flex flex-col items-center">
+            {/* 5 Stars Rating Visual */}
+            <div className="flex items-center gap-1.5 text-amber-400 text-lg mb-4 tracking-widest">
+              {'★★★★★'}
+            </div>
+
+            <span className="inline-flex items-center gap-2 px-3 py-1 text-[11px] font-mono uppercase tracking-wider text-amber-400 bg-amber-500/10 border border-amber-500/20 mb-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+              Verified Client Trust & Delivery
+            </span>
+
+            <h3 className="text-2xl sm:text-4xl font-bold uppercase tracking-tight text-white mb-4">
+              Trusted by Ambitious Founders Worldwide
+            </h3>
+
+            <p className="text-sm sm:text-base text-white/60 leading-relaxed font-light italic max-w-xl mb-8">
+              We partner closely with founder-led teams and scaling enterprises across 9+ countries. Detailed client endorsements and verified conversion metrics are being published following recent enterprise launches.
+            </p>
+
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <a
+                href="https://wa.me/8801909711808?text=Hi%20Driven%20IT%20Solution,%20I%20would%20like%20to%20learn%20more%20about%20your%20client%20partnerships."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative inline-flex items-center gap-2 bg-white/5 hover:bg-logo-gradient hover:text-black text-white px-6 py-3 text-xs font-semibold uppercase tracking-wider transition-all duration-300"
+              >
+                <span>Talk with Our Leadership</span>
+                <ArrowUpRight size={15} />
+                <CornerBrackets className="border-white/30" />
+              </a>
+
+              <a
+                href="/admin"
+                className="inline-flex items-center gap-1.5 px-4 py-3 text-xs font-mono text-white/40 hover:text-cyan-400 transition-colors"
+              >
+                <span>Add Reviews in Admin →</span>
+              </a>
+            </div>
+          </div>
         </div>
       ) : (
         <div className="grid gap-6 md:grid-cols-3">

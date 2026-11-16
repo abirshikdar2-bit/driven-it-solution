@@ -120,13 +120,61 @@ export default function WhatYouGet({ services: propServices = null }) {
 
       {/* Horizontal Accordion */}
       {services.length === 0 ? (
-        <div className="py-20 text-center border border-dashed border-white/10 rounded-2xl p-8 bg-white/[0.01]">
-          <p className="text-white/60 text-sm font-mono tracking-wide">
-            // NO SERVICES CURRENTLY LISTED · READY FOR NEW ENTRIES
-          </p>
-          <p className="text-xs text-white/35 mt-2 font-mono">
-            New custom services added from the Admin Panel will appear here instantly.
-          </p>
+        <div className="relative border border-white/10 bg-gradient-to-b from-white/[0.03] to-transparent p-10 md:p-16 text-center overflow-hidden group">
+          <CornerBrackets className="border-cyan-400/30" />
+          
+          <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-48 bg-cyan-500/10 blur-[100px] rounded-full pointer-events-none" />
+
+          <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center">
+            <span className="inline-flex items-center gap-2 px-3 py-1 text-[11px] font-mono uppercase tracking-wider text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 mb-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+              Tailored Engineering & Marketing Solutions
+            </span>
+
+            <h3 className="text-2xl sm:text-4xl font-bold uppercase tracking-tight text-white mb-4">
+              Bespoke Digital & Growth Capabilities
+            </h3>
+
+            <p className="text-sm sm:text-base text-white/60 leading-relaxed font-light italic max-w-xl mb-6">
+              Every client engagement is built around customized project requirements, revenue growth architecture, and production SLA guarantees.
+            </p>
+
+            {/* Core Capability Badges */}
+            <div className="flex flex-wrap justify-center gap-2.5 mb-8">
+              <span className="px-3 py-1.5 text-xs font-mono text-white/80 bg-white/[0.03] border border-white/10">
+                #Custom Web Architecture
+              </span>
+              <span className="px-3 py-1.5 text-xs font-mono text-white/80 bg-white/[0.03] border border-white/10">
+                #Meta AI Ad Scaling & CAPI
+              </span>
+              <span className="px-3 py-1.5 text-xs font-mono text-white/80 bg-white/[0.03] border border-white/10">
+                #Enterprise UI/UX Design
+              </span>
+              <span className="px-3 py-1.5 text-xs font-mono text-white/80 bg-white/[0.03] border border-white/10">
+                #Custom SaaS & Cloud Systems
+              </span>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <a
+                href="https://wa.me/8801909711808?text=Hi%20Driven%20IT%20Solution,%20I%20would%20like%20to%20discuss%20a%20custom%20service%20scope."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative inline-flex items-center gap-2 bg-white/5 hover:bg-logo-gradient hover:text-black text-white px-6 py-3 text-xs font-semibold uppercase tracking-wider transition-all duration-300"
+              >
+                <span>Discuss Custom Scope</span>
+                <ArrowUpRight size={15} />
+                <CornerBrackets className="border-white/30" />
+              </a>
+
+              <a
+                href="/admin"
+                className="inline-flex items-center gap-1.5 px-4 py-3 text-xs font-mono text-white/40 hover:text-cyan-400 transition-colors"
+              >
+                <span>Add Services in Admin →</span>
+              </a>
+            </div>
+          </div>
         </div>
       ) : (
       <div
