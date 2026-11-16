@@ -30,7 +30,8 @@ import {
   Shield,
   Crown,
   UserPlus,
-  Lock
+  Lock,
+  AlertTriangle
 } from 'lucide-react';
 import CornerBrackets, { SectionBadge } from '@/components/CornerBrackets';
 import FlowFieldCanvas from '@/components/FlowFieldCanvas';
@@ -47,6 +48,53 @@ export default function AdminPage() {
   const [activeTab, setActiveTab] = useState('team'); 
   // Tabs: 'projects' | 'products' | 'services' | 'team' | 'reviews' | 'settings' | 'users'
   const [toast, setToast] = useState(null);
+
+  // ================= CUSTOM BRANDED CONFIRMATION MODAL STATE =================
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    title: '',
+    message: '',
+    itemName: '',
+    confirmButtonText: 'Delete Permanently',
+    onConfirm: null,
+    isDangerous: true,
+    isLoading: false
+  });
+
+  const requestConfirmation = ({
+    title = 'Confirm Deletion',
+    message = 'Are you sure you want to delete this item? This action cannot be undone.',
+    itemName = '',
+    onConfirm,
+    confirmText = 'Delete Permanently',
+    isDangerous = true
+  }) => {
+    setConfirmModal({
+      isOpen: true,
+      title,
+      message,
+      itemName,
+      confirmButtonText: confirmText,
+      onConfirm,
+      isDangerous,
+      isLoading: false
+    });
+  };
+
+  const handleConfirmAction = async () => {
+    if (confirmModal.onConfirm) {
+      try {
+        setConfirmModal((prev) => ({ ...prev, isLoading: true }));
+        await confirmModal.onConfirm();
+      } catch (err) {
+        showToast(err.message || 'Operation failed', 'error');
+      } finally {
+        setConfirmModal((prev) => ({ ...prev, isOpen: false, isLoading: false }));
+      }
+    } else {
+      setConfirmModal((prev) => ({ ...prev, isOpen: false }));
+    }
+  };
 
   // ================= 7. USERS & ROLES STATE =================
   const [usersList, setUsersList] = useState([]);
@@ -147,55 +195,71 @@ export default function AdminPage() {
     }
   };
 
-  const handleToggleUserRole = async (targetUser) => {
+  const handleToggleUserRole = (targetUser) => {
     const nextRole = targetUser.role === 'super_admin' ? 'admin' : 'super_admin';
-    const confirmMsg = targetUser.role === 'super_admin'
+    const isDemote = targetUser.role === 'super_admin';
+    const confirmTitle = isDemote ? 'Demote Administrator' : 'Promote to Super Admin';
+    const confirmMsg = isDemote
       ? `Are you sure you want to demote ${targetUser.name} to regular Admin? They will lose access to manage users.`
-      : `Are you sure you want to promote ${targetUser.name} to Super Admin? They will gain full authority.`;
+      : `Are you sure you want to promote ${targetUser.name} to Super Admin? They will gain full authority across the control hub.`;
 
-    if (!window.confirm(confirmMsg)) return;
-
-    try {
-      setUserActionLoadingId(targetUser.id);
-      const res = await fetch('/api/users', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: targetUser.id, role: nextRole })
-      });
-      const data = await res.json();
-      if (!res.ok || !data.success) {
-        throw new Error(data.message || 'Failed to update role');
+    requestConfirmation({
+      title: confirmTitle,
+      itemName: `${targetUser.name} (${targetUser.email})`,
+      message: confirmMsg,
+      confirmText: isDemote ? 'Demote User' : 'Promote to Super Admin',
+      isDangerous: isDemote,
+      onConfirm: async () => {
+        try {
+          setUserActionLoadingId(targetUser.id);
+          const res = await fetch('/api/users', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: targetUser.id, role: nextRole })
+          });
+          const data = await res.json();
+          if (!res.ok || !data.success) {
+            throw new Error(data.message || 'Failed to update role');
+          }
+          showToast(`Role updated to ${nextRole === 'super_admin' ? 'Super Admin' : 'Admin'}!`);
+          broadcastDataChange('users');
+          fetchUsers();
+        } catch (err) {
+          showToast(err.message, 'error');
+        } finally {
+          setUserActionLoadingId(null);
+        }
       }
-      showToast(`Role updated to ${nextRole === 'super_admin' ? 'Super Admin' : 'Admin'}!`);
-      broadcastDataChange('users');
-      fetchUsers();
-    } catch (err) {
-      showToast(err.message, 'error');
-    } finally {
-      setUserActionLoadingId(null);
-    }
+    });
   };
 
-  const handleDeleteUser = async (targetUser) => {
-    if (!window.confirm(`Are you sure you want to remove ${targetUser.name} (${targetUser.email}) from the admin panel? They will be removed immediately.`)) return;
-
-    try {
-      setUserActionLoadingId(targetUser.id);
-      const res = await fetch(`/api/users?id=${targetUser.id}`, {
-        method: 'DELETE'
-      });
-      const data = await res.json();
-      if (!res.ok || !data.success) {
-        throw new Error(data.message || 'Failed to remove user');
+  const handleDeleteUser = (targetUser) => {
+    requestConfirmation({
+      title: 'Remove Administrator',
+      itemName: `${targetUser.name} (${targetUser.email})`,
+      message: `Are you sure you want to remove ${targetUser.name} (${targetUser.email}) from the admin panel? They will be removed immediately.`,
+      confirmText: 'Remove User',
+      isDangerous: true,
+      onConfirm: async () => {
+        try {
+          setUserActionLoadingId(targetUser.id);
+          const res = await fetch(`/api/users?id=${targetUser.id}`, {
+            method: 'DELETE'
+          });
+          const data = await res.json();
+          if (!res.ok || !data.success) {
+            throw new Error(data.message || 'Failed to remove user');
+          }
+          showToast(`User ${targetUser.name} removed successfully.`);
+          broadcastDataChange('users');
+          fetchUsers();
+        } catch (err) {
+          showToast(err.message, 'error');
+        } finally {
+          setUserActionLoadingId(null);
+        }
       }
-      showToast(`User ${targetUser.name} removed successfully.`);
-      broadcastDataChange('users');
-      fetchUsers();
-    } catch (err) {
-      showToast(err.message, 'error');
-    } finally {
-      setUserActionLoadingId(null);
-    }
+    });
   };
 
   // File Upload State for Teacher/Member Photo
@@ -566,19 +630,27 @@ export default function AdminPage() {
     }
   };
 
-  const handleDeleteProject = async (id, title) => {
-    if (!confirm(`Are you sure you want to delete "${title}"?`)) return;
-    try {
-      const res = await fetch(`/api/projects?id=${id}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error('Failed to delete project');
-      const updated = projects.filter(p => String(p.id) !== String(id));
-      setProjects(updated);
-      saveLocalCache('projects', updated);
-      showToast('Case study deleted successfully!');
-      broadcastDataChange('projects', { data: updated });
-    } catch (err) {
-      showToast(err.message, 'error');
-    }
+  const handleDeleteProject = (id, title) => {
+    requestConfirmation({
+      title: 'Delete Case Study',
+      itemName: title,
+      message: `Are you sure you want to permanently delete case study "${title}"? It will be removed from Supabase and the live public showcase immediately.`,
+      confirmText: 'Delete Case Study',
+      isDangerous: true,
+      onConfirm: async () => {
+        try {
+          const res = await fetch(`/api/projects?id=${id}`, { method: 'DELETE' });
+          if (!res.ok) throw new Error('Failed to delete project');
+          const updated = projects.filter((p) => String(p.id) !== String(id));
+          setProjects(updated);
+          saveLocalCache('projects', updated);
+          showToast('Case study deleted successfully!');
+          broadcastDataChange('projects', { data: updated });
+        } catch (err) {
+          showToast(err.message, 'error');
+        }
+      }
+    });
   };
 
   // ================= 2. PRODUCT HANDLERS =================
@@ -664,19 +736,27 @@ export default function AdminPage() {
     }
   };
 
-  const handleDeleteProduct = async (id, name) => {
-    if (!confirm(`Are you sure you want to delete "${name}"?`)) return;
-    try {
-      const res = await fetch(`/api/products?id=${id}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error('Failed to delete product');
-      const updated = products.filter(p => String(p.id) !== String(id));
-      setProducts(updated);
-      saveLocalCache('products', updated);
-      showToast('Product deleted successfully!');
-      broadcastDataChange('products', { data: updated });
-    } catch (err) {
-      showToast(err.message, 'error');
-    }
+  const handleDeleteProduct = (id, name) => {
+    requestConfirmation({
+      title: 'Delete Proprietary Product',
+      itemName: name,
+      message: `Are you sure you want to permanently delete product "${name}"? It will be removed from Supabase and the live software showcase immediately.`,
+      confirmText: 'Delete Product',
+      isDangerous: true,
+      onConfirm: async () => {
+        try {
+          const res = await fetch(`/api/products?id=${id}`, { method: 'DELETE' });
+          if (!res.ok) throw new Error('Failed to delete product');
+          const updated = products.filter((p) => String(p.id) !== String(id));
+          setProducts(updated);
+          saveLocalCache('products', updated);
+          showToast('Product deleted successfully!');
+          broadcastDataChange('products', { data: updated });
+        } catch (err) {
+          showToast(err.message, 'error');
+        }
+      }
+    });
   };
 
   // ================= 3. SERVICE HANDLERS =================
@@ -747,19 +827,27 @@ export default function AdminPage() {
     }
   };
 
-  const handleDeleteService = async (id, title) => {
-    if (!confirm(`Are you sure you want to delete service "${title}"?`)) return;
-    try {
-      const res = await fetch(`/api/services?id=${id}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error('Failed to delete service');
-      const updated = services.filter(s => String(s.id) !== String(id));
-      setServices(updated);
-      saveLocalCache('services', updated);
-      showToast('Service deleted successfully!');
-      broadcastDataChange('services', { data: updated });
-    } catch (err) {
-      showToast(err.message, 'error');
-    }
+  const handleDeleteService = (id, title) => {
+    requestConfirmation({
+      title: 'Delete Service Offering',
+      itemName: title,
+      message: `Are you sure you want to permanently delete service "${title}"? It will be removed from Supabase and the live service showcase immediately.`,
+      confirmText: 'Delete Service',
+      isDangerous: true,
+      onConfirm: async () => {
+        try {
+          const res = await fetch(`/api/services?id=${id}`, { method: 'DELETE' });
+          if (!res.ok) throw new Error('Failed to delete service');
+          const updated = services.filter((s) => String(s.id) !== String(id));
+          setServices(updated);
+          saveLocalCache('services', updated);
+          showToast('Service deleted successfully!');
+          broadcastDataChange('services', { data: updated });
+        } catch (err) {
+          showToast(err.message, 'error');
+        }
+      }
+    });
   };
 
   // ================= 4. TEACHERS & LEADERSHIP HANDLERS WITH FILE UPLOAD =================
@@ -864,20 +952,28 @@ export default function AdminPage() {
     }
   };
 
-  const handleDeleteTeam = async (id, name) => {
-    if (!confirm(`Are you sure you want to delete profile "${name}"?`)) return;
-    try {
-      const res = await fetch(`/api/team?id=${id}`, { method: 'DELETE' });
-      const json = await res.json();
-      if (!res.ok || !json.success) throw new Error(json.error || 'Failed to delete member');
-      const updated = Array.isArray(json.data) ? json.data : team.filter(m => String(m.id) !== String(id));
-      setTeam(updated);
-      saveLocalCache('team', updated);
-      showToast('Profile deleted successfully!');
-      broadcastDataChange('team', { data: updated });
-    } catch (err) {
-      showToast(err.message, 'error');
-    }
+  const handleDeleteTeam = (id, name) => {
+    requestConfirmation({
+      title: 'Delete Team Profile',
+      itemName: name,
+      message: `Are you sure you want to permanently remove mentor/executive "${name}" from the faculty roster?`,
+      confirmText: 'Delete Profile',
+      isDangerous: true,
+      onConfirm: async () => {
+        try {
+          const res = await fetch(`/api/team?id=${id}`, { method: 'DELETE' });
+          const json = await res.json();
+          if (!res.ok || !json.success) throw new Error(json.error || 'Failed to delete member');
+          const updated = Array.isArray(json.data) ? json.data : team.filter((m) => String(m.id) !== String(id));
+          setTeam(updated);
+          saveLocalCache('team', updated);
+          showToast('Profile deleted successfully!');
+          broadcastDataChange('team', { data: updated });
+        } catch (err) {
+          showToast(err.message, 'error');
+        }
+      }
+    });
   };
 
   // ================= 5. REVIEW HANDLERS =================
@@ -929,19 +1025,27 @@ export default function AdminPage() {
     }
   };
 
-  const handleDeleteReview = async (id, clientName) => {
-    if (!confirm(`Are you sure you want to delete review from "${clientName}"?`)) return;
-    try {
-      const res = await fetch(`/api/reviews?id=${id}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error('Failed to delete review');
-      const updated = reviews.filter(r => String(r.id) !== String(id));
-      setReviews(updated);
-      saveLocalCache('reviews', updated);
-      showToast('Review deleted successfully!');
-      broadcastDataChange('reviews', { data: updated });
-    } catch (err) {
-      showToast(err.message, 'error');
-    }
+  const handleDeleteReview = (id, clientName) => {
+    requestConfirmation({
+      title: 'Delete Client Story',
+      itemName: clientName,
+      message: `Are you sure you want to permanently delete feedback from client "${clientName}"?`,
+      confirmText: 'Delete Review',
+      isDangerous: true,
+      onConfirm: async () => {
+        try {
+          const res = await fetch(`/api/reviews?id=${id}`, { method: 'DELETE' });
+          if (!res.ok) throw new Error('Failed to delete review');
+          const updated = reviews.filter((r) => String(r.id) !== String(id));
+          setReviews(updated);
+          saveLocalCache('reviews', updated);
+          showToast('Review deleted successfully!');
+          broadcastDataChange('reviews', { data: updated });
+        } catch (err) {
+          showToast(err.message, 'error');
+        }
+      }
+    });
   };
 
   // ================= 6. GLOBAL SETTINGS SAVE =================
@@ -3156,6 +3260,92 @@ export default function AdminPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* ================= CUSTOM BRANDED CONFIRMATION MODAL ================= */}
+      {confirmModal.isOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-150">
+          <div className="relative w-full max-w-md rounded-2xl bg-[#0c0d12] border border-rose-500/30 p-6 sm:p-7 shadow-[0_0_50px_rgba(244,63,94,0.18)] overflow-hidden">
+            <CornerBrackets className="border-rose-500/40" />
+
+            {/* Ambient Background Glow */}
+            <div className="absolute -top-16 -right-16 w-40 h-40 bg-rose-500/10 blur-[50px] rounded-full pointer-events-none" />
+
+            {/* Header with Icon and Close */}
+            <div className="flex items-start justify-between mb-4 relative z-10">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-rose-500/10 border border-rose-500/25 text-rose-400 shadow-[0_0_20px_rgba(244,63,94,0.2)] shrink-0">
+                  <AlertTriangle size={20} className="text-rose-400" />
+                </div>
+                <div>
+                  <span className="inline-block px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider text-rose-400 bg-rose-500/10 border border-rose-500/20 rounded mb-1">
+                    Driven IT · Security Action
+                  </span>
+                  <h3 className="text-lg font-bold text-white font-sans tracking-tight">
+                    {confirmModal.title}
+                  </h3>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
+                disabled={confirmModal.isLoading}
+                className="text-white/40 hover:text-white transition-colors p-1 cursor-pointer"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Modal Body / Message */}
+            <div className="relative z-10 my-4 text-xs sm:text-sm text-white/70 leading-relaxed font-light">
+              <p>{confirmModal.message}</p>
+              {confirmModal.itemName && (
+                <div className="mt-3 p-3 rounded-xl bg-black/60 border border-white/10 font-mono text-xs text-rose-300 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse shrink-0" />
+                  <span className="truncate">{confirmModal.itemName}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Live Database Sync Warning */}
+            <div className="relative z-10 mb-5 text-[11px] font-mono text-white/40 flex items-center gap-1.5">
+              <span className="text-cyan-400">⚡</span>
+              <span>Direct Supabase PostgreSQL & Cloud Sync</span>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="relative z-10 flex items-center justify-end gap-3 pt-4 border-t border-white/10">
+              <button
+                type="button"
+                onClick={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
+                disabled={confirmModal.isLoading}
+                className="px-4 py-2 rounded-xl text-xs font-sans font-medium text-white/60 hover:text-white hover:bg-white/5 transition-colors cursor-pointer border border-transparent"
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                onClick={handleConfirmAction}
+                disabled={confirmModal.isLoading}
+                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-rose-500 to-red-600 hover:from-rose-600 hover:to-red-700 text-white font-sans font-bold text-xs uppercase tracking-wider cursor-pointer shadow-lg shadow-rose-500/25 transition-all flex items-center gap-2 disabled:opacity-50"
+              >
+                {confirmModal.isLoading ? (
+                  <>
+                    <Loader2 size={13} className="animate-spin" />
+                    <span>Processing...</span>
+                  </>
+                ) : (
+                  <>
+                    <Trash2 size={13} />
+                    <span>{confirmModal.confirmButtonText}</span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       )}
