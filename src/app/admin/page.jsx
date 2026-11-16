@@ -31,7 +31,8 @@ import {
   Crown,
   UserPlus,
   Lock,
-  AlertTriangle
+  AlertTriangle,
+  ShieldAlert
 } from 'lucide-react';
 import CornerBrackets, { SectionBadge } from '@/components/CornerBrackets';
 import FlowFieldCanvas from '@/components/FlowFieldCanvas';
@@ -3267,23 +3268,30 @@ export default function AdminPage() {
       {/* ================= CUSTOM BRANDED CONFIRMATION MODAL ================= */}
       {confirmModal.isOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-150">
-          <div className="relative w-full max-w-md rounded-2xl bg-[#0c0d12] border border-rose-500/30 p-6 sm:p-7 shadow-[0_0_50px_rgba(244,63,94,0.18)] overflow-hidden">
-            <CornerBrackets className="border-rose-500/40" />
+          <div className="relative w-full max-w-lg bg-[#08090c] border border-cyan-500/25 p-6 sm:p-8 shadow-[0_0_60px_rgba(0,0,0,0.9),0_0_30px_rgba(0,229,255,0.12)]">
+            <CornerBrackets className="border-cyan-400/60" />
 
-            {/* Ambient Background Glow */}
-            <div className="absolute -top-16 -right-16 w-40 h-40 bg-rose-500/10 blur-[50px] rounded-full pointer-events-none" />
+            {/* Ambient Background Glows Matching Driven IT Palette */}
+            <div className="absolute -top-24 -right-24 w-48 h-48 bg-cyan-500/10 blur-[60px] rounded-full pointer-events-none" />
+            <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-blue-600/10 blur-[60px] rounded-full pointer-events-none" />
 
-            {/* Header with Icon and Close */}
-            <div className="flex items-start justify-between mb-4 relative z-10">
+            {/* Header with Brand Icon and Close */}
+            <div className="flex items-start justify-between pb-4 mb-5 border-b border-white/10 relative z-10">
               <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-rose-500/10 border border-rose-500/25 text-rose-400 shadow-[0_0_20px_rgba(244,63,94,0.2)] shrink-0">
-                  <AlertTriangle size={20} className="text-rose-400" />
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-cyan-400/10 border border-cyan-400/30 text-cyan-400 shadow-[0_0_20px_rgba(0,229,255,0.25)] shrink-0">
+                  <ShieldAlert size={20} className="text-cyan-400" />
                 </div>
                 <div>
-                  <span className="inline-block px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider text-rose-400 bg-rose-500/10 border border-rose-500/20 rounded mb-1">
-                    Driven IT · Security Action
-                  </span>
-                  <h3 className="text-lg font-bold text-white font-sans tracking-tight">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 text-[9px] font-mono uppercase tracking-widest text-cyan-300 bg-cyan-950/60 border border-cyan-500/30">
+                      <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                      DRIVEN IT · CONTROL HUB
+                    </span>
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-white/40 hidden sm:inline">
+                      // SECURITY ACTION
+                    </span>
+                  </div>
+                  <h3 className="text-lg sm:text-xl font-bold font-sans text-white tracking-tight">
                     {confirmModal.title}
                   </h3>
                 </div>
@@ -3293,57 +3301,72 @@ export default function AdminPage() {
                 type="button"
                 onClick={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
                 disabled={confirmModal.isLoading}
-                className="text-white/40 hover:text-white transition-colors p-1 cursor-pointer"
+                className="text-white/40 hover:text-white transition-colors p-1.5 border border-transparent hover:border-white/10 hover:bg-white/5 cursor-pointer"
+                aria-label="Close dialog"
               >
                 <X size={18} />
               </button>
             </div>
 
             {/* Modal Body / Message */}
-            <div className="relative z-10 my-4 text-xs sm:text-sm text-white/70 leading-relaxed font-light">
-              <p>{confirmModal.message}</p>
+            <div className="relative z-10 space-y-4">
+              <p className="text-xs sm:text-sm text-white/75 leading-relaxed font-sans font-light">
+                {confirmModal.message}
+              </p>
+
               {confirmModal.itemName && (
-                <div className="mt-3 p-3 rounded-xl bg-black/60 border border-white/10 font-mono text-xs text-rose-300 flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse shrink-0" />
-                  <span className="truncate">{confirmModal.itemName}</span>
+                <div className="p-3.5 bg-black/75 border border-cyan-500/25 shadow-inner flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <span className="font-mono text-cyan-400 font-bold text-sm">›</span>
+                    <span className="font-mono text-xs font-semibold text-white truncate">
+                      {confirmModal.itemName}
+                    </span>
+                  </div>
+                  <span className="px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider text-cyan-300 bg-cyan-950/60 border border-cyan-500/30 shrink-0">
+                    Target Entity
+                  </span>
                 </div>
               )}
-            </div>
 
-            {/* Live Database Sync Warning */}
-            <div className="relative z-10 mb-5 text-[11px] font-mono text-white/40 flex items-center gap-1.5">
-              <span className="text-cyan-400">⚡</span>
-              <span>Direct Supabase PostgreSQL & Cloud Sync</span>
+              {/* Informational Sync Note */}
+              <div className="p-3 bg-white/[0.02] border border-white/5 text-[11px] font-mono text-white/50 flex items-start gap-2.5">
+                <span className="text-cyan-400 shrink-0 mt-0.5">ℹ</span>
+                <span className="leading-relaxed">
+                  This operation executes directly on the Supabase PostgreSQL cloud database and synchronizes immediately across the public website.
+                </span>
+              </div>
             </div>
 
             {/* Action Buttons */}
-            <div className="relative z-10 flex items-center justify-end gap-3 pt-4 border-t border-white/10">
+            <div className="relative z-10 flex items-center justify-end gap-3 pt-5 mt-6 border-t border-white/10">
               <button
                 type="button"
                 onClick={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
                 disabled={confirmModal.isLoading}
-                className="px-4 py-2 rounded-xl text-xs font-sans font-medium text-white/60 hover:text-white hover:bg-white/5 transition-colors cursor-pointer border border-transparent"
+                className="relative px-5 py-2.5 text-xs font-mono uppercase tracking-wider text-white/70 hover:text-white border border-white/15 hover:border-white/30 bg-white/[0.02] hover:bg-white/[0.06] transition-all cursor-pointer"
               >
                 Cancel
+                <CornerBrackets className="border-white/20" />
               </button>
 
               <button
                 type="button"
                 onClick={handleConfirmAction}
                 disabled={confirmModal.isLoading}
-                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-rose-500 to-red-600 hover:from-rose-600 hover:to-red-700 text-white font-sans font-bold text-xs uppercase tracking-wider cursor-pointer shadow-lg shadow-rose-500/25 transition-all flex items-center gap-2 disabled:opacity-50"
+                className="relative group px-6 py-2.5 bg-logo-gradient text-black font-mono font-bold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-[0_0_25px_rgba(0,229,255,0.3)] hover:shadow-[0_0_35px_rgba(0,229,255,0.5)] flex items-center gap-2 disabled:opacity-50"
               >
                 {confirmModal.isLoading ? (
                   <>
-                    <Loader2 size={13} className="animate-spin" />
+                    <Loader2 size={13} className="animate-spin text-black" />
                     <span>Processing...</span>
                   </>
                 ) : (
                   <>
-                    <Trash2 size={13} />
+                    <Trash2 size={13} className="text-black" />
                     <span>{confirmModal.confirmButtonText}</span>
                   </>
                 )}
+                <CornerBrackets className="border-black/40" />
               </button>
             </div>
           </div>
