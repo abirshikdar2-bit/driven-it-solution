@@ -2752,60 +2752,76 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
-                    Screenshot Path / File
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-xs font-sans font-medium text-white/70">
+                    Product Screenshot / Mockup Image
                   </label>
-                  <div className="flex gap-2 items-center">
-                    <input
-                      type="text"
-                      required
-                      placeholder="/products/cafe-os.png"
-                      value={currentProduct.image}
-                      onChange={(e) => setCurrentProduct({ ...currentProduct, image: e.target.value })}
-                      className="flex-1 px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
-                    />
-                    <input
-                      type="file"
-                      accept="image/*"
-                      ref={productFileInputRef}
-                      onChange={handleProductFileUpload}
-                      className="hidden"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => productFileInputRef.current?.click()}
-                      disabled={isUploadingProductImage}
-                      className="px-3.5 py-2.5 rounded-xl bg-cyan-400/10 hover:bg-cyan-400/20 text-cyan-300 font-sans text-xs font-semibold cursor-pointer border border-cyan-400/30 flex items-center gap-1.5 transition-colors shrink-0"
-                    >
-                      {isUploadingProductImage ? <Loader2 size={13} className="animate-spin text-cyan-400" /> : <UploadCloud size={13} className="text-cyan-400" />}
-                      <span>Upload</span>
-                    </button>
-                  </div>
-                  {currentProduct.image && (
-                    <div className="mt-2 relative w-full h-24 rounded-lg border border-cyan-500/25 overflow-hidden bg-black/70 flex items-center justify-center">
-                      <img
-                        src={currentProduct.image}
-                        alt="Product Preview"
-                        className="w-full h-full object-cover"
-                        onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                      />
-                    </div>
-                  )}
+                  <span className="text-[10px] font-mono text-cyan-400 bg-cyan-950/60 border border-cyan-500/30 px-2 py-0.5 rounded">
+                    Direct Cloud Upload · Up to 50MB
+                  </span>
                 </div>
-                <div>
-                  <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
-                    Live Demo Link
-                  </label>
+                <div className="flex gap-2 items-center">
                   <input
-                    type="url"
-                    placeholder="https://dalilos.com"
-                    value={currentProduct.liveUrl || ''}
-                    onChange={(e) => setCurrentProduct({ ...currentProduct, liveUrl: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
+                    type="text"
+                    required
+                    placeholder="https://... or /products/cafe-os.png"
+                    value={currentProduct.image}
+                    onChange={(e) => setCurrentProduct({ ...currentProduct, image: e.target.value })}
+                    className="flex-1 px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                   />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    ref={productFileInputRef}
+                    onChange={handleProductFileUpload}
+                    className="hidden"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => productFileInputRef.current?.click()}
+                    disabled={isUploadingProductImage}
+                    className="px-4 py-2.5 rounded-xl bg-cyan-400/10 hover:bg-cyan-400/20 text-cyan-300 font-sans text-xs font-semibold cursor-pointer border border-cyan-400/30 flex items-center gap-1.5 transition-colors shrink-0"
+                  >
+                    {isUploadingProductImage ? (
+                      <>
+                        <Loader2 size={13} className="animate-spin text-cyan-400" />
+                        <span>Uploading...</span>
+                      </>
+                    ) : (
+                      <>
+                        <UploadCloud size={13} className="text-cyan-400" />
+                        <span>Upload Screenshot</span>
+                      </>
+                    )}
+                  </button>
                 </div>
+                {currentProduct.image && (
+                  <div className="mt-2.5 relative w-full h-44 rounded-xl border border-cyan-500/25 overflow-hidden bg-black/70 flex items-center justify-center group cursor-pointer" title="Hover to preview full-length scroll">
+                    <img
+                      src={currentProduct.image}
+                      alt="Product Preview"
+                      className="w-full h-full object-cover object-top group-hover:object-bottom transition-all duration-[7000ms] ease-in-out"
+                      onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                    />
+                    <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-black/80 backdrop-blur-md text-[10px] font-mono text-cyan-400 border border-cyan-500/30 pointer-events-none">
+                      Hover to scroll full page ↕
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
+                  Live Demo Link / Web Address
+                </label>
+                <input
+                  type="url"
+                  placeholder="https://dalilos.com"
+                  value={currentProduct.liveUrl || ''}
+                  onChange={(e) => setCurrentProduct({ ...currentProduct, liveUrl: e.target.value })}
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
+                />
               </div>
 
               <div className="flex justify-end gap-3 pt-4 border-t border-white/5">
