@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, Search } from 'lucide-react';
 import CornerBrackets, { SectionBadge } from './CornerBrackets';
 import { subscribeToDataChanges, getLocalCache, saveLocalCache } from '@/lib/syncEvents';
 
@@ -175,46 +175,21 @@ export default function CaseStudiesSection({ projects: propProjects = null }) {
 
       {/* Sticky Stacking Projects List (Exact Mollahs IT Architecture) */}
       {projects.length === 0 ? (
-        <div className="relative border border-white/10 bg-gradient-to-b from-white/[0.03] to-transparent p-10 md:p-16 text-center overflow-hidden group">
-          <CornerBrackets className="border-cyan-400/30" />
+        <div className="relative border border-white/10 bg-[#070707] py-20 px-8 text-center flex flex-col items-center justify-center">
+          <CornerBrackets className="border-white/20" />
           
-          {/* Subtle Ambient Glow */}
-          <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-48 bg-cyan-500/10 blur-[100px] rounded-full pointer-events-none" />
-
-          <div className="relative z-10 max-w-2xl mx-auto flex flex-col items-center">
-            <span className="inline-flex items-center gap-2 px-3 py-1 text-[11px] font-mono uppercase tracking-wider text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 mb-6">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-              Private Portfolio & NDA Deployments
-            </span>
-
-            <h3 className="text-2xl sm:text-4xl font-bold uppercase tracking-tight text-white mb-4">
-              Curating New Flagship Case Studies
-            </h3>
-
-            <p className="text-sm sm:text-base text-white/60 leading-relaxed font-light italic max-w-xl mb-8">
-              We engineer mission-critical digital platforms, automated lead funnels, and enterprise cloud applications. Detailed production breakdowns and verified live metrics are being compiled for public showcase.
-            </p>
-
-            <div className="flex flex-wrap items-center justify-center gap-4">
-              <a
-                href="https://wa.me/8801909711808?text=Hi%20Driven%20IT%20Solution,%20I%20would%20like%20to%20request%20your%20private%20case%20studies."
-                target="_blank"
-                rel="noopener noreferrer"
-                className="relative inline-flex items-center gap-2 bg-white/5 hover:bg-logo-gradient hover:text-black text-white px-6 py-3 text-xs font-semibold uppercase tracking-wider transition-all duration-300"
-              >
-                <span>Request Private Portfolio</span>
-                <ArrowUpRight size={15} />
-                <CornerBrackets className="border-white/30" />
-              </a>
-
-              <a
-                href="/admin"
-                className="inline-flex items-center gap-1.5 px-4 py-3 text-xs font-mono text-white/40 hover:text-cyan-400 transition-colors"
-              >
-                <span>Add Projects in Admin Console →</span>
-              </a>
-            </div>
+          {/* Magnifying Glass Icon */}
+          <div className="mb-5 flex items-center justify-center w-12 h-12 rounded-full bg-white/[0.04] border border-white/10 text-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.15)]">
+            <Search size={22} className="text-cyan-400" />
           </div>
+
+          <h3 className="text-xl sm:text-2xl font-bold uppercase tracking-tight text-white mb-2 font-sans">
+            NO CASE STUDIES YET
+          </h3>
+
+          <p className="text-xs sm:text-sm text-white/60 font-light italic font-sans max-w-md">
+            Check back soon. We publish new client work regularly.
+          </p>
         </div>
       ) : (
         <div className="flex flex-col gap-6 md:gap-[35vh]">
