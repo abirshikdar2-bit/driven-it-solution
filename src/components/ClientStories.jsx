@@ -7,7 +7,7 @@ import { subscribeToDataChanges, getLocalCache, saveLocalCache } from '@/lib/syn
 
 export default function ClientStories({ reviews: propReviews = null }) {
   const [reviews, setReviews] = useState(() => {
-    if (Array.isArray(propReviews) && propReviews.length > 0) return propReviews;
+    if (Array.isArray(propReviews)) return propReviews;
     return Array.isArray(initialReviews) ? initialReviews : [];
   });
 
@@ -63,8 +63,18 @@ export default function ClientStories({ reviews: propReviews = null }) {
       </div>
 
       {/* Testimonials Bento Grid */}
-      <div className="grid gap-6 md:grid-cols-3">
-        {reviews.map((rev) => (
+      {reviews.length === 0 ? (
+        <div className="py-20 text-center border border-dashed border-white/10 rounded-2xl p-8 bg-white/[0.01]">
+          <p className="text-white/60 text-sm font-mono tracking-wide">
+            // NO CLIENT STORIES LISTED · READY FOR NEW ENTRIES
+          </p>
+          <p className="text-xs text-white/35 mt-2 font-mono">
+            New client feedback added from the Admin Panel will appear here instantly.
+          </p>
+        </div>
+      ) : (
+        <div className="grid gap-6 md:grid-cols-3">
+          {reviews.map((rev) => (
           <div
             key={rev.id}
             className="relative border border-white/10 bg-[#0a0a0b] p-8 flex flex-col justify-between group hover:border-cyan-400/40 transition-colors"
@@ -110,7 +120,8 @@ export default function ClientStories({ reviews: propReviews = null }) {
             <CornerBrackets className="border-white/20" />
           </div>
         ))}
-      </div>
+        </div>
+      )}
     </section>
   );
 }

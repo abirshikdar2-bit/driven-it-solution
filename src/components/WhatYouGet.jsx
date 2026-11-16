@@ -34,7 +34,7 @@ const iconMap = {
 
 export default function WhatYouGet({ services: propServices = null }) {
   const [services, setServices] = useState(
-    Array.isArray(propServices) && propServices.length > 0
+    Array.isArray(propServices)
       ? propServices
       : Array.isArray(initialServices) ? initialServices : []
   );
@@ -119,6 +119,16 @@ export default function WhatYouGet({ services: propServices = null }) {
       </div>
 
       {/* Horizontal Accordion */}
+      {services.length === 0 ? (
+        <div className="py-20 text-center border border-dashed border-white/10 rounded-2xl p-8 bg-white/[0.01]">
+          <p className="text-white/60 text-sm font-mono tracking-wide">
+            // NO SERVICES CURRENTLY LISTED · READY FOR NEW ENTRIES
+          </p>
+          <p className="text-xs text-white/35 mt-2 font-mono">
+            New custom services added from the Admin Panel will appear here instantly.
+          </p>
+        </div>
+      ) : (
       <div
         className="relative flex flex-col gap-2 md:h-[520px] md:flex-row"
         onMouseLeave={handleMouseLeave}
@@ -224,6 +234,7 @@ export default function WhatYouGet({ services: propServices = null }) {
           );
         })}
       </div>
+      )}
     </section>
   );
 }

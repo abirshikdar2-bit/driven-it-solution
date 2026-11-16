@@ -9,7 +9,7 @@ import { subscribeToDataChanges, getLocalCache, saveLocalCache } from '@/lib/syn
 
 export default function SoftwareWeOwn({ products: propProducts = null }) {
   const [products, setProducts] = useState(() => {
-    if (Array.isArray(propProducts) && propProducts.length > 0) return propProducts;
+    if (Array.isArray(propProducts)) return propProducts;
     return Array.isArray(initialProducts) ? initialProducts : [];
   });
 
@@ -65,8 +65,18 @@ export default function SoftwareWeOwn({ products: propProducts = null }) {
       </div>
 
       {/* 2-Column Product Grid */}
-      <div className="grid gap-8 lg:grid-cols-2">
-        {products.map((prod) => (
+      {products.length === 0 ? (
+        <div className="py-20 text-center border border-dashed border-white/10 rounded-2xl p-8 bg-white/[0.01]">
+          <p className="text-white/60 text-sm font-mono tracking-wide">
+            // NO SOFTWARE PRODUCTS LISTED · READY FOR NEW ENTRIES
+          </p>
+          <p className="text-xs text-white/35 mt-2 font-mono">
+            New products and SaaS tools added from the Admin Panel will appear here instantly.
+          </p>
+        </div>
+      ) : (
+        <div className="grid gap-8 lg:grid-cols-2">
+          {products.map((prod) => (
           <div key={prod.id} className="group relative flex h-full flex-col border border-white/10 bg-white/[0.015] transition-all hover:border-cyan-400/40">
             {/* Screenshot Header */}
             <div className="relative aspect-[16/9] w-full overflow-hidden border-b border-white/10 bg-slate-950">
@@ -133,7 +143,8 @@ export default function SoftwareWeOwn({ products: propProducts = null }) {
             </div>
           </div>
         ))}
-      </div>
+        </div>
+      )}
     </section>
   );
 }

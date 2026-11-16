@@ -5,48 +5,7 @@ import { ArrowUpRight } from 'lucide-react';
 import CornerBrackets, { SectionBadge } from './CornerBrackets';
 import { subscribeToDataChanges, getLocalCache, saveLocalCache } from '@/lib/syncEvents';
 
-const defaultProjects = [
-  {
-    id: 'proj-1',
-    num: '/001/',
-    category: 'Web Design & Development',
-    title: 'Nexus Enterprise Platform',
-    description: 'Next.js 16 + Supabase real-time cloud aggregator engineered with automated data telemetry.',
-    image: '/images/projects/web-development-showcase.webp',
-    liveUrl: '',
-    isFeatured: true
-  },
-  {
-    id: 'proj-2',
-    num: '/002/',
-    category: 'AI & Meta Ad Expert',
-    title: 'Velocita Automotive Scale',
-    description: 'Conversion-first landing page with Meta CAPI telemetry and luxury aesthetic.',
-    image: '/images/projects/meta-ads-showcase.webp',
-    liveUrl: '',
-    isFeatured: true
-  },
-  {
-    id: 'proj-3',
-    num: '/003/',
-    category: 'Graphics Designing',
-    title: 'Caribbrew Artisan Brand Identity',
-    description: 'Custom Shopify storefront and full visual brand identity for an artisan brand.',
-    image: '/images/projects/graphic-design-showcase.webp',
-    liveUrl: '',
-    isFeatured: true
-  },
-  {
-    id: 'proj-4',
-    num: '/004/',
-    category: 'Digital Marketing',
-    title: 'Bellevill Heritage Interiors',
-    description: 'Premium Next.js experience and high-converting lead capture pipeline built around brand heritage.',
-    image: '/images/projects/digital-marketing-showcase.webp',
-    liveUrl: '',
-    isFeatured: true
-  }
-];
+const defaultProjects = [];
 
 function ProjectCard({ project, index }) {
   const ref = useRef(null);
@@ -155,7 +114,7 @@ function ProjectCard({ project, index }) {
 
 export default function CaseStudiesSection({ projects: propProjects = null }) {
   const [projects, setProjects] = useState(() => {
-    if (Array.isArray(propProjects) && propProjects.length > 0) return propProjects;
+    if (Array.isArray(propProjects)) return propProjects;
     return defaultProjects;
   });
 
@@ -215,11 +174,22 @@ export default function CaseStudiesSection({ projects: propProjects = null }) {
       </div>
 
       {/* Sticky Stacking Projects List (Exact Mollahs IT Architecture) */}
-      <div className="flex flex-col gap-6 md:gap-[35vh]">
-        {projects.map((proj, idx) => (
-          <ProjectCard key={proj.id || proj.num || idx} project={proj} index={idx} />
-        ))}
-      </div>
+      {projects.length === 0 ? (
+        <div className="py-20 text-center border border-dashed border-white/10 rounded-2xl p-8 bg-white/[0.01]">
+          <p className="text-white/60 text-sm font-mono tracking-wide">
+            // NO PROJECTS CURRENTLY LISTED · READY FOR NEW ENTRIES
+          </p>
+          <p className="text-xs text-white/35 mt-2 font-mono">
+            New case studies added from the Admin Panel will appear here instantly.
+          </p>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-6 md:gap-[35vh]">
+          {projects.map((proj, idx) => (
+            <ProjectCard key={proj.id || proj.num || idx} project={proj} index={idx} />
+          ))}
+        </div>
+      )}
     </section>
   );
 }
