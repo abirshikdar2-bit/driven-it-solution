@@ -40,8 +40,13 @@ function ProjectCard({ project, index }) {
       <div className="relative aspect-[4/5] overflow-hidden border border-white/10 bg-[#0f0f0f] sm:aspect-[16/10] md:aspect-[16/8]">
         {/* Full-bleed background image with Mollahs IT transitions */}
         <img
-          src={project.image}
+          src={project.image || '/images/projects/web-development-showcase.webp'}
           alt={`${project.title} website`}
+          onError={(e) => {
+            if (e.currentTarget.src !== '/images/projects/web-development-showcase.webp') {
+              e.currentTarget.src = '/images/projects/web-development-showcase.webp';
+            }
+          }}
           className={`object-cover motion-reduce:!object-top ${
             isActive ? 'object-bottom opacity-100 grayscale-0' : 'object-top opacity-50 grayscale'
           }`}

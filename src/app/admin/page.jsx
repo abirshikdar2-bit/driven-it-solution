@@ -589,11 +589,16 @@ export default function AdminPage() {
   const handleProjectFileUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    if (file.size > 10 * 1024 * 1024) {
+      showToast('Image size exceeds 10MB limit', 'error');
+      if (e.target) e.target.value = '';
+      return;
+    }
     try {
       setIsUploadingProjectImage(true);
       const uploadedUrl = await uploadFile(file);
       setCurrentProject(prev => ({ ...prev, image: uploadedUrl }));
-      showToast('Project image uploaded successfully!');
+      showToast('Project image uploaded to Supabase Storage!');
     } catch (err) {
       showToast(err.message, 'error');
     } finally {
@@ -679,11 +684,16 @@ export default function AdminPage() {
   const handleProductFileUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    if (file.size > 10 * 1024 * 1024) {
+      showToast('Image size exceeds 10MB limit', 'error');
+      if (e.target) e.target.value = '';
+      return;
+    }
     try {
       setIsUploadingProductImage(true);
       const uploadedUrl = await uploadFile(file);
       setCurrentProduct(prev => ({ ...prev, image: uploadedUrl }));
-      showToast('Product screenshot uploaded successfully!');
+      showToast('Product screenshot uploaded to Supabase Storage!');
     } catch (err) {
       showToast(err.message, 'error');
     } finally {
@@ -883,6 +893,11 @@ export default function AdminPage() {
   const handleTeacherPhotoUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    if (file.size > 10 * 1024 * 1024) {
+      showToast('Image size exceeds 10MB limit', 'error');
+      if (e.target) e.target.value = '';
+      return;
+    }
 
     // Show immediate local preview
     try {
@@ -1323,6 +1338,18 @@ export default function AdminPage() {
                         <div className="mt-1.5 flex items-center gap-2 text-xs font-sans text-cyan-400">
                           <span className="text-white/50 font-medium">Live Link:</span>
                           <span className="truncate max-w-[280px] underline font-mono text-[11px]">{proj.liveUrl}</span>
+                        </div>
+                      )}
+
+                      {/* Case Study Image Thumbnail */}
+                      {proj.image && (
+                        <div className="mt-3 relative w-full h-32 rounded-xl overflow-hidden border border-white/10 bg-black/60">
+                          <img
+                            src={proj.image}
+                            alt={proj.title}
+                            className="w-full h-full object-cover"
+                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                          />
                         </div>
                       )}
                     </div>
@@ -2383,14 +2410,19 @@ export default function AdminPage() {
 
               {/* Image with file upload */}
               <div>
-                <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
-                  Showcase Mockup Image
-                </label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-xs font-sans font-medium text-white/70">
+                    Showcase Mockup Image
+                  </label>
+                  <span className="text-[10px] font-mono text-cyan-400">
+                    Supabase Storage Active
+                  </span>
+                </div>
                 <div className="flex gap-2 items-center">
                   <input
                     type="text"
                     required
-                    placeholder="/images/projects/web-development-showcase.webp"
+                    placeholder="https://... or /images/projects/..."
                     value={currentProject.image}
                     onChange={(e) => setCurrentProject({ ...currentProject, image: e.target.value })}
                     className="flex-1 px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 font-mono text-xs text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
@@ -2406,12 +2438,48 @@ export default function AdminPage() {
                     type="button"
                     onClick={() => projectFileInputRef.current?.click()}
                     disabled={isUploadingProjectImage}
-                    className="px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-sans text-xs font-medium cursor-pointer border border-white/10 flex items-center gap-1.5 transition-colors"
+                    className="px-4 py-2.5 rounded-xl bg-cyan-400/10 hover:bg-cyan-400/20 text-cyan-300 font-sans text-xs font-semibold cursor-pointer border border-cyan-400/30 flex items-center gap-1.5 transition-colors shrink-0"
                   >
-                    {isUploadingProjectImage ? <Loader2 size={13} className="animate-spin" /> : <UploadCloud size={13} />}
-                    <span>Upload</span>
+                    {isUploadingProjectImage ? (
+                      <>
+                        <Loader2 size={13} className="animate-spin text-cyan-400" />
+                        <span>Uploading...</span>
+                      </>
+                    ) : (
+                      <>
+                        <UploadCloud size={13} className="text-cyan-400" />
+                        <span>Upload Image</span>
+                      </>
+                    )}
                   </button>
                 </div>
+
+                {/* Instant Live Image Preview Box */}
+                {currentProject.image && (
+                  <div className="mt-2.5 relative w-full h-36 rounded-xl border border-cyan-500/25 overflow-hidden bg-black/70 flex items-center justify-center group">
+                    <img
+                      src={currentProject.image}
+                      alt="Project Preview"
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                    <div className="absolute top-2 right-2 flex items-center gap-1.5">
+                      <span className="px-2 py-0.5 rounded bg-black/80 border border-cyan-400/30 text-[10px] font-mono text-cyan-300">
+                        Image Preview Ready
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setCurrentProject(prev => ({ ...prev, image: '' }))}
+                        className="p-1 rounded bg-black/80 border border-white/20 text-white/60 hover:text-white transition-colors cursor-pointer"
+                        title="Clear image"
+                      >
+                        <X size={12} />
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div>
@@ -2589,12 +2657,22 @@ export default function AdminPage() {
                       type="button"
                       onClick={() => productFileInputRef.current?.click()}
                       disabled={isUploadingProductImage}
-                      className="px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-sans text-xs font-medium cursor-pointer border border-white/10 flex items-center gap-1.5 transition-colors"
+                      className="px-3.5 py-2.5 rounded-xl bg-cyan-400/10 hover:bg-cyan-400/20 text-cyan-300 font-sans text-xs font-semibold cursor-pointer border border-cyan-400/30 flex items-center gap-1.5 transition-colors shrink-0"
                     >
-                      {isUploadingProductImage ? <Loader2 size={13} className="animate-spin" /> : <UploadCloud size={13} />}
+                      {isUploadingProductImage ? <Loader2 size={13} className="animate-spin text-cyan-400" /> : <UploadCloud size={13} className="text-cyan-400" />}
                       <span>Upload</span>
                     </button>
                   </div>
+                  {currentProduct.image && (
+                    <div className="mt-2 relative w-full h-24 rounded-lg border border-cyan-500/25 overflow-hidden bg-black/70 flex items-center justify-center">
+                      <img
+                        src={currentProduct.image}
+                        alt="Product Preview"
+                        className="w-full h-full object-cover"
+                        onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                      />
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label className="block text-xs font-sans font-medium text-white/70 mb-1.5">
