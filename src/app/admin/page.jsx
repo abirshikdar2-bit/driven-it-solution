@@ -34,7 +34,8 @@ import {
   Lock,
   AlertTriangle,
   ShieldAlert,
-  Search
+  Search,
+  User
 } from 'lucide-react';
 import CornerBrackets, { SectionBadge } from '@/components/CornerBrackets';
 import FlowFieldCanvas from '@/components/FlowFieldCanvas';
@@ -114,7 +115,11 @@ export default function AdminPage() {
       if (res.ok) {
         const json = await res.json();
         if (json.success && Array.isArray(json.data)) {
-          setUsersList(json.data);
+          const sanitized = json.data.map((u) => ({
+            ...u,
+            picture: u.picture && !u.picture.includes('bottts') && !u.picture.includes('dicebear') ? u.picture : ''
+          }));
+          setUsersList(sanitized);
         }
       }
     } catch (err) {
@@ -132,7 +137,11 @@ export default function AdminPage() {
         if (res.ok) {
           const data = await res.json();
           if (data.authenticated && data.user) {
-            setAuthenticatedAdmin(data.user);
+            const sanitizedUser = {
+              ...data.user,
+              picture: data.user.picture && !data.user.picture.includes('bottts') && !data.user.picture.includes('dicebear') ? data.user.picture : ''
+            };
+            setAuthenticatedAdmin(sanitizedUser);
             fetchUsers();
           }
         }
@@ -1208,15 +1217,16 @@ export default function AdminPage() {
           <div className="flex items-center gap-3 sm:gap-4">
             {authenticatedAdmin && (
               <div className="flex items-center gap-2.5 sm:gap-3 border-r border-white/10 pr-3 sm:pr-4">
-                {authenticatedAdmin.picture ? (
+                {authenticatedAdmin.picture && !authenticatedAdmin.picture.includes('bottts') && !authenticatedAdmin.picture.includes('dicebear') ? (
                   <img
                     src={authenticatedAdmin.picture}
                     alt={authenticatedAdmin.name}
                     className="h-8 w-8 rounded-full border border-cyan-400/50 object-cover shadow-[0_0_10px_rgba(0,229,255,0.2)]"
+                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
                   />
                 ) : (
-                  <div className="h-8 w-8 rounded-full bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center font-mono font-bold text-xs text-cyan-300">
-                    {authenticatedAdmin.name ? authenticatedAdmin.name[0].toUpperCase() : 'A'}
+                  <div className="h-8 w-8 rounded-full bg-cyan-950/60 border border-cyan-400/50 flex items-center justify-center text-cyan-400 shadow-[0_0_10px_rgba(0,229,255,0.2)]">
+                    <User size={15} className="text-cyan-400" />
                   </div>
                 )}
                 <div className="hidden md:flex flex-col text-left">
@@ -2222,12 +2232,17 @@ export default function AdminPage() {
                       <div>
                         {/* Top Profile Header */}
                         <div className="flex items-start gap-4 mb-5">
-                          <div className="relative h-14 w-14 shrink-0 rounded-full overflow-hidden border border-white/15 bg-slate-900 shadow-md">
-                            <img
-                              src={usr.picture || 'https://api.dicebear.com/7.x/bottts/svg?seed=Admin'}
-                              alt={usr.name}
-                              className="h-full w-full object-cover"
-                            />
+                          <div className="relative h-14 w-14 shrink-0 rounded-full overflow-hidden border border-cyan-400/30 bg-gradient-to-b from-[#111927] to-[#080d14] flex items-center justify-center text-cyan-300 shadow-[0_0_15px_rgba(0,229,255,0.15)]">
+                            {usr.picture && !usr.picture.includes('bottts') && !usr.picture.includes('dicebear') ? (
+                              <img
+                                src={usr.picture}
+                                alt={usr.name}
+                                className="h-full w-full object-cover"
+                                onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                              />
+                            ) : (
+                              <User size={28} className="text-cyan-400" />
+                            )}
                           </div>
 
                           <div className="flex-1 min-w-0">

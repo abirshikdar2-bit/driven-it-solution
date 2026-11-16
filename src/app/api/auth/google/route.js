@@ -76,7 +76,7 @@ export async function POST(req) {
       const su = body.supabaseUser;
       rawEmail = su.email || '';
       rawName = su.user_metadata?.full_name || su.user_metadata?.name || (rawEmail ? rawEmail.split('@')[0] : 'Admin User');
-      rawPicture = su.user_metadata?.avatar_url || su.user_metadata?.picture || `https://api.dicebear.com/7.x/bottts/svg?seed=${rawName}`;
+      rawPicture = su.user_metadata?.avatar_url || su.user_metadata?.picture || '';
       sub = su.id || '';
     } else if (credential) {
       const payload = decodeGoogleJWT(credential);
@@ -90,7 +90,7 @@ export async function POST(req) {
     } else if (action === 'demo_login' || body.email) {
       rawEmail = body.email || demoUser?.email || 'abirshikdar2@gmail.com';
       rawName = body.name || demoUser?.name || 'Abir Shikdar';
-      rawPicture = body.picture || demoUser?.picture || 'https://api.dicebear.com/7.x/bottts/svg?seed=AbirAdmin';
+      rawPicture = body.picture || demoUser?.picture || '';
       sub = `admin-${Date.now()}`;
     } else {
       return NextResponse.json({ success: false, message: 'No credential or user provided' }, { status: 400 });

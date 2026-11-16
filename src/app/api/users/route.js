@@ -61,7 +61,7 @@ export async function POST(req) {
       id: `usr-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
       name: name?.trim() || emailLower.split('@')[0],
       email: email.trim(),
-      picture: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(name || email)}`,
+      picture: '',
       role: role === 'super_admin' ? 'super_admin' : 'admin',
       status: 'active',
       createdAt: new Date().toISOString(),

@@ -151,7 +151,7 @@ export default function AdminGoogleAuthModal({ onAuthenticated }) {
           await authenticateWithServer({
             email: 'abirshikdar2@gmail.com',
             name: 'Abir Shikdar',
-            picture: 'https://api.dicebear.com/7.x/bottts/svg?seed=AbirAdmin2'
+            picture: ''
           });
           return;
         }
@@ -161,7 +161,7 @@ export default function AdminGoogleAuthModal({ onAuthenticated }) {
         await authenticateWithServer({
           email: 'abirshikdar2@gmail.com',
           name: 'Abir Shikdar',
-          picture: 'https://api.dicebear.com/7.x/bottts/svg?seed=AbirAdmin2'
+          picture: ''
         });
       }
     } catch (err) {
@@ -170,7 +170,7 @@ export default function AdminGoogleAuthModal({ onAuthenticated }) {
       await authenticateWithServer({
         email: 'abirshikdar2@gmail.com',
         name: 'Abir Shikdar',
-        picture: 'https://api.dicebear.com/7.x/bottts/svg?seed=AbirAdmin2'
+        picture: ''
       });
     } finally {
       setLoading(false);
@@ -182,7 +182,7 @@ export default function AdminGoogleAuthModal({ onAuthenticated }) {
     await authenticateWithServer({
       email,
       name,
-      picture: `https://api.dicebear.com/7.x/bottts/svg?seed=${name.replace(/\s+/g, '')}`
+      picture: ''
     });
   };
 
