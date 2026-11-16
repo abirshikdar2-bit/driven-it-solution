@@ -20,6 +20,7 @@ import {
   Phone,
   Mail,
   UploadCloud,
+  Upload,
   ImageIcon,
   Loader2,
   Cpu,
